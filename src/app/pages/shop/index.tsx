@@ -1,24 +1,31 @@
+import { fetchProducts } from "@/core/api/productsApi";
 import ProductCard from "@/core/components/ProductCard";
+import { Product } from "@/core/models/Product";
+import { useEffect, useState } from "react";
 
 export default function ShopPage() {
-  const products = Array.from({ length: 9 }).map((_, idx) => ({
-    id: idx,
-    imageUrl: "/images/product-one.png",
-    name: "Sofá Loveseat",
-    price: "$199,00",
-    oldPrice: "$400,00",
-    rating: 5,
-    label: "Nuevo",
-    discount: "-51%",
-  }));
+  
+  
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleAddToCart = (id: number) => {
-    console.log("Agregar al carrito:", id);
-  };
+  
+  useEffect(() => {
+    fetchProducts()
+      .then((data) => setProducts(data))
+      .catch((err) => console.error('Error fetching products:', err))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const handleToggleWishlist = (id: number) => {
-    console.log("Toggle wishlist:", id);
-  };
+  if (loading) return <p>Cargando productos...</p>;
+
+  // const handleAddToCart = (id: number) => {
+  //   console.log("Agregar al carrito:", id);
+  // };
+
+  // const handleToggleWishlist = (id: number) => {
+  //   console.log("Toggle wishlist:", id);
+  // };
   return (
     <section className="px-8 lg:px-14">
       <div className="shop-page-banner-bg min-h-[308px] md:h-[392px] max-h-[392px] flex justify-center items-center">
@@ -170,18 +177,19 @@ export default function ShopPage() {
             {products.map((p) => (
               <ProductCard
                 key={p.id}
-                imageUrl={p.imageUrl}
+                // imageUrl={p.imageUrl}
                 name={p.name}
-                price={p.price}
-                oldPrice={p.oldPrice}
-                rating={p.rating}
-                label={p.label}
-                discount={p.discount}
-                onAddToCart={() => handleAddToCart(p.id)}
-                onToggleWishlist={() => handleToggleWishlist(p.id)}
+                // price={p.price}
+                // oldPrice={p.oldPrice}
+                // rating={p.rating}
+                // label={p.label}
+                // discount={p.discount}
+                // onAddToCart={() => handleAddToCart(p.id)}
+                // onToggleWishlist={() => handleToggleWishlist(p.id)}
               />
             ))}
           </div>
+
           <div className="flex justify-center">
             <button className="py-1.5 px-10 rounded-[80px] border border-app-black text-center font-inter text-base/7 font-semibold tracking-[-0.4px]">
               Ver más

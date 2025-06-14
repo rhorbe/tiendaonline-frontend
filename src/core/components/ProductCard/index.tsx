@@ -2,12 +2,12 @@
 import React from "react";
 
 interface ProductCardProps {
-  imageUrl: string;
+  imageUrl?: string;
   label?: string;
   discount?: string;
   rating?: number;
-  name: string;
-  price: string;
+  name?: string;
+  price?: string;
   oldPrice?: string;
   onAddToCart?: () => void;
   onToggleWishlist?: () => void;
