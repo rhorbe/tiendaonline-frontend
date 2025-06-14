@@ -6,15 +6,15 @@ export default function ShopPage() {
         <div className="max-w-fit flex flex-col items-center gap-4 md:gap-6">
           <div className="w-fit flex gap-4">
             <div className="flex items-center gap-1">
-              <p className="text-grayish-brown font-inter text-sm/6 font-medium">Home</p>
+              <p className="text-grayish-brown font-inter text-sm/6 font-medium">Inicio</p>
               <img src="/images/right-icon.svg" alt="right icon" className="w-3 h-3 object-contain" />
             </div>
             <p className="text-app-black font-inter text-sm/[25px] font-medium">
-              Shop
+              Tienda
             </p>
           </div>
           <h1 className="text-app-black font-poppins text-[40px]/[44px] md:text-[54px]/[58px] tracking-[-0.4px] md:tracking-[-1px] font-medium">
-          Shop Page
+          Tienda
           </h1>
           <p className="text-app-black font-inter text-center text-base/[26px] md:text-xl/[32px] font-normal">
             Let’s design the place you always imagined.
@@ -64,12 +64,12 @@ export default function ShopPage() {
           <div className="flex items-center gap-2">
             <img src="/images/filter.svg" alt="filter icon" className="h-6 w-6" />
             <p className="text-app-black font-inter text-xl/8 font-semibold">
-              Filter
+              Filtro
             </p>
           </div>
           <div className="space-y-2">
             <h1 className="text-app-black font-inter text-base/[26px] font-semibold">
-              CATEGORIES
+              CATEGORIAS
             </h1>
             <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-categroy-scrollbar">
               {
@@ -85,7 +85,7 @@ export default function ShopPage() {
           </div>
           <div>
             <h1 className="text-app-black font-inter text-base/[26px] font-semibold mb-4">
-              PRICE
+              PRECIO
             </h1>
             <div className="flex flex-col gap-2">
               {
@@ -115,7 +115,7 @@ export default function ShopPage() {
         <div className="col-span-3">
           <div className="hidden md:flex justify-between items-center mb-10">
             <p className="text-app-black font-inter text-xl/8 font-semibold">
-              Filter
+              Filtro
             </p>
             <div className="flex gap-8">
               <div className="relative inline-block w-fit">
@@ -182,7 +182,7 @@ export default function ShopPage() {
                       </div>
                     </div>
                     <button className='text-white text-center font-inter text-base/6 md:text-base/7 font-medium tracking-[-0.4px] bg-app-black rounded-lg w-full px-4 md:px-10 py-2 md:py-[10px]'>
-                      Add to cart
+                      Agregar al Carrito
                     </button>
                   </div>
                   <div className='mt-3'>

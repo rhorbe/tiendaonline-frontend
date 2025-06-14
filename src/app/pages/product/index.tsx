@@ -105,7 +105,7 @@ export default function ProductPage() {
                                   </button>
                               </div>
                               <button className='text-white text-center font-inter text-base font-medium leading-[28px] tracking-[-0.4px] bg-app-black rounded-lg w-full px-10 py-[10px]'>
-                                  Add to cart
+                                  Agregar al Carrito
                               </button>
                           </div>
                           <div className="py-6 border-t space-y-2 border-app-light-gray">

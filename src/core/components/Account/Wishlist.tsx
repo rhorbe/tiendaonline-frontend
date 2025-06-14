@@ -55,7 +55,7 @@ export default function Wishlist() {
                                 </p>
                             </td>
                             <td className="py-6 px-4 border-app-light-gray border-b">
-                              <Button text="Add to cart" className="max-w-fit" />
+                              <Button text="Agregar al Carrito" className="max-w-fit" />
                             </td>
                         </tr>
                     </tbody>
@@ -100,7 +100,7 @@ export default function Wishlist() {
                                         </p>
                                     </div>
                                 </div>
-                                <Button text="Add to cart" />
+                                <Button text="Agregar al Carrito" />
                             </td>
                         </tr>
                     </tbody>
