@@ -81,7 +81,7 @@ const Home: FC = () => {
                   width: "32px",
                 }}
                 src={"/images/arrow-right-carousel.svg"}
-                alt="arrow right"
+                alt="flecha derecha"
               />
             </div>
           </div>
@@ -93,7 +93,7 @@ const Home: FC = () => {
                   width: "32px",
                 }}
                 src={"/images/arrow-left-carousel.svg"}
-                alt="arrow right"
+                alt="flecha izquierda"
               />
             </div>
           </div>
@@ -101,8 +101,7 @@ const Home: FC = () => {
         <div className="pt-8 pb-10 grid md:grid-cols-2 gap-6">
           <div>
             <h2 className="text-app-black font-poppins text-[40px]/[44px] md:text-7xl/[76px] tracking-[-0.4px] md:tracking-[-2px] font-medium">
-              Simply Unique <span className="text-app-gray">/</span> Simply
-              Better.
+              Simplemente Único <span className="text-app-gray">/</span> Simplemente Mejor.
             </h2>
           </div>
           <div className="flex justify-center items-center">
@@ -110,8 +109,7 @@ const Home: FC = () => {
               <span className="text-app-slate-gray font-inter text-base/[26px] font-semibold">
                 3legant
               </span>{" "}
-              is a gift & decorations store based in HCMC, Vietnam. Est since
-              2019.
+              es una tienda de regalos y decoración ubicada en CABA, Argentina. Desde 2019.
             </p>
           </div>
         </div>
@@ -127,15 +125,15 @@ const Home: FC = () => {
           >
             <div className="p-8 md:p-12">
               <h2 className="text-app-black font-poppins text-[28px]/[34px] md:text-[34px]/[28px] font-medium tracking-[-0.6px] md:tracking-[-0.6px]">
-                Living Room
+                Living Comedor
               </h2>
               <a className="flex gap-1 items-center cursor-pointer mt-3 border-b border-app-black w-fit">
                 <p className="text-app-black font-inter text-sm font-medium leading-[24px]">
-                  Shop Now
+                  Ver productos
                 </p>
                 <img
                   src="/images/arrow-right-carousel.svg"
-                  alt="arrow right"
+                  alt="flecha derecha"
                   className="h-[18px] w-[18px]"
                 />
               </a>
@@ -145,15 +143,15 @@ const Home: FC = () => {
             <div className="w-full bg-primary grid grid-cols-2">
               <div className="py-[42px] pl-8 flex flex-col justify-end">
                 <h2 className="text-app-black font-poppins text-[28px]/[34px] md:text-[34px]/[28px] font-medium tracking-[-0.6px] md:tracking-[-0.6px]">
-                  Living Room
+                  Living Comedor
                 </h2>
                 <a className="flex gap-1 items-center cursor-pointer mt-3 border-b border-app-black w-fit">
                   <p className="text-app-black font-inter text-sm font-medium leading-[24px]">
-                    Shop Now
+                    Ver productos
                   </p>
                   <img
                     src="/images/arrow-right-carousel.svg"
-                    alt="arrow right"
+                    alt="flecha derecha"
                     className="h-[18px] w-[18px]"
                   />
                 </a>
@@ -169,15 +167,15 @@ const Home: FC = () => {
             <div className="w-full bg-primary grid grid-cols-2">
               <div className="py-[42px] pl-8 flex flex-col justify-end">
                 <h2 className="text-app-black font-poppins text-[28px]/[34px] md:text-[34px]/[28px] font-medium tracking-[-0.6px] md:tracking-[-0.6px]">
-                  Living Room
+                  Living Comedor
                 </h2>
                 <a className="flex gap-1 items-center cursor-pointer mt-3 border-b border-app-black w-fit">
                   <p className="text-app-black font-inter text-sm font-medium leading-[24px]">
-                    Shop Now
+                    Ver productos
                   </p>
                   <img
                     src="/images/arrow-right-carousel.svg"
-                    alt="arrow right"
+                    alt="flecha derecha"
                     className="h-[18px] w-[18px]"
                   />
                 </a>
@@ -194,15 +192,15 @@ const Home: FC = () => {
         <div className="pt-12">
           <div className="flex items-center justify-between">
             <h3 className="text-black font-poppins text-[40px]/[44px] font-medium tracking-[-0.4px]">
-              New <br /> Arrivals
+              Nuevos <br /> Ingresos
             </h3>
             <a className="hidden md:flex gap-1 items-center cursor-pointer mt-3">
               <p className="text-app-black font-inter text-base/[28px] font-medium">
-                More Products
+                Más productos
               </p>
               <img
                 src="/images/arrow-right-carousel.svg"
-                alt="arrow right"
+                alt="flecha derecha"
                 className="h-[20px] w-[20px]"
               />
             </a>
@@ -223,7 +221,7 @@ const Home: FC = () => {
                     <div>
                       <div className="px-3 py-1 bg-white rounded">
                         <p className="text-app-black font-inter text-base font-bold uppercase">
-                          New
+                          Nuevo
                         </p>
                       </div>
                       <div className="px-3 py-1 bg-app-green rounded mt-2">
@@ -235,13 +233,13 @@ const Home: FC = () => {
                     <div className="bg-white p-1.5 rounded-3xl h-8 w-8 shadow-wishlist-icon">
                       <img
                         src="/images/wishlist.svg"
-                        alt="whishlist"
+                        alt="favoritos"
                         className="h-5 w-5"
                       />
                     </div>
                   </div>
                   <button className="text-white text-center font-inter text-base font-medium leading-[28px] tracking-[-0.4px] bg-app-black rounded-lg w-full px-10 py-[10px]">
-                    Agregar al Carrito
+                    Agregar al carrito
                   </button>
                 </div>
                 <div className="mt-3">
@@ -250,12 +248,12 @@ const Home: FC = () => {
                       <img
                         key={idx}
                         src="/images/star-icon.svg"
-                        alt="star icon"
+                        alt="estrella"
                       />
                     ))}
                   </div>
                   <h3 className="mb-2 text-app-black font-inter text-base/[26px] font-medium">
-                    Loveseat Sofa
+                    Sofá de dos plazas
                   </h3>
                   <div className="flex gap-3.5 items-center">
                     <p className="text-app-black font-inter text-sm/[22px] font-semibold">
@@ -271,11 +269,11 @@ const Home: FC = () => {
           </div>
           <a className="flex gap-1 items-center cursor-pointer mt-3">
             <p className="text-app-black font-inter text-base/[28px] font-medium">
-              More Products
+              Más productos
             </p>
             <img
               src="/images/arrow-right-carousel.svg"
-              alt="arrow right"
+              alt="flecha derecha"
               className="h-[20px] w-[20px]"
             />
           </a>
@@ -301,27 +299,26 @@ const Home: FC = () => {
       <section className="grid md:grid-cols-2">
         <img
           src="/images/banner.png"
-          alt="banner iamge"
+          alt="imagen banner"
           className="w-full h-full object-cover max-h-[532px]"
         />
         <div className="pr-4 pl-8 md:pr-7 lg:pl-10 lg:pr-14 bg-primary flex flex-col justify-center gap-4 py-12">
           <p className="text-app-blue font-inter text-base/4 uppercase">
-            SALE UP TO 35% OFF
+            ¡HASTA 35% OFF!
           </p>
           <h2 className="max-w-[452px] text-app-black font-poppins text-[40px]/[44px] font-medium tracking-[-0.4px]">
-            HUNDREDS of New lower prices!
+            ¡Cientos de precios más bajos!
           </h2>
           <p className="text-app-black font-inter text-xl/8 max-w-[452px]">
-            It’s more affordable than ever to give every room in your home a
-            stylish makeover
+            Ahora es más accesible que nunca renovar cada ambiente de tu casa con estilo.
           </p>
           <a className="flex gap-1 items-center cursor-pointer mt-2 border-b border-app-black w-fit">
             <p className="text-app-black font-inter text-base font-medium leading-[24px]">
-              Shop Now
+              Ver productos
             </p>
             <img
               src="/images/arrow-right-carousel.svg"
-              alt="arrow right"
+              alt="flecha derecha"
               className="h-[18px] w-[18px]"
             />
           </a>
@@ -329,7 +326,7 @@ const Home: FC = () => {
       </section>
       <section className="px-8 lg:px-14 py-10 md:py-20">
         <h3 className="text-black font-poppins text-[40px]/[44px] font-medium tracking-[-0.4px]">
-          Best Seller
+          Más vendidos
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 py-6 md:py-12">
           {Array.from({ length: 8 }, (_, idx) => (
@@ -347,7 +344,7 @@ const Home: FC = () => {
                   <div>
                     <div className="px-3 py-1 bg-white rounded">
                       <p className="text-app-black font-inter text-base font-bold uppercase">
-                        New
+                        Nuevo
                       </p>
                     </div>
                     <div className="px-3 py-1 bg-app-green rounded mt-2">
@@ -359,13 +356,13 @@ const Home: FC = () => {
                   <div className="bg-white p-1.5 rounded-3xl h-8 w-8 shadow-wishlist-icon">
                     <img
                       src="/images/wishlist.svg"
-                      alt="whishlist"
+                      alt="favoritos"
                       className="h-5 w-5"
                     />
                   </div>
                 </div>
                 <button className="text-white text-center font-inter text-base font-medium leading-[28px] tracking-[-0.4px] bg-app-black rounded-lg w-full px-10 py-[10px]">
-                  Agregar al Carrito
+                  Agregar al carrito
                 </button>
               </div>
               <div className="mt-3">
@@ -374,12 +371,12 @@ const Home: FC = () => {
                     <img
                       key={idx}
                       src="/images/star-icon.svg"
-                      alt="star icon"
+                      alt="estrella"
                     />
                   ))}
                 </div>
                 <h3 className="mb-2 text-app-black font-inter text-base/[26px] font-medium">
-                  Loveseat Sofa
+                  Sofá de dos plazas
                 </h3>
                 <div className="flex gap-3.5 items-center">
                   <p className="text-app-black font-inter text-sm/[22px] font-semibold">

@@ -7,7 +7,7 @@ export default function CartPage() {
         <section className="px-8 lg:px-14 py-20">
             <div className="">
                 <h1 className="text-app-black font-poppins text-center text-[54px]/[58px] font-medium tracking-[-1px] mb-10">
-                    Cart
+                    Carrito
                 </h1>
                 <Process activeStep={1} />
             </div>
@@ -19,13 +19,13 @@ export default function CartPage() {
                             <thead>
                                 <tr className="">
                                     <th className="pb-6 px-4 text-center text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
-                                        Product
+                                        Producto
                                     </th>
                                     <th className="pb-6 px-4 text-center text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
-                                        Quantity
+                                        Cantidad
                                     </th>
                                     <th className="pb-6 px-4 text-center text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
-                                        Price
+                                        Precio
                                     </th>
                                     <th className="pb-6 px-4 text-center text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
                                         Subtotal
@@ -56,7 +56,7 @@ export default function CartPage() {
                                                     className='object-contain object-center h-6 w-6'
                                                 />
                                                 <p className="text-app-gray font-inter text-sm/[22px] font-semibold">
-                                                    Remove
+                                                    Quitar
                                                 </p>
                                             </button>
                                         </div>
@@ -88,7 +88,7 @@ export default function CartPage() {
                     </div>
                     <div className="md:hidden">
                         <h2 className="pb-6 text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
-                            Product
+                            Producto
                         </h2>
                         <div className="w-full border-b border-app-light-gray mb-6">
                             <div className="flex justify-between py-6 border-b border-app-light-gray">
@@ -136,7 +136,7 @@ export default function CartPage() {
                 </div>
                 <div className="p-6 rounded-md border border-app-gray bg-white space-y-3 mb-4">
                     <p className="text-app-black font-poppins text-xl/7 font-medium mb-4">
-                        Cart summary
+                        Resumen del carrito
                     </p>
                     <div
                         className={`py-3 px-4 flex justify-between items-center rounded-[4px] border border-app-black ${selectedOption === 'free-shipping' ? 'bg-primary' : 'bg-white'

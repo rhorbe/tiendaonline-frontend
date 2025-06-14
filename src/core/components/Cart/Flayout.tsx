@@ -1,4 +1,5 @@
 import Button from "../Button/Button";
+import { ROUTES } from "@/core/enum/common";
 
 interface FlayoutMenuProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,18 +13,18 @@ export const Flayout = ({ setOpen }: FlayoutMenuProps) => {
                     <img src="/images/close.svg" alt="" />
                 </button>
                 <h3 className="text-app-black font-poppins text-[28px]/34px font-medium tracking-[-0.6px] mb-4">
-                    Cart
+                    Carrito
                 </h3>
                 <div className="flex flex-col gap-6">
                     <div className="py-6 flex justify-between">
                         <div className="flex gap-4">
-                            <img src="/images/cart-product.png" alt="cart product" className="w-20" />
+                            <img src="/images/cart-product.png" alt="producto en carrito" className="w-20" />
                             <div>
                                 <h3 className="max-w-[210px] text-app-black font-inter text-sm/[22px] font-semibold mb-2">
-                                    Tray Table
+                                    Mesa Auxiliar
                                 </h3>
                                 <p className="text-app-gray font-inter text-sm/[20px] mb-2">
-                                    Color: Black
+                                    Color: Negro
                                 </p>
                                 <div className="flex gap-3 items-center border border-app-gray rounded py-3 px-2 w-fit">
                                     <button>
@@ -65,14 +66,14 @@ export const Flayout = ({ setOpen }: FlayoutMenuProps) => {
                     </p>
                 </div>
                 <div className="py-[18px]">
-                    <Button text="Check Out" onClick={() => console.log('hello')} />
+                    <Button text="Finalizar compra" onClick={() => console.log('hola')} />
                 </div>
                 <a
-                    href="/cart"
+                    href={ROUTES.CART}
                     className="inline-flex justify-center text-center w-full py-2"
                 >
                     <p className="border-b border-app-black font-inter text-sm/[22px] font-semibold text-app-black">
-                        View Cart
+                        Ver carrito
                     </p>
                 </a>
             </div>

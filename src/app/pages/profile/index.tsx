@@ -9,7 +9,7 @@ export default function ProfilePage() {
   return (
       <section className="px-8 lg:px-14 pb-20">
           <h1 className="py-10 md:py-20 font-poppins text-[40px]/[44px] md:text-[54px]/[58px] text-center font-medium">
-              My Account
+              Mi Cuenta
           </h1>
           <div className="flex flex-col md:flex-row">
               <div className="py-10 px-4 w-full md:w-fit bg-app-light-gray rounded-lg space-y-10 h-fit">
@@ -17,15 +17,15 @@ export default function ProfilePage() {
                       <div className="w-[82px] h-[82px] relative">
                           <img src="/images/avatar_placeholder.png" alt="Avatar" className="w-full h-full object-contain object-center" />
                           <div className="absolute bottom-0 right-0 p-[7px] rounded-full border-[1.5px] border-white bg-app-black">
-                              <img src="/images/camera.svg" alt="Camera" className="w-4 h-4 object-contain object-center" />
+                              <img src="/images/camera.svg" alt="Cámara" className="w-4 h-4 object-contain object-center" />
                           </div>
                       </div>
                       <p className="text-app-black font-inter text-xl/8 font-semibold">
-                          Sofia Havertz
+                          Sofía Havertz
                       </p>
                   </div>
                   <ul className="space-y-2 min-w-[230px] hidden md:block">
-                      {['Account', 'Address', 'Orders', 'Wishlist', 'Log Out'].map((item, index) => (
+                      {['Cuenta', 'Dirección', 'Pedidos', 'Favoritos', 'Cerrar sesión'].map((item, index) => (
                           <li
                               key={index}
                               onClick={() => setActiveIndex(index)} 
@@ -41,7 +41,7 @@ export default function ProfilePage() {
                           value={activeIndex}
                           onChange={(e) => setActiveIndex(parseInt(e.target.value))}
                       >
-                          {['Account', 'Address', 'Orders', 'Wishlist', 'Log Out'].map((item, index) => (
+                          {['Cuenta', 'Dirección', 'Pedidos', 'Favoritos', 'Cerrar sesión'].map((item, index) => (
                               <option
                                   key={index}
                                   value={index}

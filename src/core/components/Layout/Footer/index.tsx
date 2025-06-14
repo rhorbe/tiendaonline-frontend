@@ -1,9 +1,11 @@
+import { ROUTES } from "@/core/enum/common";
+
 export default function Footer() {
   const navLinks = [
-    { name: "Inicio", url: "/" },
-    { name: "Tienda", url: "/shop" },
-    { name: "Productos", url: "/product/1" },
-    { name: "Contacto", url: "/contact" },
+    { name: "Inicio", url: ROUTES.HOME },
+    { name: "Tienda", url: ROUTES.SHOP },
+    { name: "Productos", url: ROUTES.PRODUCT },
+    { name: "Contacto", url: ROUTES.CONTACT },
   ];
   return (
     <footer className="px-8 md:px-7 lg:px-14 py-12 md:pt-20 md:pb-8 bg-app-black">
@@ -18,7 +20,7 @@ export default function Footer() {
           </div>
           <div className="h-[1px] w-6 md:min-h-6 md:w-[1px] bg-app-gray" />
           <p className="max-w-[350px] flex-shrink-0 text-white font-inter text-sm/[22px]">
-            Parfums
+            Perfumes
           </p>
         </div>
         <div>
@@ -49,14 +51,14 @@ export default function Footer() {
           <a href="https://www.instagram.com/ditunpsjb/">
             <img
               src="/images/instagram.svg"
-              alt="Instagram del Departamento de Informática Trelew de la Univarsidad Nacional de la Patagonia"
+              alt="Instagram del Departamento de Informática Trelew de la Universidad Nacional de la Patagonia"
               className="h-6 w-6 object-contain"
             />
           </a>
           <a href="https://www.facebook.com/ditunpsjb">
             <img
               src="/images/facebook.svg"
-              alt="Facebook del Departamento de Informática Trelew de la Univarsidad Nacional de la Patagonia"
+              alt="Facebook del Departamento de Informática Trelew de la Universidad Nacional de la Patagonia"
               className="h-6 w-6 object-contain"
             />
           </a>

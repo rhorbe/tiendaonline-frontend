@@ -1,29 +1,30 @@
+import { ROUTES } from "@/core/enum/common";
 
 interface MobileMenuProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export default function MobileMenu({ setOpen }: MobileMenuProps) {
   const navLinks = [
-    { name: "Inicio", url: "/" },
-    { name: "Tienda", url: "/shop" },
-    { name: "Productos", url: "/product/1" },
-    { name: "Contacto", url: "/contact" },
+    { name: "Inicio", url: ROUTES.HOME },
+    { name: "Tienda", url: ROUTES.SHOP },
+    { name: "Productos", url: ROUTES.PRODUCT },
+    { name: "Contacto", url: ROUTES.CONTACT },
   ];
 
   return (
     <div className="p-6 bg-white absolute top-0 left-0 z-50 w-full h-screen flex flex-col justify-between md:hidden">
       <div>
         <div className="flex justify-between items-center self-stretch">
-              <img src="/images/logo_lessence_negro.png" alt="L'Essence Perfumes" className='h-8 w-auto' />
+          <img src="/images/logo_lessence_negro.png" alt="L'Essence Perfumes" className='h-8 w-auto' />
 
           <button onClick={() => setOpen(false)}>
-            <img src="/images/close.svg" alt="Logo" className="h-6 w-auto" />
+            <img src="/images/close.svg" alt="Cerrar" className="h-6 w-auto" />
           </button>
         </div>
         <input
           type="text"
           className="border border-app-gray bg-white rounded-lg p-2 text-base w-full mt-4"
-          placeholder="Enter text"
+          placeholder="Buscar..."
         />
 
         <nav>
@@ -67,21 +68,21 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
           <a href="https://www.instagram.com/ditunpsjb/">
             <img
               src="/images/instagram-black.svg"
-              alt="integram"
+              alt="Instagram"
               className="w-6 h-6"
             />
           </a>
           <a href="https://www.facebook.com/ditunpsjb">
             <img
               src="/images/faceboo-black.svg"
-              alt="facebook"
+              alt="Facebook"
               className="w-6 h-6"
             />
           </a>
           <a href="https://www.youtube.com/@comunicaciondigitalunpsjb">
             <img
               src="/images/youtube-black.svg"
-              alt="youtube"
+              alt="YouTube"
               className="w-6 h-6"
             />
           </a>
