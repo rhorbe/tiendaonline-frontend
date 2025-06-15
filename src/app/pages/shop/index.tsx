@@ -173,7 +173,7 @@ export default function ShopPage() {
 
           {loading ? (
             <div className="flex justify-center items-center h-40">
-              <img src="/images/loading.gif" alt="Cargando..." className="w-16 h-16" />
+               <p  className="font-inter w-fit text-sm/[22px] font-semibold  text-taup-gray">Cargando...</p>
             </div>
           ) : (
             <>
