@@ -7,7 +7,7 @@ interface ProductCardProps {
   discount?: string;
   rating?: number;
   name?: string;
-  price?: string;
+  price: number | string;
   oldPrice?: string;
   onAddToCart?: () => void;
   onToggleWishlist?: () => void;
@@ -17,13 +17,25 @@ const ProductCard: React.FC<ProductCardProps> = ({
   imageUrl,
   label = "Nuevo",
   discount = "-50%",
-  rating = 5,
+  rating = 1,
   name,
   price,
   oldPrice,
   onAddToCart,
   onToggleWishlist,
 }) => {
+
+  const cleanPrice =
+    typeof price === "string" ? price.replace(/,/g, "") : price;
+
+  const priceAsCurrensy = price
+    ? Number(cleanPrice).toLocaleString("es-AR", {
+        style: "currency",
+        currency: "ARS",
+        minimumFractionDigits: 2,
+      })
+    : "";
+
   return (
     <div>
       <div
@@ -77,7 +89,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </h3>
         <div className="flex gap-3.5 items-center">
           <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-            {price}
+            {priceAsCurrensy}
           </p>
           {oldPrice && (
             <p className="text-app-gray font-inter text-sm/[22px] font-semibold line-through">

@@ -4,20 +4,18 @@ import { Product } from "@/core/models/Product";
 import { useEffect, useState } from "react";
 
 export default function ShopPage() {
-  
-  
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  
   useEffect(() => {
     fetchProducts()
-      .then((data) => setProducts(data))
-      .catch((err) => console.error('Error fetching products:', err))
+      .then((data) => {
+      console.log(data);
+      setProducts(data);
+      })
+      .catch((err) => console.error("Error recuperando productos:", err))
       .finally(() => setLoading(false));
   }, []);
-
-  if (loading) return <p>Cargando productos...</p>;
 
   // const handleAddToCart = (id: number) => {
   //   console.log("Agregar al carrito:", id);
@@ -173,28 +171,36 @@ export default function ShopPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
-            {products.map((p) => (
-              <ProductCard
-                key={p.id}
-                // imageUrl={p.imageUrl}
-                name={p.name}
-                // price={p.price}
-                // oldPrice={p.oldPrice}
-                // rating={p.rating}
-                // label={p.label}
-                // discount={p.discount}
-                // onAddToCart={() => handleAddToCart(p.id)}
-                // onToggleWishlist={() => handleToggleWishlist(p.id)}
-              />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center h-40">
+              <img src="/images/loading.gif" alt="Cargando..." className="w-16 h-16" />
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
+                {products.map((p) => (
+                  <ProductCard
+                    key={p.id}
+                    imageUrl={p.image_id ?? undefined}
+                    name={p.name}
+                    price={p.price}
+                    //oldPrice={p.oldPrice}
+                    //rating={p.rating}
+                    //label={p.label}
+                    //discount={p.discount}
+                    // onAddToCart={() => handleAddToCart(p.id)}
+                    // onToggleWishlist={() => handleToggleWishlist(p.id)}
+                  />
+                ))}
+              </div>
 
-          <div className="flex justify-center">
-            <button className="py-1.5 px-10 rounded-[80px] border border-app-black text-center font-inter text-base/7 font-semibold tracking-[-0.4px]">
-              Ver más
-            </button>
-          </div>
+              <div className="flex justify-center">
+                <button className="py-1.5 px-10 rounded-[80px] border border-app-black text-center font-inter text-base/7 font-semibold tracking-[-0.4px]">
+                  Ver más
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>
