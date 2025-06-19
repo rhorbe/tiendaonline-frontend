@@ -38,7 +38,7 @@ const Header: FC = () => {
           </ul>
         </nav>
         <div className="flex items-center gap-4">
-          <a href="/profile">
+          <a href={ROUTES.LOGIN}>
             <img
               src="/images/user-circle.svg"
               alt="Iniciar sesión"
