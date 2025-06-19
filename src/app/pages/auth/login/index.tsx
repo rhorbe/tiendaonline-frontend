@@ -1,4 +1,5 @@
 import { CustomInput } from "@/core/components";
+import PasswordInput from "@/core/components/PasswordInput";
 import { ROUTES } from "@/core/enum/common";
 import { FC } from "react";
 
@@ -28,11 +29,11 @@ const Login: FC = () => {
             placeholder="Correo Electrónico"
             required
           />
-          <CustomInput
+          <PasswordInput
             id="password"
-            type="password"
             placeholder="Contraseña"
-            icon="/images/eye.svg"
+            showIcon="/images/eye.svg"
+            hideIcon="/images/eye-off.svg"
             required
           />
           <div className="flex justify-between items-center">

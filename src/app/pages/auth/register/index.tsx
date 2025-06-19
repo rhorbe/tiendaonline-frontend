@@ -1,4 +1,5 @@
 import { CustomInput } from "@/core/components";
+import PasswordInput from "@/core/components/PasswordInput";
 import { ROUTES } from "@/core/enum/common";
 import { FC } from "react";
 
@@ -7,7 +8,7 @@ const Register: FC = () => {
     <div className="grid md:grid-cols-2 h-screen text-app-black">
       <div className="login-background min-h-[437px]">
         <h1 className="text-center font-poppins font-medium text-2xl mt-8">
-          L'Essence.
+          L'Essence
         </h1>
       </div>
 
@@ -30,40 +31,14 @@ const Register: FC = () => {
             placeholder="Correo electrónico"
             required
           />
-          <CustomInput
+          <PasswordInput
             id="password"
-            type="password"
             placeholder="Contraseña"
-            icon="/images/eye.svg"
+            showIcon="/images/eye.svg"
+            hideIcon="/images/eye-off.svg"
             required
           />
-          {/*           <div className="flex items-center gap-2 flex-wrap">
-            <input
-              id="accept"
-              type="checkbox"
-              className="w-5 h-5 text-gray-500 border-2 rounded focus:ring-0 checked:bg-app-black checked:border-[#6C7275] cursor-pointer"
-              defaultChecked
-            />
-            <label
-              htmlFor="accept"
-              className="text-xs md:text-base font-inter leading-[26px] text-app-gray"
-            >
-              Estoy de acuerdo con la{" "}
-              <a
-                href="#"
-                className="text-app-black font-inter hover:underline font-bold"
-              >
-                Política de privacidad
-              </a>{" "}
-              y los{" "}
-              <a
-                href="#"
-                className="text-app-black font-inter hover:underline font-bold"
-              >
-                Términos de uso
-              </a>
-            </label>
-          </div> */}
+
           <div className="flex items-start gap-2">
             <input
               id="accept"

@@ -9,12 +9,12 @@ export default function ForgotPassword() {
 
       <div className='flex items-center justify-center px-10'>
         <form className='bg-white w-full max-w-[486px] space-y-8 py-10'>
-          <div>
-            <h2 className='text-[40px]/[44px] font-poppins font-medium tracking-[-0.4px]'>Forgot Password</h2>
+            <div>
+            <h2 className='text-[40px]/[44px] font-poppins font-medium tracking-[-0.4px]'>Olvidé mi contraseña</h2>
             <p className="text-app-gray font-inter text-base/[26px] font-normal mt-2">
-              Enter your registered email address. we’ll send you a code to reset your password.
+              Ingresa tu correo electrónico registrado. Te enviaremos un código para restablecer tu contraseña.
             </p>
-          </div>
+            </div>
           <CustomInput
             id="email"
             type="email"
