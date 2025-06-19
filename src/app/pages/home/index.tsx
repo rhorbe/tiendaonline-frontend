@@ -107,7 +107,7 @@ const Home: FC = () => {
           <div className="flex justify-center items-center">
             <p className="text-app-gray font-inter text-sm/[22px] md:text-base/[26px] font-normal max-w-[424px]">
               <span className="text-app-slate-gray font-inter text-base/[26px] font-semibold">
-                3legant
+                L'Essence
               </span>{" "}
               es una tienda de regalos y decoración ubicada en CABA, Argentina. Desde 2019.
             </p>

@@ -15,7 +15,7 @@ export default function ContactPage() {
         {
             icon: '/images/mail.svg',
             title: 'Email',
-            paragraph: 'hola@3legant.com'
+            paragraph: 'hola@lessence.com'
         }
     ];
 
@@ -59,7 +59,7 @@ export default function ContactPage() {
                             Sobre Nosotros
                         </p>
                         <p className="text-app-black font-inter text-sm/[22px] md:text-base/[26px] font-normal">
-                            3legant es una tienda de regalos y decoración ubicada en HCMC, Vietnam. Est. desde 2019.
+                            L'Essence es una tienda de regalos y decoración ubicada en HCMC, Vietnam. Est. desde 2019.
                             Nuestro servicio al cliente siempre está preparado para ayudarte 24/7.
                         </p>
                         <a className='flex gap-1 items-center cursor-pointer mt-2 border-b border-app-black w-fit'>
