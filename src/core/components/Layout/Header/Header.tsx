@@ -38,18 +38,25 @@ const Header: FC = () => {
           </ul>
         </nav>
         <div className="flex items-center gap-4">
+          <a href="/profile">
+            <img
+              src="/images/user-circle.svg"
+              alt="Iniciar sesión"
+              className="h-6 w-6"
+            />
+          </a>
           <button
             onClick={() => setCartOpen(!cartOpen)}
             className="flex items-center gap-1.5"
           >
             <img
               src="/images/shopping bag.svg"
-              alt="Ícono de carrito"
+              alt="Carrito de compras"
               className="h-6 w-6"
             />
             <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
               <p className="text-white text-center font-inter text-xs font-bold leading-[10px]">
-                {/* TODO: Cantidad en el carrito */}
+                2
               </p>
             </div>
           </button>
