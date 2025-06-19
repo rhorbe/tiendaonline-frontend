@@ -1,110 +1,30 @@
-# E-commerce UI Template
+# Proyecto educativo en React "L'Essence Perfumería On-line"
 
-This is an e-commerce UI template built using **React**, **Vite**, **Tailwind CSS**, **Swiper**, and **TypeScript**. The project is designed to provide a scalable and responsive starting point for e-commerce applications, with modern UI components and a clean architecture.
+Este proyecto está basado en el trabajo de [Muhammed Resvan K](https://github.com/Resvan/3legant), publicado originalmente bajo la Licencia MIT.
 
-## Features
+El código original ha sido adaptado con fines exclusivamente educativos. Se realizaron modificaciones para ilustrar determinados conceptos técnicos dentro del contexto de una aplicación React.
 
-- **Responsive Design:** Works seamlessly across different screen sizes.
-- **Swiper Integration:** Beautiful sliders for showcasing products or banners.
-- **Fast Builds:** Powered by Vite for lightning-fast development.
-- **TypeScript Support:** Ensures type safety and cleaner code.
-- **Tailwind CSS:** Utility-first CSS framework for styling without leaving your HTML.
-- **Modular Components:** Easy-to-use, reusable React components.
+## Licencia
 
-## Technologies Used
+Este proyecto incluye partes del código original de Muhammed Resvan K (2024), licenciado bajo la Licencia MIT.  
+El texto completo de la licencia se encuentra en el archivo [LICENSE](./LICENSE).
 
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Swiper](https://swiperjs.com/)
-- [TypeScript](https://www.typescriptlang.org/)
+## Descargo de responsabilidad
 
-## Installation
+Este proyecto se utiliza únicamente con fines de aprendizaje y demostración. No está destinado a uso comercial.
 
-To run this project locally, follow these steps:
 
-1. **Clone the repository:**
+# Educational React Project "L'Essence Perfumería On-line"
 
-   ```bash
-   git clone https://github.com/Resvan/3legant.git
-   ```
+This project is based on the work of [Muhammed Resvan K](https://github.com/Resvan/3legant), originally released under the MIT License.
 
-2. **Navigate to the project directory:**
-
-   ```bash
-   cd 3legant
-   ```
-
-3. **Install dependencies:**
-
-   ```bash
-   npm install
-   ```
-
-4. **Run the development server:**
-
-   ```bash
-   npm run dev
-   ```
-
-   The project should now be running at `http://localhost:3000`.
-
-## Project Structure
-
-```
-├── public          # Static assets
-├── src
-│   ├── assets      # Images, icons, fonts, etc.
-│   ├── components  # Reusable UI components
-│   ├── pages       # Page-level components
-│   ├── styles      # Global and component-specific styles
-│   └── utils       # Utility functions and helpers
-├── App.tsx         # Main application component
-├── main.tsx        # Entry point for the app
-├── index.html      # HTML template
-├── tailwind.config.js  # Tailwind CSS configuration
-├── tsconfig.json   # TypeScript configuration
-└── vite.config.ts  # Vite configuration
-```
-
-## Usage
-
-1. **Development Mode:** To start the development server, run:
-
-   ```bash
-   npm run dev
-   ```
-
-2. **Build for Production:**
-
-   To create a production build, run:
-
-   ```bash
-   npm run build
-   ```
-
-   The output will be generated in the `dist` folder.
-
-3. **Preview Production Build:**
-
-   After building, you can preview the production build locally:
-
-   ```bash
-   npm run preview
-   ```
-
-## Customization
-
-- **Tailwind CSS:** Modify styles in the `tailwind.config.js` or add custom styles to `src/styles`.
-- **Components:** Add or customize React components in the `src/components` directory to fit your requirements.
-- **Swiper Sliders:** Customize the Swiper sliders in `src/components` to adjust the behavior or styling as needed.
-
-## Contributing
-
-Contributions are welcome! If you have any suggestions or improvements, feel free to open an issue or submit a pull request.
+The original code has been adapted for educational purposes only. Modifications were made to better illustrate certain technical concepts in the context of a React application.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+This project includes portions of code from the original work by Muhammed Resvan K (2024), which is licensed under the MIT License.  
+The full license text is available in the [LICENSE](./LICENSE) file.
 
+## Disclaimer
 
+This project is for learning and demonstration purposes only. It is not intended for commercial use.
