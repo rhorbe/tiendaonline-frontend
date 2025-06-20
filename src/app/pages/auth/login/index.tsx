@@ -1,9 +1,40 @@
+import api from "@/core/api/axiosInstance";
 import { CustomInput } from "@/core/components";
 import PasswordInput from "@/core/components/PasswordInput";
 import { ROUTES } from "@/core/enum/common";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 const Login: FC = () => {
+
+  const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  interface LoginResponse {
+    token: string;
+  }
+
+  interface ErrorResponse {
+    response?: {
+      data?: {
+        message?: string;
+      };
+    };
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const { data } = await api.post<LoginResponse>("/login", {
+        email,
+        password:'paas',
+      });
+      localStorage.setItem("token", data.token);
+      window.location.replace("/dashboard");
+    } catch (err: unknown) {
+      const error = err as ErrorResponse;
+      alert(error.response?.data?.message ?? "Error de conexión");
+    }
+  };
+
   return (
     <div className="grid md:grid-cols-2 h-screen text-app-black">
       <div className="login-background min-h-[437px]">
@@ -13,7 +44,7 @@ const Login: FC = () => {
       </div>
 
       <div className="flex items-center justify-center px-10">
-        <form className="bg-white w-full max-w-[486px] space-y-8 py-10">
+        <form className="bg-white w-full max-w-[486px] space-y-8 py-10" onSubmit={handleSubmit}>
           <h2 className="text-[40px]/[44px] font-poppins font-medium tracking-[-0.4px]">
             Iniciar Sesión
           </h2>
@@ -23,12 +54,13 @@ const Login: FC = () => {
               Registrarse
             </a>
           </p>
-          <CustomInput
-            id="name"
-            type="text"
-            placeholder="Correo Electrónico"
-            required
-          />
+         <CustomInput
+              id="name"
+              type="text"
+              placeholder="Correo Electrónico"
+              required
+              onChange={(value) => setEmail(value)}
+            />
           <PasswordInput
             id="password"
             placeholder="Contraseña"

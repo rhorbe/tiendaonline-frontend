@@ -68,7 +68,7 @@ const Register: FC = () => {
           </div>
 
           <button className="text-white text-center font-inter text-base font-medium leading-[28px] tracking-[-0.4px] bg-app-black rounded-lg w-full px-10 py-[10px]">
-            Inscribirse
+            Registrarse
           </button>
         </form>
       </div>

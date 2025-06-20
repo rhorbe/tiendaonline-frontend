@@ -7,6 +7,6 @@ const api: AxiosInstance = axios.create({
 });
 
 // opcional: interceptores
-// import './interceptors';
+import './interceptors';
 
 export default api;
