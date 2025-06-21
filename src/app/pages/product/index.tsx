@@ -1,13 +1,23 @@
 import CustomAccordion from "@/core/components/Accordian";
 import ProductSlider from "@/core/components/ProductSlider/indext";
+import { useParams } from "react-router-dom";
+import { useProductContext } from "@/store/ProductContext";
+import { ROUTES } from "@/core/enum/common";
 
 export default function ProductPage() {
+  const { id } = useParams();
+  const { state } = useProductContext();
+  const product = state.products.find((p) => p.id === id);
+
+  if (!product) {
+    return <p>Producto no encontrado.</p>;
+  }
   return (
     <section className="px-8 lg:px-14 border-t border-app-light-gray">
       <div className="w-fit flex gap-3 md:gap-4 py-4">
         <div className="flex items-center gap-1">
           <p className="text-grayish-brown font-inter text-xs/5 md:text-sm/6 font-medium">
-            Inicio
+            <a href={ROUTES.HOME}>Inicio</a> 
           </p>
           <img
             src="/images/right-icon.svg"
@@ -16,7 +26,7 @@ export default function ProductPage() {
           />
         </div>
         <p className="text-app-black font-inter text-sm/[25px] font-medium">
-          Tienda
+          <a href={ROUTES.SHOP}>Tienda</a> 
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
@@ -38,16 +48,14 @@ export default function ProductPage() {
               </div>
             </div>
             <h1 className="text-app-black font-poppins text-[40px]/[44px] font-medium tracking-[-0.4px]">
-              Mesa Bandeja
+              {product.name}
             </h1>
             <p className="text-app-gray text-base/[26px] font-inter">
-              Comprá una o varias y hacé que cada espacio donde te sentás sea
-              más cómodo. Liviana y fácil de mover, con bandeja removible, ideal
-              para servir algo rico.
+             {product.description}
             </p>
             <div className="flex gap-3 items-center">
               <p className="text-app-black font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
-                $199.00
+                ${product.price}
               </p>
               <p className="text-app-gray font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
                 $400.00
