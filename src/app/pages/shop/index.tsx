@@ -10,7 +10,7 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true);
 
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loadingCategories, setCatLoading] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
   useEffect(() => {
     fetchProducts()
@@ -23,7 +23,7 @@ export default function ShopPage() {
     fetchCategories()
       .then((data) => setCategories(data))
       .catch((err) => console.error("Error recuperando categorías:", err))
-      .finally(() => setCatLoading(false));
+      .finally(() => setLoadingCategories(false));
   }, []);
 
   // const handleAddToCart = (id: number) => {
