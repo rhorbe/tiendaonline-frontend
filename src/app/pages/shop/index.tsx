@@ -1,5 +1,7 @@
+import { fetchCategories } from "@/core/api/categoriesApi";
 import { fetchProducts } from "@/core/api/productsApi";
 import ProductCard from "@/core/components/ProductCard";
+import { Category } from "@/core/models/Category";
 import { Product } from "@/core/models/Product";
 import { useEffect, useState } from "react";
 
@@ -7,14 +9,21 @@ export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setCatLoading] = useState(true);
+
   useEffect(() => {
     fetchProducts()
-      .then((data) => {
-      console.log(data);
-      setProducts(data);
-      })
+      .then((data) => setProducts(data))
       .catch((err) => console.error("Error recuperando productos:", err))
       .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    fetchCategories()
+      .then((data) => setCategories(data))
+      .catch((err) => console.error("Error recuperando categorías:", err))
+      .finally(() => setCatLoading(false));
   }, []);
 
   // const handleAddToCart = (id: number) => {
@@ -72,18 +81,7 @@ export default function ShopPage() {
             </button>
           </div>
         </div>
-        <div className="flex md:hidden col-span-3 justify-between items-center py-2">
-          <p className="text-app-black font-inter text-base/[26px] md:text-xl/8 font-semibold">
-            Filtro
-          </p>
-          <div className="relative inline-block w-fit">
-            <select className="w-full appearance-none rounded-md border-none outline-none bg-white px-4 py-2 pr-10 text-gray-900 focus:border-none focus:outline-none focus:ring-0">
-              <option className="text-app-black font-inter text-base/[26px] font-semibold w-full">
-                Ordenar por
-              </option>
-            </select>
-          </div>
-        </div>
+
         <div className="col-span-1 hidden md:flex flex-col gap-6">
           <div className="flex items-center gap-2">
             <img
@@ -99,20 +97,24 @@ export default function ShopPage() {
             <h1 className="text-app-black font-inter text-base/[26px] font-semibold">
               CATEGORÍAS
             </h1>
-            <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-categroy-scrollbar">
-              {Array.from({ length: 10 }, (_, idx) => (
-                <button
-                  key={idx}
-                  className={`font-inter w-fit text-sm/[22px] font-semibold ${
-                    idx === 1
-                      ? "text-app-black border-b border-app-black"
-                      : "text-taup-gray"
-                  }`}
-                >
-                  Todos los ambientes
-                </button>
-              ))}
-            </div>
+            {loadingCategories ? (
+              <div className="flex justify-center items-center h-40">
+                <p className="font-inter w-fit text-sm/[22px] font-semibold  text-taup-gray">
+                  Cargando...
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-categroy-scrollbar">
+                {categories.map((c) => (
+                  <button
+                    key={c.id}
+                    className={`font-inter w-fit text-sm/[22px] font-semibold text-app-gray`}
+                  >
+                    {c.name}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <div>
             <h1 className="text-app-black font-inter text-base/[26px] font-semibold mb-4">
@@ -142,38 +144,11 @@ export default function ShopPage() {
           </div>
         </div>
         <div className="col-span-3">
-          <div className="hidden md:flex justify-between items-center mb-10">
-            <p className="text-app-black font-inter text-xl/8 font-semibold">
-              Filtro
-            </p>
-            <div className="flex gap-8">
-              <div className="relative inline-block w-fit">
-                <select className="w-full appearance-none rounded-md border-none outline-none bg-white px-4 py-2 pr-10 text-gray-900 focus:border-none focus:outline-none focus:ring-0">
-                  <option className="text-app-black font-inter text-base/[26px] font-semibold">
-                    Ordenar por
-                  </option>
-                </select>
-              </div>
-              <div className="flex">
-                <button className="py-2 px-3 bg-primary flex justify-center items-center border-r border-app-light-gray">
-                  {/* SVG */}
-                </button>
-                <button className="py-2 px-3 bg-primary flex justify-center items-center border-r border-app-light-gray">
-                  {/* SVG */}
-                </button>
-                <button className="py-2 px-3 bg-primary flex justify-center items-center border-r border-app-light-gray">
-                  {/* SVG */}
-                </button>
-                <button className="py-3 px-3 bg-primary flex justify-center items-center border-t border-app-light-gray rotate-90">
-                  {/* SVG */}
-                </button>
-              </div>
-            </div>
-          </div>
-
           {loading ? (
             <div className="flex justify-center items-center h-40">
-               <p  className="font-inter w-fit text-sm/[22px] font-semibold  text-taup-gray">Cargando...</p>
+              <p className="font-inter w-fit text-sm/[22px] font-semibold  text-taup-gray">
+                Cargando...
+              </p>
             </div>
           ) : (
             <>
