@@ -34,7 +34,9 @@ export default function ShopPage() {
         })
         .catch((err) => console.error("Error recuperando productos:", err))
         .finally(() => setLoading(false));
-    }
+    }else {
+    setLoading(false);
+  }
   }, [state.products.length, dispatch]);
 
   const handleProductClick = (id: string) => {
