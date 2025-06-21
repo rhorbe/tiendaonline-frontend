@@ -1,4 +1,3 @@
-// src/components/ProductCard.tsx
 import React from "react";
 
 interface ProductCardProps {
@@ -11,6 +10,7 @@ interface ProductCardProps {
   oldPrice?: string;
   onAddToCart?: () => void;
   onToggleWishlist?: () => void;
+  onClick?: () => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -23,8 +23,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   oldPrice,
   onAddToCart,
   onToggleWishlist,
+  onClick,
 }) => {
-
   const cleanPrice =
     typeof price === "string" ? price.replace(/,/g, "") : price;
 
@@ -37,7 +37,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     : "";
 
   return (
-    <div>
+    <button onClick={onClick}>
       <div
         style={{
           background: `url(${imageUrl})`,
@@ -98,7 +98,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 

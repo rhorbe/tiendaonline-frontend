@@ -5,13 +5,16 @@ import { fetchSizes } from "@/core/api/sizesApi";
 import ProductCard from "@/core/components/ProductCard";
 import { Brand } from "@/core/models/Brand";
 import { Category } from "@/core/models/Category";
-import { Product } from "@/core/models/Product";
 import { Size } from "@/core/models/Size";
 import { useEffect, useState } from "react";
 import { ROUTES } from "@/core/enum/common";
+import { useProductContext } from "@/store/ProductContext";
+import { useNavigate } from "react-router-dom";
 
 export default function ShopPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const { state, dispatch } = useProductContext();
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -24,11 +27,19 @@ export default function ShopPage() {
   const [loadingSizes, setLoadingSizes] = useState(true);
 
   useEffect(() => {
-    fetchProducts()
-      .then((data) => setProducts(data))
-      .catch((err) => console.error("Error recuperando productos:", err))
-      .finally(() => setLoading(false));
+    if (state.products.length === 0) {
+      fetchProducts()
+        .then((data) => {
+          dispatch({ type: "SET_PRODUCTS", payload: data });
+        })
+        .catch((err) => console.error("Error recuperando productos:", err))
+        .finally(() => setLoading(false));
+    }
   }, []);
+
+  const handleProductClick = (id: string) => {
+    navigate(ROUTES.PRODUCT.replace(":id", String(id)));
+  };
 
   useEffect(() => {
     fetchCategories()
@@ -226,20 +237,16 @@ export default function ShopPage() {
           ) : (
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
-                {products.map((p) => (
-                    <a key={p.id} href={ROUTES.PRODUCT.replace(":id", String(p.id))}>
+                {state.products.map((p) => (
+                  <div key={p.id} className="cursor-pointer">
                     <ProductCard
                       imageUrl={p.image_url ?? ""}
                       name={p.name}
                       price={p.price}
-                      //oldPrice={p.oldPrice}
                       rating={5}
-                      //label={p.label}
-                      //discount="23%"
-                      // onAddToCart={() => handleAddToCart(p.id)}
-                      // onToggleWishlist={() => handleToggleWishlist(p.id)}
+                      onClick={() => handleProductClick(p.id)}
                     />
-                    </a>
+                  </div>
                 ))}
               </div>
 
