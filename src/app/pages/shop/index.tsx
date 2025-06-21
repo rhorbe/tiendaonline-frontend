@@ -1,9 +1,14 @@
+import { fetchBrands } from "@/core/api/brandsApi";
 import { fetchCategories } from "@/core/api/categoriesApi";
 import { fetchProducts } from "@/core/api/productsApi";
+import { fetchSizes } from "@/core/api/sizesApi";
 import ProductCard from "@/core/components/ProductCard";
+import { Brand } from "@/core/models/Brand";
 import { Category } from "@/core/models/Category";
 import { Product } from "@/core/models/Product";
+import { Size } from "@/core/models/Size";
 import { useEffect, useState } from "react";
+import { ROUTES } from "@/core/enum/common";
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -11,6 +16,12 @@ export default function ShopPage() {
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [loadingBrands, setLoadingBrands] = useState(true);
+
+  const [sizes, setSizes] = useState<Size[]>([]);
+  const [loadingSizes, setLoadingSizes] = useState(true);
 
   useEffect(() => {
     fetchProducts()
@@ -26,6 +37,20 @@ export default function ShopPage() {
       .finally(() => setLoadingCategories(false));
   }, []);
 
+  useEffect(() => {
+    fetchBrands()
+      .then((data) => setBrands(data))
+      .catch((err) => console.error("Error recuperando marcas:", err))
+      .finally(() => setLoadingBrands(false));
+  }, []);
+
+  useEffect(() => {
+    fetchSizes()
+      .then((data) => setSizes(data))
+      .catch((err) => console.error("Error recuperando tallas:", err))
+      .finally(() => setLoadingSizes(false));
+  }, []);
+
   // const handleAddToCart = (id: number) => {
   //   console.log("Agregar al carrito:", id);
   // };
@@ -35,12 +60,12 @@ export default function ShopPage() {
   // };
   return (
     <section className="px-8 lg:px-14">
-      <div className="shop-page-banner-bg min-h-[308px] md:h-[392px] max-h-[392px] flex justify-center items-center">
+      <div className="shop-page-banner-bg min-h-[208px] md:h-[292px] max-h-[292px] flex justify-center items-center">
         <div className="max-w-fit flex flex-col items-center gap-4 md:gap-6">
           <div className="w-fit flex gap-4">
             <div className="flex items-center gap-1">
               <p className="text-grayish-brown font-inter text-sm/6 font-medium">
-                Inicio
+                <a href={ROUTES.HOME}>Inicio</a>
               </p>
               <img
                 src="/images/right-icon.svg"
@@ -56,7 +81,7 @@ export default function ShopPage() {
             Tienda
           </h1>
           <p className="text-app-black font-inter text-center text-base/[26px] md:text-xl/[32px] font-normal">
-            Diseñemos el lugar que siempre imaginaste.
+            Un mundo de perfumes.
           </p>
         </div>
       </div>
@@ -116,6 +141,54 @@ export default function ShopPage() {
               </div>
             )}
           </div>
+
+          <div className="space-y-2">
+            <h1 className="text-app-black font-inter text-base/[26px] font-semibold">
+              MARCAS
+            </h1>
+            {loadingBrands ? (
+              <div className="flex justify-center items-center h-40">
+                <p className="font-inter w-fit text-sm/[22px] font-semibold  text-taup-gray">
+                  Cargando...
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-categroy-scrollbar">
+                {brands.map((b) => (
+                  <button
+                    key={b.id}
+                    className="font-inter w-fit text-sm/[22px] font-semibold text-app-gray"
+                  >
+                    {b.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <h1 className="text-app-black font-inter text-base/[26px] font-semibold">
+              TAMAÑOS
+            </h1>
+            {loadingSizes ? (
+              <div className="flex justify-center items-center h-40">
+                <p className="font-inter w-fit text-sm/[22px] font-semibold  text-taup-gray">
+                  Cargando...
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-categroy-scrollbar">
+                {sizes.map((s) => (
+                  <button
+                    key={s.id}
+                    className="font-inter w-fit text-sm/[22px] font-semibold text-app-gray"
+                  >
+                    {s.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <div>
             <h1 className="text-app-black font-inter text-base/[26px] font-semibold mb-4">
               PRECIO
@@ -154,18 +227,19 @@ export default function ShopPage() {
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
                 {products.map((p) => (
-                  <ProductCard
-                    key={p.id}
-                    imageUrl={p.image_id ?? undefined}
-                    name={p.name}
-                    price={p.price}
-                    //oldPrice={p.oldPrice}
-                    //rating={p.rating}
-                    //label={p.label}
-                    //discount={p.discount}
-                    // onAddToCart={() => handleAddToCart(p.id)}
-                    // onToggleWishlist={() => handleToggleWishlist(p.id)}
-                  />
+                    <a key={p.id} href={ROUTES.PRODUCT.replace(":id", String(p.id))}>
+                    <ProductCard
+                      imageUrl={p.image_url ?? ""}
+                      name={p.name}
+                      price={p.price}
+                      //oldPrice={p.oldPrice}
+                      rating={5}
+                      //label={p.label}
+                      //discount="23%"
+                      // onAddToCart={() => handleAddToCart(p.id)}
+                      // onToggleWishlist={() => handleToggleWishlist(p.id)}
+                    />
+                    </a>
                 ))}
               </div>
 

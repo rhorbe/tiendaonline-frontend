@@ -8,6 +8,7 @@ export interface Product {
   brand_id: string;
   size_id: string;
   image_id: string | null;
+  image_url: string | null;
 }
 
 export interface ProductsResponse {

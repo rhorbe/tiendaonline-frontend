@@ -8,7 +8,6 @@ const Header: FC = () => {
   const [cartOpen, setCartOpen] = useState(false);
 
   const navLinks = [
-    { name: "Inicio", url: ROUTES.HOME },
     { name: "Tienda", url: ROUTES.SHOP },
     { name: "Contacto", url: ROUTES.CONTACT },
   ];
@@ -17,11 +16,12 @@ const Header: FC = () => {
     <header className="relative">
       <div className="hidden md:flex justify-between items-center mx-auto px-4 md:px-7 lg:px-14 py-4">
         <div className="flex items-center">
+          <a href={ROUTES.HOME}>
           <img
             src="/images/logo_lessence_negro.png"
             alt="L'Essence Perfumes"
             className="h-8 w-auto"
-          />
+          /></a>
         </div>
         <nav className="flex-grow text-center">
           <ul className="flex justify-center items-center space-x-10">
