@@ -6,7 +6,6 @@ const api: AxiosInstance = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// opcional: interceptores
-import './interceptors';
+// import './interceptors';
 
 export default api;
