@@ -1,5 +1,5 @@
 import CustomAccordion from "@/core/components/Accordian";
-import ProductSlider from "@/core/components/ProductSlider/indext";
+import ProductSlider from "@/core/components/ProductSlider";
 import { useParams } from "react-router-dom";
 import { useProductContext } from "@/store/ProductContext";
 import { ROUTES } from "@/core/enum/common";
@@ -31,7 +31,7 @@ export default function ProductPage() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
         <div className="">
-          <ProductSlider />
+          <ProductSlider productImageUrls={[product.image_url ?? ""]} />
         </div>
         <div>
           <div className="space-y-4 pb-6 border-b border-app-light-gray">
