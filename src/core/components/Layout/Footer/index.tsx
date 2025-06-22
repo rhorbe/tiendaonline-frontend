@@ -4,7 +4,6 @@ export default function Footer() {
   const navLinks = [
     { name: "Inicio", url: ROUTES.HOME },
     { name: "Tienda", url: ROUTES.SHOP },
-    { name: "Productos", url: ROUTES.PRODUCT },
     { name: "Contacto", url: ROUTES.CONTACT },
   ];
   return (
