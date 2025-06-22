@@ -34,9 +34,9 @@ export default function ShopPage() {
         })
         .catch((err) => console.error("Error recuperando productos:", err))
         .finally(() => setLoading(false));
-    }else {
-    setLoading(false);
-  }
+    } else {
+      setLoading(false);
+    }
   }, [state.products.length, dispatch]);
 
   const handleProductClick = (id: string) => {
@@ -48,16 +48,12 @@ export default function ShopPage() {
       .then((data) => setCategories(data))
       .catch((err) => console.error("Error recuperando categorías:", err))
       .finally(() => setLoadingCategories(false));
-  }, []);
 
-  useEffect(() => {
     fetchBrands()
       .then((data) => setBrands(data))
       .catch((err) => console.error("Error recuperando marcas:", err))
       .finally(() => setLoadingBrands(false));
-  }, []);
 
-  useEffect(() => {
     fetchSizes()
       .then((data) => setSizes(data))
       .catch((err) => console.error("Error recuperando tallas:", err))
@@ -94,7 +90,7 @@ export default function ShopPage() {
             Tienda
           </h1>
           <p className="text-app-black font-inter text-center text-base/[26px] md:text-xl/[32px] font-normal">
-            Un mundo de perfumes.
+            Un mundo de fragancias únicas
           </p>
         </div>
       </div>

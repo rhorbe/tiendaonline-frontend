@@ -11,13 +11,13 @@ export default function Footer() {
     <footer className="px-8 md:px-7 lg:px-14 py-12 md:pt-20 md:pb-8 bg-app-black">
       <div className="flex flex-col md:flex-row justify-between items-center mb-[49px] 2xl:container mx-auto gap-10">
         <div className="flex flex-col md:flex-row gap-8 items-center">
-          <div className="flex items-center">
+            <a href={ROUTES.HOME} className="flex items-center">
             <img
               src="/images/logo_lessence_blanco.png"
               alt="L'Essence Perfumes"
               className="h-7 w-auto"
             />
-          </div>
+            </a>
           <div className="h-[1px] w-6 md:min-h-6 md:w-[1px] bg-app-gray" />
           <p className="max-w-[350px] flex-shrink-0 text-white font-inter text-sm/[22px]">
             Perfumes
@@ -41,9 +41,17 @@ export default function Footer() {
         </div>
       </div>
       <div className="py-4 flex flex-col-reverse md:flex-row justify-between items-center 2xl:container mx-auto border-t-[0.5px] border-app-gray gap-8">
-        <div className="flex flex-col md:flex-row gap-7 items-center">
-          <p className="max-w-[350px] flex-shrink-0 text-app-light-gray font-poppins text-sm/[20px]">
-            Copyright © 2025 - Universidad Nacional de la Patagonia
+        <div className="flex flex-col md:flex-row flex-1 gap-7 items-center">
+          <p className="w-full text-center md:text-left text-app-light-gray font-poppins text-sm/[20px]">
+            Copyright © 2025 -{" "}
+            <a
+              href="https://www.unp.edu.ar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              Universidad Nacional de la Patagonia
+            </a>
           </p>
         </div>
 
