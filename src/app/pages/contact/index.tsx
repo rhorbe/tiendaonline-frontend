@@ -46,7 +46,7 @@ export default function ContactPage() {
       <section className="px-8 lg:px-14 py-20 space-y-12">
         <div className="space-y-10">
           <p className="text-app-black font-poppins text-xl/7 md:text-[40px]/[44px] font-medium tracking-[-0.4px] text-center">
-            Contactanos
+            Contáctanos
           </p>
           <div className="grid md:grid-cols-3 gap-6">
             {items.map((item, idx) => (
