@@ -66,7 +66,12 @@ export const Flayout = ({ setOpen }: FlayoutMenuProps) => {
                     </p>
                 </div>
                 <div className="py-[18px]">
-                    <Button text="Finalizar compra" onClick={() => console.log('hola')} />
+                    <Button
+                        text="Finalizar compra"
+                        onClick={() => {
+                            window.location.href = ROUTES.CHECKOUT;
+                        }}
+                    />
                 </div>
                 <a
                     href={ROUTES.CART}
