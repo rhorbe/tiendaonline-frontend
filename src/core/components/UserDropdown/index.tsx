@@ -30,7 +30,7 @@ export default function UserDropdown() {
         {user ? (
           <span>{user.name}</span>
         ) : (
-          <img src="/images/user-circle.svg" alt="User" className="w-8 h-8" />
+          <img src="/images/user-circle.svg" alt="User" className="w-6 h-6" />
         )}
       </button>
 
