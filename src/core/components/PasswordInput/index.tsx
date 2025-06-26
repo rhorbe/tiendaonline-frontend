@@ -6,6 +6,7 @@ interface PasswordInputProps {
   required?: boolean;
   showIcon?: string; // Ícono para mostrar la contraseña
   hideIcon?: string; // Ícono para ocultarla
+  onChange?: (value: string) => void;
 }
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
@@ -14,8 +15,16 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   required,
   showIcon,
   hideIcon,
+  onChange,
 }) => {
+  const [text, setText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nuevoValor = e.target.value;
+    setText(nuevoValor);
+    onChange?.(nuevoValor);
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -28,6 +37,8 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         type={showPassword ? "text" : "password"}
         placeholder={placeholder}
         required={required}
+        value={text}
+        onChange={handleChange}
         className="border-b-2 border-app-light-gray bg-transparent focus:outline-none focus:ring-0 py-2 w-full border-t-0 border-l-0 border-r-0 pr-10 placeholder-inter"
       />
       {showIcon && hideIcon && (

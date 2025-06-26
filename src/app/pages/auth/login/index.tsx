@@ -5,9 +5,8 @@ import { ROUTES } from "@/core/enum/common";
 import { FC, useState } from "react";
 
 const Login: FC = () => {
-
   const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   interface LoginResponse {
     token: string;
   }
@@ -25,7 +24,7 @@ const Login: FC = () => {
     try {
       const { data } = await api.post<LoginResponse>("/login", {
         email,
-        password:'paas',
+        password,
       });
       localStorage.setItem("token", data.token);
       window.location.replace("/dashboard");
@@ -44,7 +43,10 @@ const Login: FC = () => {
       </div>
 
       <div className="flex items-center justify-center px-10">
-        <form className="bg-white w-full max-w-[486px] space-y-8 py-10" onSubmit={handleSubmit}>
+        <form
+          className="bg-white w-full max-w-[486px] space-y-8 py-10"
+          onSubmit={handleSubmit}
+        >
           <h2 className="text-[40px]/[44px] font-poppins font-medium tracking-[-0.4px]">
             Iniciar Sesión
           </h2>
@@ -54,19 +56,20 @@ const Login: FC = () => {
               Registrarse
             </a>
           </p>
-         <CustomInput
-              id="name"
-              type="text"
-              placeholder="Correo Electrónico"
-              required
-              onChange={(value) => setEmail(value)}
-            />
+          <CustomInput
+            id="name"
+            type="text"
+            placeholder="Correo Electrónico"
+            required
+            onChange={(value) => setEmail(value)}
+          />
           <PasswordInput
             id="password"
             placeholder="Contraseña"
             showIcon="/images/eye.svg"
             hideIcon="/images/eye-off.svg"
             required
+            onChange={(value) => setPassword(value)}
           />
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 text-nowrap flex-wrap">

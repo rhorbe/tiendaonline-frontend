@@ -56,8 +56,8 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
               className="h-6 w-6"
             />
             <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
-              <p className="text-white text-center font-inter text-xs font-bold leading-[10px]">
-                {/* TODO */}
+              <p className="text-white text-center font-inter text-xs font-bold leading-[10px]"> {/* Vista mobile */}
+                222
               </p>
             </div>
           </div>

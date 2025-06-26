@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import MobileMenu from "./MobileMenu";
 import { Flayout } from "../../Cart/Flayout";
 import { ROUTES } from "@/core/enum/common";
+import UserDropdown from "../../UserDropdown";
 
 const Header: FC = () => {
   const [open, setOpen] = useState(false);
@@ -17,11 +18,12 @@ const Header: FC = () => {
       <div className="hidden md:flex justify-between items-center mx-auto px-4 md:px-7 lg:px-14 py-4">
         <div className="flex items-center">
           <a href={ROUTES.HOME}>
-          <img
-            src="/images/logo_lessence_negro.png"
-            alt="L'Essence Perfumes"
-            className="h-8 w-auto"
-          /></a>
+            <img
+              src="/images/logo_lessence_negro.png"
+              alt="L'Essence Perfumes"
+              className="h-8 w-auto"
+            />
+          </a>
         </div>
         <nav className="flex-grow text-center">
           <ul className="flex justify-center items-center space-x-10">
@@ -38,13 +40,7 @@ const Header: FC = () => {
           </ul>
         </nav>
         <div className="flex items-center gap-4">
-          <a href={ROUTES.LOGIN}>
-            <img
-              src="/images/user-circle.svg"
-              alt="Iniciar sesión"
-              className="h-6 w-6"
-            />
-          </a>
+          <UserDropdown />
           <button
             onClick={() => setCartOpen(!cartOpen)}
             className="flex items-center gap-1.5"
@@ -56,7 +52,8 @@ const Header: FC = () => {
             />
             <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
               <p className="text-white text-center font-inter text-xs font-bold leading-[10px]">
-                2
+                {" "}
+                {/* Vista grande */}2
               </p>
             </div>
           </button>
@@ -73,22 +70,25 @@ const Header: FC = () => {
             className="h-6 w-auto"
           />
         </div>
-        <div className="px-[1px] py-0.5">
-          <button
-            onClick={() => setCartOpen(true)}
-            className="flex items-center gap-1.5"
-          >
-            <img
-              src="/images/shopping bag.svg"
-              alt="Ícono de carrito"
-              className="h-6 w-6"
-            />
-            <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
-              <p className="text-white text-center font-inter text-xs font-bold leading-[10px]">
-                2
-              </p>
-            </div>
-          </button>
+        <div className="flex items-center gap-4">
+          <UserDropdown />
+          <div className="px-[1px] py-0.5">
+            <button
+              onClick={() => setCartOpen(true)}
+              className="flex items-center gap-1.5"
+            >
+              <img
+                src="/images/shopping bag.svg"
+                alt="Ícono de carrito"
+                className="h-6 w-6"
+              />
+              <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
+                <p className="text-white text-center font-inter text-xs font-bold leading-[10px]">
+                  22
+                </p>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
       {open && <MobileMenu setOpen={setOpen} />}
