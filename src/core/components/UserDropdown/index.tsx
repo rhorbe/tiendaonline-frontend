@@ -27,20 +27,11 @@ export default function UserDropdown() {
         onClick={() => setOpen((prev) => !prev)}
         className="p-2 rounded-full hover:bg-gray-200 transition"
       >
-        {/* Ícono de usuario */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-6 h-6"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5.121 17.804A8.966 8.966 0 0012 21a8.966 8.966 0 006.879-3.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
+        {user ? (
+          <span>{user.name}</span>
+        ) : (
+          <img src="/images/user-circle.svg" alt="User" className="w-8 h-8" />
+        )}
       </button>
 
       {open && (

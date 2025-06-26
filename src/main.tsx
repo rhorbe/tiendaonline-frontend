@@ -11,9 +11,9 @@ import { AuthProvider } from "./store/AuthContext";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-    <ProductProvider>
-      <App />
-    </ProductProvider>
+      <ProductProvider>
+        <App />
+      </ProductProvider>
     </AuthProvider>
   </StrictMode>
 );
