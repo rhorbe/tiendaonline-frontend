@@ -23,7 +23,7 @@ export default function ContactPage() {
     {
       image: "/images/shipping.svg",
       title: "Envío gratis",
-      paragraph: "Compras superiores a $200",
+      paragraph: "Compras superiores a $100.000",
     },
     {
       image: "/images/finance.svg",
@@ -33,7 +33,7 @@ export default function ContactPage() {
     {
       image: "/images/lock.svg",
       title: "Pagos seguros",
-      paragraph: "Protegido por Stripe",
+      paragraph: "Protegido por Mercado Pago",
     },
     {
       image: "/images/call.svg",

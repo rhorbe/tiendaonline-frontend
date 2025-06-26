@@ -5,6 +5,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { ROUTES } from "@/core/enum/common";
 
 const Home: FC = () => {
   const heroImages = [
@@ -68,11 +69,13 @@ const Home: FC = () => {
       >
         {heroImages.map((image, idx) => (
           <SwiperSlide key={image}>
-            <img
-              src={image}
-              alt={`imagen ${idx + 1}`}
-              className="max-h-[536px] w-full"
-            />
+            <a href={ROUTES.SHOP}>
+              <img
+                src={image}
+                alt={`imagen ${idx + 1}`}
+                className="max-h-[536px] w-full"
+              />
+            </a>
           </SwiperSlide>
         ))}
 

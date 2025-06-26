@@ -21,7 +21,7 @@ const Header: FC = () => {
             <img
               src="/images/logo_lessence_negro.png"
               alt="L'Essence Perfumes"
-              className="h-8 w-auto"
+              className="h-10 w-auto"
             />
           </a>
         </div>
@@ -31,7 +31,7 @@ const Header: FC = () => {
               <li key={link.url}>
                 <a
                   href={link.url}
-                  className="text-app-black font-inter text-sm font-semibold"
+                  className="text-app-black font-inter font-semibold"
                 >
                   {link.name}
                 </a>
