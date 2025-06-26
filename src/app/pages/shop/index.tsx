@@ -9,7 +9,7 @@ import { Size } from "@/core/models/Size";
 import { useEffect, useState } from "react";
 import { ROUTES } from "@/core/enum/common";
 import { useProductContext } from "@/store/ProductContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ShopPage() {
   const { state, dispatch } = useProductContext();
@@ -74,7 +74,7 @@ export default function ShopPage() {
           <div className="w-fit flex gap-4">
             <div className="flex items-center gap-1">
               <p className="text-grayish-brown font-inter text-sm/6 font-medium">
-                <a href={ROUTES.HOME}>Inicio</a>
+                <Link to={ROUTES.HOME}>Inicio</Link>
               </p>
               <img
                 src="/images/right-icon.svg"

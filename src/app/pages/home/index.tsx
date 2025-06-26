@@ -6,6 +6,7 @@ import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { ROUTES } from "@/core/enum/common";
+import { Link } from "react-router-dom";
 
 const Home: FC = () => {
   const heroImages = [
@@ -69,13 +70,13 @@ const Home: FC = () => {
       >
         {heroImages.map((image, idx) => (
           <SwiperSlide key={image}>
-            <a href={ROUTES.SHOP}>
+            <Link to={ROUTES.SHOP}>
               <img
                 src={image}
                 alt={`imagen ${idx + 1}`}
                 className="max-h-[536px] w-full"
               />
-            </a>
+            </Link>
           </SwiperSlide>
         ))}
 

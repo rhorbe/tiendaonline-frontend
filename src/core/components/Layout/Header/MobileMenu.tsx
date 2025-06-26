@@ -1,4 +1,5 @@
 import { ROUTES } from "@/core/enum/common";
+import { Link } from "react-router-dom";
 
 interface MobileMenuProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,9 +34,9 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
                 key={index}
                 className="pt-4 w-full text-app-black font-inter text-sm font-semibold pb-2 border-b border-app-light-gray"
               >
-                <a href={link.url} className="w-full">
+                <Link to={link.url} className="w-full">
                   {link.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -43,12 +44,12 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
       </div>
       <div>
         <div className="flex justify-between pb-3 border-b border-app-light-gray">
-          <a
+          <Link
             className="text-lg/[32px] font-inter font-medium tracking-[-0.4px] text-app-gray"
-            href="/cart"
+            to="/cart"
           >
             Carrito
-          </a>
+          </Link>
           <div className="flex items-center gap-1.5">
             <img
               src="/images/shopping bag.svg"
@@ -64,27 +65,27 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
         </div>
 
         <div className="flex gap-6">
-          <a href="https://www.instagram.com/ditunpsjb/">
+          <Link to="https://www.instagram.com/ditunpsjb/">
             <img
               src="/images/instagram-black.svg"
               alt="Instagram"
               className="w-6 h-6"
             />
-          </a>
-          <a href="https://www.facebook.com/ditunpsjb">
+          </Link>
+          <Link to="https://www.facebook.com/ditunpsjb">
             <img
               src="/images/faceboo-black.svg"
               alt="Facebook"
               className="w-6 h-6"
             />
-          </a>
-          <a href="https://www.youtube.com/@comunicaciondigitalunpsjb">
+          </Link>
+          <Link to="https://www.youtube.com/@comunicaciondigitalunpsjb">
             <img
               src="/images/youtube-black.svg"
               alt="YouTube"
               className="w-6 h-6"
             />
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Button from "../Button/Button";
 import { ROUTES } from "@/core/enum/common";
 
@@ -73,14 +74,14 @@ export const Flayout = ({ setOpen }: FlayoutMenuProps) => {
                         }}
                     />
                 </div>
-                <a
-                    href={ROUTES.CART}
+                <Link
+                    to={ROUTES.CART}
                     className="inline-flex justify-center text-center w-full py-2"
                 >
                     <p className="border-b border-app-black font-inter text-sm/[22px] font-semibold text-app-black">
                         Ver carrito
                     </p>
-                </a>
+                </Link>
             </div>
         </div>
     );

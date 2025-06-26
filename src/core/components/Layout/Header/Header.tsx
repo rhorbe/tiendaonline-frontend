@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { Link } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
 import { Flayout } from "../../Cart/Flayout";
 import { ROUTES } from "@/core/enum/common";
@@ -15,26 +16,27 @@ const Header: FC = () => {
 
   return (
     <header className="relative">
+      {/* Desktop */}
       <div className="hidden md:flex justify-between items-center mx-auto px-4 md:px-7 lg:px-14 py-4">
         <div className="flex items-center">
-          <a href={ROUTES.HOME}>
+          <Link to={ROUTES.HOME}>
             <img
               src="/images/logo_lessence_negro.png"
               alt="L'Essence Perfumes"
               className="h-10 w-auto"
             />
-          </a>
+          </Link>
         </div>
         <nav className="flex-grow text-center">
           <ul className="flex justify-center items-center space-x-10">
             {navLinks.map((link) => (
               <li key={link.url}>
-                <a
-                  href={link.url}
+                <Link
+                  to={link.url}
                   className="text-app-black font-inter font-semibold"
                 >
                   {link.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -52,23 +54,26 @@ const Header: FC = () => {
             />
             <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
               <p className="text-white text-center font-inter text-xs font-bold leading-[10px]">
-                {" "}
-                {/* Vista grande */}2
+                2
               </p>
             </div>
           </button>
         </div>
       </div>
+
+      {/* Mobile */}
       <div className="flex justify-between items-center md:hidden py-4 px-8">
         <div className="flex items-center gap-1">
           <button onClick={() => setOpen(!open)}>
             <img src="/images/menu.svg" alt="Abrir menú" />
           </button>
-          <img
-            src="/images/logo_lessence_negro.png"
-            alt="L'Essence Perfumes"
-            className="h-6 w-auto"
-          />
+          <Link to={ROUTES.HOME}>
+            <img
+              src="/images/logo_lessence_negro.png"
+              alt="L'Essence Perfumes"
+              className="h-6 w-auto"
+            />
+          </Link>
         </div>
         <div className="flex items-center gap-4">
           <UserDropdown />
@@ -91,7 +96,11 @@ const Header: FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Menú móvil */}
       {open && <MobileMenu setOpen={setOpen} />}
+
+      {/* Carrito */}
       <div
         className={`cart-transition ${
           cartOpen ? "cart-open absolute top-0 right-0 z-50" : ""

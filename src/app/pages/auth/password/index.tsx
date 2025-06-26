@@ -6,13 +6,13 @@ export default function ForgotPassword() {
     <div className="grid md:grid-cols-2 h-screen text-app-black">
       <div className="hidden md:block login-background min-h-[437px]">
         <div className="flex justify-center items-center mt-8">
-          <a href={ROUTES.HOME}>
+          <Link to={ROUTES.HOME}>
             <img
               src="/images/logo_lessence_negro.png"
               alt="L'Essence Perfumes"
               className="h-14 w-auto"
             />
-          </a>
+          </Link>
         </div>
       </div>
 

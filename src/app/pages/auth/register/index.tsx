@@ -2,19 +2,20 @@ import { CustomInput } from "@/core/components";
 import PasswordInput from "@/core/components/PasswordInput";
 import { ROUTES } from "@/core/enum/common";
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 const Register: FC = () => {
   return (
     <div className="grid md:grid-cols-2 h-screen text-app-black">
       <div className="hidden md:block login-background min-h-[437px]">
         <div className="flex justify-center items-center mt-8">
-          <a href={ROUTES.HOME}>
+          <Link to={ROUTES.HOME}>
             <img
               src="/images/logo_lessence_negro.png"
               alt="L'Essence Perfumes"
               className="h-14 w-auto"
             />
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -25,9 +26,9 @@ const Register: FC = () => {
           </h2>
           <p className="text-app-gray font-inter text-base/[26px] font-semibold">
             ¿Ya tiene una cuenta?{" "}
-            <a href={ROUTES.LOGIN} className="text-app-green cursor-pointer">
+            <Link to={ROUTES.LOGIN} className="text-app-green cursor-pointer">
               Iniciar Sesión
-            </a>
+            </Link>
           </p>
           <CustomInput id="name" type="text" placeholder="Nombre" required />
 
@@ -57,19 +58,19 @@ const Register: FC = () => {
               className="text-xs md:text-base font-inter leading-[26px] text-app-gray whitespace-normal"
             >
               Estoy de acuerdo con la{" "}
-              <a
-                href="#"
+              <Link
+                to="#"
                 className="text-app-black font-inter hover:underline font-bold"
               >
                 Política de privacidad
-              </a>{" "}
+              </Link>{" "}
               y los{" "}
-              <a
-                href="#"
+              <Link
+                to="#"
                 className="text-app-black font-inter hover:underline font-bold"
               >
                 Términos de uso
-              </a>
+              </Link>
             </label>
           </div>
 

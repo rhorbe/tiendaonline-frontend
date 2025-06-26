@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "@/core/api/axiosInstance";
 import { CustomInput } from "@/core/components";
 import PasswordInput from "@/core/components/PasswordInput";
@@ -43,13 +43,13 @@ const Login: FC = () => {
     <div className="grid md:grid-cols-2 h-screen text-app-black">
       <div className="hidden md:block login-background min-h-[437px]">
         <div className="flex justify-center items-center mt-8">
-          <a href={ROUTES.HOME}>
+          <Link to={ROUTES.HOME}>
             <img
               src="/images/logo_lessence_negro.png"
               alt="L'Essence Perfumes"
               className="h-14 w-auto"
             />
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -63,9 +63,12 @@ const Login: FC = () => {
           </h2>
           <p className="text-app-gray font-inter text-base/[26px] font-semibold">
             ¿Aún no tienes una cuenta?{" "}
-            <a href={ROUTES.REGISTER} className="text-app-green cursor-pointer">
+            <Link
+              to={ROUTES.REGISTER}
+              className="text-app-green cursor-pointer"
+            >
               Registrarse
-            </a>
+            </Link>
           </p>
           <CustomInput
             id="name"

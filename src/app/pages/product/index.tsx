@@ -22,7 +22,7 @@ export default function ProductPage() {
       <div className="w-fit flex gap-3 md:gap-4 py-4">
         <div className="flex items-center gap-1">
           <p className="text-grayish-brown font-inter text-xs/5 md:text-sm/6 font-medium">
-            <a href={ROUTES.HOME}>Inicio</a>
+            <Link to={ROUTES.HOME}>Inicio</Link>
           </p>
           <img
             src="/images/right-icon.svg"
@@ -31,7 +31,7 @@ export default function ProductPage() {
           />
         </div>
         <p className="text-app-black font-inter text-sm/[25px] font-medium">
-          <a href={ROUTES.SHOP}>Tienda</a>
+          <Link to={ROUTES.SHOP}>Tienda</Link>
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
