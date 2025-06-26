@@ -28,6 +28,8 @@ const Login: FC = () => {
         id: data.user.id,
         name: data.user.name,
         email: data.user.email,
+        email_verified_at: data.user.email_verified_at,
+        remember_token: data.user.remember_token,
       });
 
       navigate(ROUTES.SHOP);
