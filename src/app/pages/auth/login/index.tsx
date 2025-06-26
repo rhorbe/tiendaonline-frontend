@@ -41,10 +41,16 @@ const Login: FC = () => {
 
   return (
     <div className="grid md:grid-cols-2 h-screen text-app-black">
-      <div className="login-background min-h-[437px]">
-        <h1 className="text-center font-poppins font-medium text-2xl mt-8">
-          L'Essence
-        </h1>
+      <div className="hidden md:block login-background min-h-[437px]">
+        <div className="flex justify-center items-center mt-8">
+          <a href={ROUTES.HOME}>
+            <img
+              src="/images/logo_lessence_negro.png"
+              alt="L'Essence Perfumes"
+              className="h-14 w-auto"
+            />
+          </a>
+        </div>
       </div>
 
       <div className="flex items-center justify-center px-10">
