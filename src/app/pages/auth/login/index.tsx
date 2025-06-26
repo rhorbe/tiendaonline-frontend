@@ -1,23 +1,18 @@
+import { FC, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "@/core/api/axiosInstance";
 import { CustomInput } from "@/core/components";
 import PasswordInput from "@/core/components/PasswordInput";
 import { ROUTES } from "@/core/enum/common";
-import { FC, useState } from "react";
+import { useAuth } from "@/store/AuthContext";
+import { LoginResponse } from "@/core/models/User";
+import { ErrorResponse } from "@/core/models/Error";
 
 const Login: FC = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  interface LoginResponse {
-    token: string;
-  }
-
-  interface ErrorResponse {
-    response?: {
-      data?: {
-        message?: string;
-      };
-    };
-  }
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,8 +21,16 @@ const Login: FC = () => {
         email,
         password,
       });
+
       localStorage.setItem("token", data.token);
-      window.location.replace("/dashboard");
+
+      login({
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+      });
+
+      navigate(ROUTES.SHOP);
     } catch (err: unknown) {
       const error = err as ErrorResponse;
       alert(error.response?.data?.message ?? "Error de conexión");
