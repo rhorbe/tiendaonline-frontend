@@ -1,5 +1,5 @@
 import ProductSlider from "@/core/components/ProductSlider";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useProductContext } from "@/store/ProductContext";
 import { ROUTES } from "@/core/enum/common";
 

@@ -1,5 +1,6 @@
 import { CustomInput } from "@/core/components";
 import { ROUTES } from "@/core/enum/common";
+import { Link } from "react-router-dom";
 
 export default function ForgotPassword() {
   return (
