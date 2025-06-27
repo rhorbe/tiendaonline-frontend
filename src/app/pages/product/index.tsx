@@ -8,6 +8,19 @@ export default function ProductPage() {
   const { state } = useProductContext();
   const product = state.products.find((p) => p.id === id);
 
+  const priceAsCurrency = (price: string | number) => {
+    const cleanPrice =
+      typeof price === "string" ? price.replace(/,/g, "") : price;
+
+    return price
+      ? Number(cleanPrice).toLocaleString("es-AR", {
+          style: "currency",
+          currency: "ARS",
+          minimumFractionDigits: 2,
+        })
+      : "";
+  };
+
   if (!product) {
     return (
       <div className="flex justify-center items-center h-40">
@@ -60,7 +73,7 @@ export default function ProductPage() {
             </p>
             <div className="flex gap-3 items-center">
               <p className="text-app-black font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
-                ${product.price}
+                {priceAsCurrency(product.price)}
               </p>
             </div>
 
