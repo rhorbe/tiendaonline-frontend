@@ -117,18 +117,10 @@ export default function ProductPage() {
               <div className="py-6 border-t space-y-2 border-app-light-gray">
                 <div className="flex items-center gap-24">
                   <p className="text-app-gray font-inter text-xs/5 font-normal">
-                    SKU
-                  </p>
-                  <p className="text-app-black font-inter text-xs/5 font-normal">
-                    1117
-                  </p>
-                </div>
-                <div className="flex items-center gap-24">
-                  <p className="text-app-gray font-inter text-xs/5 font-normal">
                     CATEGORÍA
                   </p>
                   <p className="text-app-black font-inter text-xs/5 font-normal">
-                    Living, Dormitorio
+                    {product.category_id}
                   </p>
                 </div>
               </div>
