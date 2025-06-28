@@ -2,24 +2,29 @@ import ProductSlider from "@/core/components/ProductSlider";
 import { Link, useParams } from "react-router-dom";
 import { useProductContext } from "@/store/ProductContext";
 import { ROUTES } from "@/core/enum/common";
+import { useState } from "react";
 
 export default function ProductPage() {
   const { id } = useParams();
   const { state } = useProductContext();
   const product = state.products.find((p) => p.id === id);
 
-  const priceAsCurrency = (price: string | number) => {
-    const cleanPrice =
-      typeof price === "string" ? price.replace(/,/g, "") : price;
+  const [quantity, setQuantity] = useState(1);
 
-    return price
-      ? Number(cleanPrice).toLocaleString("es-AR", {
-          style: "currency",
-          currency: "ARS",
-          minimumFractionDigits: 2,
-        })
-      : "";
-  };
+  const handleClickDecrease = () =>
+    setQuantity((prev) => (prev <= 1 ? prev : prev - 1));
+
+  const handleClickIncrease = () => setQuantity((prev) => prev + 1);
+
+  const cleanPrice = (price: string | number) =>
+    typeof price === "string" ? Number(price.replace(/,/g, "")) : price;
+
+  const priceAsCurrency = (price: number) =>
+    price.toLocaleString("es-AR", {
+      style: "currency",
+      currency: "ARS",
+      minimumFractionDigits: 2,
+    });
 
   if (!product) {
     return (
@@ -73,7 +78,7 @@ export default function ProductPage() {
             </p>
             <div className="flex gap-3 items-center">
               <p className="text-app-black font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
-                {priceAsCurrency(product.price)}
+                {priceAsCurrency(cleanPrice(product.price) * quantity)}
               </p>
             </div>
 
@@ -81,7 +86,7 @@ export default function ProductPage() {
               <div className="py-8">
                 <div className="flex gap-6 items-center mb-4">
                   <div className="flex flex-shrink-0 gap-6 items-center bg-primary rounded py-3 px-4 w-fit">
-                    <button>
+                    <button onClick={handleClickDecrease}>
                       <img
                         src="/images/minus.svg"
                         alt="menos"
@@ -89,9 +94,9 @@ export default function ProductPage() {
                       />
                     </button>
                     <p className="text-app-black font-inter font-semibold text-base/[26px]">
-                      2
+                      {quantity}
                     </p>
-                    <button>
+                    <button onClick={handleClickIncrease}>
                       <img
                         src="/images/add.svg"
                         alt="más"
