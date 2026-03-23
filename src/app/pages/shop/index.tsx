@@ -138,7 +138,7 @@ export default function ShopPage() {
                 </p>
               </div>
             ) : (
-              <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-categroy-scrollbar">
+              <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
                 {categories.map((c) => (
                   <button
                     key={c.id}
@@ -162,7 +162,7 @@ export default function ShopPage() {
                 </p>
               </div>
             ) : (
-              <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-categroy-scrollbar">
+              <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
                 {brands.map((b) => (
                   <button
                     key={b.id}
@@ -186,7 +186,7 @@ export default function ShopPage() {
                 </p>
               </div>
             ) : (
-              <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-categroy-scrollbar">
+              <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
                 {sizes.map((s) => (
                   <button
                     key={s.id}

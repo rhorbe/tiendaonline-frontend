@@ -22,7 +22,7 @@ const AddressForm: FC<ModalProps> = ({ isOpen, onClose }) => {
 
     return (
         <div className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
-            <div className={`bg-white relative rounded-lg shadow-lg p-6 pt-10 pb-5 max-w-full w-full mx-auto transform transition-transform duration-300 ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-20 opacity-0'} max-h-[90vh] custom-categroy-scrollbar overflow-y-auto md:max-w-[440px]`}>
+            <div className={`bg-white relative rounded-lg shadow-lg p-6 pt-10 pb-5 max-w-full w-full mx-auto transform transition-transform duration-300 ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-20 opacity-0'} max-h-[90vh] custom-category-scrollbar overflow-y-auto md:max-w-[440px]`}>
                 <button onClick={onClose}>
                     <img src="/images/close.svg" alt="Close Button" className="w-5 h-5 object-contain object-center absolute top-4 right-4" />
                 </button>
