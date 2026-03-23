@@ -1,163 +1,161 @@
-
 @import 'flowbite';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 .smooth-shadow {
-  box-shadow: 0px 1px 1px rgba(3, 7, 18, 0.00),
-    0px 5px 4px rgba(3, 7, 18, 0.01),
-    0px 12px 9px rgba(3, 7, 18, 0.01),
-    0px 20px 15px rgba(3, 7, 18, 0.02),
-    0px 32px 24px rgba(3, 7, 18, 0.02);
+    box-shadow: 0 1px 1px rgba(3, 7, 18, 0.00),
+    0 5px 4px rgba(3, 7, 18, 0.01),
+    0 12px 9px rgba(3, 7, 18, 0.01),
+    0 20px 15px rgba(3, 7, 18, 0.02),
+    0 32px 24px rgba(3, 7, 18, 0.02);
 }
 
 .light-shadow {
-  box-shadow: 0px 8px 6px rgba(3, 7, 18, 0.01),
-    0px 32px 24px rgba(3, 7, 18, 0.01);
+    box-shadow: 0 8px 6px rgba(3, 7, 18, 0.01),
+    0 32px 24px rgba(3, 7, 18, 0.01);
 }
 
 /* Login Page */
 .login-background {
-  background:
-    url('/images/login-img.png') no-repeat center center;
-  background-color: #F3F5F7;
-  background-size: contain;
-  height: 100%;
+    background: url('/images/login-img.png') no-repeat center center;
+    background-color: #F3F5F7;
+    background-size: contain;
+    height: 100%;
 }
 
 .placeholder-inter::placeholder {
-  font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 26px;
-  color: #6C7275;
-  text-transform: capitalize;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+    color: #6C7275;
+    text-transform: capitalize;
 }
 
 /* Home Page */
 .swiper-pagination-bullet {
-  width: 12px;
-  height: 12px;
-  text-align: center;
-  line-height: 20px;
-  font-size: 12px;
-  color: #000;
-  opacity: 1 !important;
-  background: white !important;
+    width: 12px;
+    height: 12px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    color: #000;
+    opacity: 1 !important;
+    background: white !important;
 }
 
 .swiper-pagination-bullet-active {
-  color: #fff;
-  width: 32px !important;
-  background: white !important;
-  border-radius: 4px !important;
+    color: #fff;
+    width: 32px !important;
+    background: white !important;
+    border-radius: 4px !important;
 }
 
 .swiper-button {
-  display: flex;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  cursor: pointer;
-  background-color: white;
-  width: 52px;
-  height: 52px;
-  border-radius: 40px;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    cursor: pointer;
+    background-color: white;
+    width: 52px;
+    height: 52px;
+    border-radius: 40px;
+    align-items: center;
+    justify-content: center;
 }
 
 .swiper-button img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .image-swiper-button-prev {
-  left: 20px;
+    left: 20px;
 }
 
 .image-swiper-button-next {
-  right: 20px;
+    right: 20px;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  height: 4px;
+    height: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background-color: #ebebeb;
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
+    background-color: #ebebeb;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-  background: #141718;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #141718;
 }
 
 .shop-page-banner-bg {
-  background:
-    linear-gradient(180deg, rgba(243, 245, 247, 0.00) 27.68%, rgba(243, 245, 247, 0.60) 66.63%, rgba(243, 245, 247, 0.20) 100%),
+    background: linear-gradient(180deg, rgba(243, 245, 247, 0.00) 27.68%, rgba(243, 245, 247, 0.60) 66.63%, rgba(243, 245, 247, 0.20) 100%),
     url('/images/shop-bg.png') lightgray 50% / cover no-repeat;
-  background-color: #F3F5F7;
-  background-blend-mode: normal, multiply;
+    background-color: #F3F5F7;
+    background-blend-mode: normal, multiply;
 }
 
 .custom-categroy-scrollbar::-webkit-scrollbar {
-  width: 8px;
+    width: 8px;
 }
 
 .custom-categroy-scrollbar::-webkit-scrollbar-track {
-  background-color: #ebebeb;
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
+    background-color: #ebebeb;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
 }
 
 .custom-categroy-scrollbar::-webkit-scrollbar-thumb {
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-  background: #141718;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #141718;
 }
 
 .hide-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .cart-transition {
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .cart-open {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
 
 .hide-spinner {
-  appearance: none;
-  -moz-appearance: textfield;
-  -webkit-appearance: none;
-  margin: 0;
+    appearance: none;
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 
 .hide-spinner::-webkit-inner-spin-button,
 .hide-spinner::-webkit-outer-spin-button {
-  display: none;
+    display: none;
 }
