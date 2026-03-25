@@ -1,11 +1,187 @@
-@baseUrl = http://127.0.0.1:8001
+@baseUrl = http://127.0.0.1:8000
+@carritoId = 69b89351fbb7da2b920d61c1
+@itemId = 69b89351fbb7da2b920d61c2
+@categoriaId = 69b89351fbb7da2b920d61c3
+@marcaId = 69b89351fbb7da2b920d61c4
+@pedidoId = 69b89351fbb7da2b920d61c5
+@productoId = 69b89351fbb7da2b920d61c6
+@tamanioId = 69b89351fbb7da2b920d61c7
 
-### GET productos
-GET {{baseUrl}}/api/producto/
+### GET carrito
+GET {{baseUrl}}/api/carrito
 Accept: application/json
 
-### GET un producto
-GET {{baseUrl}}/api/producto/69b82c5f0bd0f7daec0e248f
+### POST carrito item
+POST {{baseUrl}}/api/carrito/item
+Accept: application/json
+Content-Type: application/json
+
+{
+  "producto_id": "{{productoId}}",
+  "cantidad": 1
+}
+
+### GET carrito por id
+GET {{baseUrl}}/api/carrito/{{carritoId}}
+Accept: application/json
+
+### DELETE carrito
+DELETE {{baseUrl}}/api/carrito/{{carritoId}}
+Accept: application/json
+
+### PUT carrito item
+PUT {{baseUrl}}/api/carrito/{{carritoId}}/item/{{itemId}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "cantidad": 2
+}
+
+### DELETE carrito item
+DELETE {{baseUrl}}/api/carrito/{{carritoId}}/item/{{itemId}}
+Accept: application/json
 
 ### GET categorias
 GET {{baseUrl}}/api/categoria
+Accept: application/json
+
+### POST categoria
+POST {{baseUrl}}/api/categoria
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nombre": "Nueva categoria"
+}
+
+### GET categoria por id
+GET {{baseUrl}}/api/categoria/{{categoriaId}}
+Accept: application/json
+
+### PUT categoria
+PUT {{baseUrl}}/api/categoria/{{categoriaId}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nombre": "Categoria actualizada"
+}
+
+### DELETE categoria
+DELETE {{baseUrl}}/api/categoria/{{categoriaId}}
+Accept: application/json
+
+### POST login
+POST {{baseUrl}}/api/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### GET marcas
+GET {{baseUrl}}/api/marca
+Accept: application/json
+
+### POST marca
+POST {{baseUrl}}/api/marca
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nombre": "Nueva marca"
+}
+
+### GET marca por id
+GET {{baseUrl}}/api/marca/{{marcaId}}
+Accept: application/json
+
+### PUT marca
+PUT {{baseUrl}}/api/marca/{{marcaId}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nombre": "Marca actualizada"
+}
+
+### DELETE marca
+DELETE {{baseUrl}}/api/marca/{{marcaId}}
+Accept: application/json
+
+### GET pedidos
+GET {{baseUrl}}/api/pedido
+Accept: application/json
+
+### GET pedido por id
+GET {{baseUrl}}/api/pedido/{{pedidoId}}
+Accept: application/json
+
+### GET productos
+GET {{baseUrl}}/api/producto
+Accept: application/json
+
+### POST producto
+POST {{baseUrl}}/api/producto
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nombre": "Producto nuevo",
+  "precio": 100,
+  "stock": 10,
+  "categoria_id": "{{categoriaId}}",
+  "marca_id": "{{marcaId}}"
+}
+
+### GET producto por id
+GET {{baseUrl}}/api/producto/{{productoId}}
+Accept: application/json
+
+### PUT producto
+PUT {{baseUrl}}/api/producto/{{productoId}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nombre": "Producto actualizado",
+  "precio": 120,
+  "stock": 8
+}
+
+### DELETE producto
+DELETE {{baseUrl}}/api/producto/{{productoId}}
+Accept: application/json
+
+### GET tamanios
+GET {{baseUrl}}/api/tamanio
+Accept: application/json
+
+### POST tamanio
+POST {{baseUrl}}/api/tamanio
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nombre": "M"
+}
+
+### GET tamanio por id
+GET {{baseUrl}}/api/tamanio/{{tamanioId}}
+Accept: application/json
+
+### PUT tamanio
+PUT {{baseUrl}}/api/tamanio/{{tamanioId}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nombre": "L"
+}
+
+### DELETE tamanio
+DELETE {{baseUrl}}/api/tamanio/{{tamanioId}}
+Accept: application/json
