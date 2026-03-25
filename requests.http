@@ -1,0 +1,11 @@
+@baseUrl = http://127.0.0.1:8001
+
+### GET productos
+GET {{baseUrl}}/api/producto/
+Accept: application/json
+
+### GET un producto
+GET {{baseUrl}}/api/producto/69b82c5f0bd0f7daec0e248f
+
+### GET categorias
+GET {{baseUrl}}/api/categoria
