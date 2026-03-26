@@ -3,7 +3,7 @@ import { Category, CategoriesResponse } from "../models/Category";
 
 export const fetchCategories = async (): Promise<Category[]> => {
 
-  const response = await api.get<CategoriesResponse>("/category");
+  const response = await api.get<CategoriesResponse>("/categoria");
 
 
   if (!response.data.success) {

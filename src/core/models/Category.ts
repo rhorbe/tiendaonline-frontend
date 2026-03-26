@@ -1,6 +1,6 @@
 export interface Category {
   id: string;
-  name: string;  
+  nombre: string;
 }
 
 export interface CategoriesResponse {

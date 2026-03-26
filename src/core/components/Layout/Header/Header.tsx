@@ -21,9 +21,9 @@ const Header: FC = () => {
         <div className="flex items-center">
           <Link to={ROUTES.HOME}>
             <img
-              src="/images/logo_lessence_negro.png"
-              alt="L'Essence Perfumes"
-              className="h-10 w-auto"
+              src="/images/logo_essences.svg"
+              alt="Essences"
+              className="h-12 w-auto p-2"
             />
           </Link>
         </div>

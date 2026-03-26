@@ -14,9 +14,9 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row gap-8 items-center">
           <Link to={ROUTES.HOME} className="flex items-center">
             <img
-              src="/images/logo_lessence_blanco.png"
+              src="/images/logo_essences_blanco.svg"
               alt="L'Essence Perfumes"
-              className="h-7 w-auto"
+              className="h-10 w-auto p-2"
             />
           </Link>
           <div className="h-[1px] w-6 md:min-h-6 md:w-[1px] bg-app-gray" />
