@@ -144,7 +144,7 @@ export default function ShopPage() {
                     key={c.id}
                     className={`font-inter w-fit text-sm/[22px] font-semibold text-app-gray`}
                   >
-                    {c.name}
+                    {c.nombre}
                   </button>
                 ))}
               </div>
