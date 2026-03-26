@@ -235,13 +235,6 @@ export default function ShopPage() {
                                 <p className="font-inter text-sm/[22px] font-semibold text-taup-gray">
                                     {brandError}
                                 </p>
-                                <button
-                                    type="button"
-                                    onClick={loadMarcas}
-                                    className="py-2 px-4 rounded-full border border-app-black text-app-black font-inter text-sm font-semibold"
-                                >
-                                    Reintentar
-                                </button>
                             </div>
                         ) : (
                             <div
@@ -279,13 +272,6 @@ export default function ShopPage() {
                                 <p className="font-inter text-sm/[22px] font-semibold text-taup-gray">
                                     {tamanioError}
                                 </p>
-                                <button
-                                    type="button"
-                                    onClick={loadTamanios}
-                                    className="py-2 px-4 rounded-full border border-app-black text-app-black font-inter text-sm font-semibold"
-                                >
-                                    Reintentar
-                                </button>
                             </div>
                         ) : (
                             <div
