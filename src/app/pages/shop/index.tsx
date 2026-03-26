@@ -124,6 +124,13 @@ export default function ShopPage() {
             <div
                 className="shop-page-banner-bg min-h-[208px] md:h-[292px] max-h-[292px] flex justify-center items-center">
                 <div className="max-w-fit flex flex-col items-center gap-4 md:gap-6">
+                    <h1 className="text-app-black font-poppins text-[40px]/[44px] md:text-[54px]/[58px] tracking-[-0.4px] md:tracking-[-1px] font-medium">
+                        Tienda
+                    </h1>
+                    <p className="text-app-black font-inter text-center text-base/[26px] md:text-xl/[32px] font-normal">
+                        Un mundo de fragancias únicas
+                    </p>
+
                     <div className="w-fit flex gap-4">
                         <div className="flex items-center gap-1">
                             <p className="text-grayish-brown font-inter text-sm/6 font-medium">
@@ -139,12 +146,6 @@ export default function ShopPage() {
                             Tienda
                         </p>
                     </div>
-                    <h1 className="text-app-black font-poppins text-[40px]/[44px] md:text-[54px]/[58px] tracking-[-0.4px] md:tracking-[-1px] font-medium">
-                        Tienda
-                    </h1>
-                    <p className="text-app-black font-inter text-center text-base/[26px] md:text-xl/[32px] font-normal">
-                        Un mundo de fragancias únicas
-                    </p>
                 </div>
             </div>
             <div className="pt-8 md:pt-[60px] pb-[100px] grid md:grid-cols-4 gap-6">

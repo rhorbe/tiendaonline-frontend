@@ -1,4 +1,4 @@
-@baseUrl = http://127.0.0.1:8001
+@baseUrl = http://127.0.0.1:8000/api
 
 @carritoId = 69b89351fbb7da2b920d61c1
 @itemId = 69b89351fbb7da2b920d61c2
@@ -9,11 +9,11 @@
 @tamanioId = 69b89351fbb7da2b920d61c7
 
 ### GET carrito
-GET {{baseUrl}}/api/carrito
+GET {{baseUrl}}/carrito
 Accept: application/json
 
 ### POST carrito item
-POST {{baseUrl}}/api/carrito/item
+POST {{baseUrl}}/carrito/item
 Accept: application/json
 Content-Type: application/json
 
@@ -23,15 +23,15 @@ Content-Type: application/json
 }
 
 ### GET carrito por id
-GET {{baseUrl}}/api/carrito/{{carritoId}}
+GET {{baseUrl}}/carrito/{{carritoId}}
 Accept: application/json
 
 ### DELETE carrito
-DELETE {{baseUrl}}/api/carrito/{{carritoId}}
+DELETE {{baseUrl}}/carrito/{{carritoId}}
 Accept: application/json
 
 ### PUT carrito item
-PUT {{baseUrl}}/api/carrito/{{carritoId}}/item/{{itemId}}
+PUT {{baseUrl}}/carrito/{{carritoId}}/item/{{itemId}}
 Accept: application/json
 Content-Type: application/json
 
@@ -40,15 +40,15 @@ Content-Type: application/json
 }
 
 ### DELETE carrito item
-DELETE {{baseUrl}}/api/carrito/{{carritoId}}/item/{{itemId}}
+DELETE {{baseUrl}}/carrito/{{carritoId}}/item/{{itemId}}
 Accept: application/json
 
 ### GET categorias
-GET {{baseUrl}}/api/categoria
+GET {{baseUrl}}/categoria
 Accept: application/json
 
 ### POST categoria
-POST {{baseUrl}}/api/categoria
+POST {{baseUrl}}/categoria
 Accept: application/json
 Content-Type: application/json
 
@@ -57,11 +57,11 @@ Content-Type: application/json
 }
 
 ### GET categoria por id
-GET {{baseUrl}}/api/categoria/{{categoriaId}}
+GET {{baseUrl}}/categoria/{{categoriaId}}
 Accept: application/json
 
 ### PUT categoria
-PUT {{baseUrl}}/api/categoria/{{categoriaId}}
+PUT {{baseUrl}}/categoria/{{categoriaId}}
 Accept: application/json
 Content-Type: application/json
 
@@ -70,11 +70,11 @@ Content-Type: application/json
 }
 
 ### DELETE categoria
-DELETE {{baseUrl}}/api/categoria/{{categoriaId}}
+DELETE {{baseUrl}}/categoria/{{categoriaId}}
 Accept: application/json
 
 ### POST login
-POST {{baseUrl}}/api/login
+POST {{baseUrl}}/login
 Accept: application/json
 Content-Type: application/json
 
@@ -84,11 +84,11 @@ Content-Type: application/json
 }
 
 ### GET marcas
-GET {{baseUrl}}/api/marca
+GET {{baseUrl}}/marca
 Accept: application/json
 
 ### POST marca
-POST {{baseUrl}}/api/marca
+POST {{baseUrl}}/marca
 Accept: application/json
 Content-Type: application/json
 
@@ -97,11 +97,11 @@ Content-Type: application/json
 }
 
 ### GET marca por id
-GET {{baseUrl}}/api/marca/{{marcaId}}
+GET {{baseUrl}}/marca/{{marcaId}}
 Accept: application/json
 
 ### PUT marca
-PUT {{baseUrl}}/api/marca/{{marcaId}}
+PUT {{baseUrl}}/marca/{{marcaId}}
 Accept: application/json
 Content-Type: application/json
 
@@ -110,23 +110,23 @@ Content-Type: application/json
 }
 
 ### DELETE marca
-DELETE {{baseUrl}}/api/marca/{{marcaId}}
+DELETE {{baseUrl}}/marca/{{marcaId}}
 Accept: application/json
 
 ### GET pedidos
-GET {{baseUrl}}/api/pedido
+GET {{baseUrl}}/pedido
 Accept: application/json
 
 ### GET pedido por id
-GET {{baseUrl}}/api/pedido/{{pedidoId}}
+GET {{baseUrl}}/pedido/{{pedidoId}}
 Accept: application/json
 
 ### GET productos
-GET {{baseUrl}}/api/producto
+GET {{baseUrl}}/producto
 Accept: application/json
 
 ### POST producto
-POST {{baseUrl}}/api/producto
+POST {{baseUrl}}/producto
 Accept: application/json
 Content-Type: application/json
 
@@ -139,11 +139,11 @@ Content-Type: application/json
 }
 
 ### GET producto por id
-GET {{baseUrl}}/api/producto/{{productoId}}
+GET {{baseUrl}}/producto/{{productoId}}
 Accept: application/json
 
 ### PUT producto
-PUT {{baseUrl}}/api/producto/{{productoId}}
+PUT {{baseUrl}}/producto/{{productoId}}
 Accept: application/json
 Content-Type: application/json
 
@@ -154,15 +154,15 @@ Content-Type: application/json
 }
 
 ### DELETE producto
-DELETE {{baseUrl}}/api/producto/{{productoId}}
+DELETE {{baseUrl}}/producto/{{productoId}}
 Accept: application/json
 
 ### GET tamanios
-GET {{baseUrl}}/api/tamanio
+GET {{baseUrl}}/tamanio
 Accept: application/json
 
 ### POST tamanio
-POST {{baseUrl}}/api/tamanio
+POST {{baseUrl}}/tamanio
 Accept: application/json
 Content-Type: application/json
 
@@ -171,11 +171,11 @@ Content-Type: application/json
 }
 
 ### GET tamanio por id
-GET {{baseUrl}}/api/tamanio/{{tamanioId}}
+GET {{baseUrl}}/tamanio/{{tamanioId}}
 Accept: application/json
 
 ### PUT tamanio
-PUT {{baseUrl}}/api/tamanio/{{tamanioId}}
+PUT {{baseUrl}}/tamanio/{{tamanioId}}
 Accept: application/json
 Content-Type: application/json
 
@@ -184,5 +184,5 @@ Content-Type: application/json
 }
 
 ### DELETE tamanio
-DELETE {{baseUrl}}/api/tamanio/{{tamanioId}}
+DELETE {{baseUrl}}/tamanio/{{tamanioId}}
 Accept: application/json
