@@ -28,3 +28,17 @@ The full license text is available in the [LICENSE](./LICENSE) file.
 ## Disclaimer
 
 This project is for learning and demonstration purposes only. It is not intended for commercial use.
+
+## Configuracion de API (desarrollo local)
+
+Para conectar el frontend al mismo backend de `requests.http`:
+
+1. Crea un archivo `.env` en la raiz del proyecto.
+2. Define la variable:
+
+```env
+VITE_API_URL=http://127.0.0.1:8001/api
+```
+
+> Si no existe `.env`, la aplicacion usa ese mismo valor por defecto.
+

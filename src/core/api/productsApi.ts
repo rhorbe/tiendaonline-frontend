@@ -3,7 +3,7 @@ import { Product, ProductsResponse } from "../models/Product";
 
 export const fetchProducts = async (): Promise<Product[]> => {
 
-  const response = await api.get<ProductsResponse>("/product");
+  const response = await api.get<ProductsResponse>('/producto');
 
 
   if (!response.data.success) {

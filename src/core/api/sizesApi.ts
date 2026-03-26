@@ -3,7 +3,7 @@ import { Size, SizesResponse } from "../models/Size";
 
 export const fetchSizes = async (): Promise<Size[]> => {
 
-  const response = await api.get<SizesResponse>("/size");
+  const response = await api.get<SizesResponse>('/tamanio');
 
 
   if (!response.data.success) {

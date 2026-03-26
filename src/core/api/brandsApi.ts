@@ -3,7 +3,7 @@ import { Brand, BrandsResponse } from "../models/Brand";
 
 export const fetchBrands = async (): Promise<Brand[]> => {
 
-  const response = await api.get<BrandsResponse>("/brand");
+  const response = await api.get<BrandsResponse>('/marca');
 
 
   if (!response.data.success) {
