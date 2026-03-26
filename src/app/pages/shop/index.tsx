@@ -1,7 +1,7 @@
 import {fetchBrands} from "@/core/api/marcasApi.ts";
 import {fetchCategorias} from "@/core/api/categoriasApi.ts";
 import {fetchProducts} from "@/core/api/productosApi.ts";
-import {fetchSizes} from "@/core/api/tamaniosApi.ts";
+import {fetchTamanio} from "@/core/api/tamaniosApi.ts";
 import ProductCard from "@/core/components/ProductCard";
 import {Brand} from "@/core/models/Brand";
 import {Categoria} from "@/core/models/Categoria.ts";
@@ -18,12 +18,12 @@ export default function ShopPage() {
     const [loading, setLoading] = useState(true);
 
     const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [loadingCategories, setLoadingCategories] = useState(true);
-    const [categoryError, setCategoryError] = useState<string | null>(null);
+    const [loadingCategories, setLoadingCategorias] = useState(true);
+    const [categoryError, setCategoriaError] = useState<string | null>(null);
 
     const [marcas, setMarcas] = useState<Brand[]>([]);
-    const [loadingBrands, setLoadingBrands] = useState(true);
-    const [brandError, setBrandError] = useState<string | null>(null);
+    const [loadingBrands, setLoadingMarcas] = useState(true);
+    const [brandError, setMarcaError] = useState<string | null>(null);
 
     const [tamanios, setTamanios] = useState<Tamanio[]>([]);
     const [loadingTamanios, setLoadingTamanios] = useState(true);
@@ -46,39 +46,39 @@ export default function ShopPage() {
         navigate(ROUTES.PRODUCT.replace(":id", String(id)));
     };
 
-    const loadCategories = useCallback(() => {
-        setLoadingCategories(true);
-        setCategoryError(null);
+    const loadCategorias = useCallback(() => {
+        setLoadingCategorias(true);
+        setCategoriaError(null);
 
         fetchCategorias()
             .then((data) => setCategorias(data))
             .catch((err) => {
                 console.error("Error recuperando categorías:", err);
                 setCategorias([]);
-                setCategoryError("No se pudieron cargar las categorías.");
+                setCategoriaError("No se pudieron cargar las categorías.");
             })
-            .finally(() => setLoadingCategories(false));
+            .finally(() => setLoadingCategorias(false));
     }, []);
 
-    const loadBrands = useCallback(() => {
-        setLoadingBrands(true);
-        setBrandError(null);
+    const loadMarcas = useCallback(() => {
+        setLoadingMarcas(true);
+        setMarcaError(null);
 
         fetchBrands()
             .then((data) => setMarcas(data))
             .catch((err) => {
                 console.error("Error recuperando marcas:", err);
                 setMarcas([]);
-                setBrandError("No se pudieron cargar las marcas.");
+                setMarcaError("No se pudieron cargar las marcas.");
             })
-            .finally(() => setLoadingBrands(false));
+            .finally(() => setLoadingMarcas(false));
     }, []);
 
-    const loadSizes = useCallback(() => {
+    const loadTamanios = useCallback(() => {
         setLoadingTamanios(true);
         setTamanioError(null);
 
-        fetchSizes()
+        fetchTamanio()
             .then((data) => setTamanios(data))
             .catch((err) => {
                 console.error("Error recuperando los tamaños:", err);
@@ -89,10 +89,10 @@ export default function ShopPage() {
     }, []);
 
     useEffect(() => {
-        loadCategories();
-        loadBrands();
-        loadSizes();
-    }, [loadCategories, loadBrands, loadSizes]);
+        loadCategorias();
+        loadMarcas();
+        loadTamanios();
+    }, [loadCategorias, loadMarcas, loadTamanios]);
 
     return (
         <section className="px-8 lg:px-14">
@@ -212,7 +212,7 @@ export default function ShopPage() {
                                 </p>
                                 <button
                                     type="button"
-                                    onClick={loadBrands}
+                                    onClick={loadMarcas}
                                     className="py-2 px-4 rounded-full border border-app-black text-app-black font-inter text-sm font-semibold"
                                 >
                                     Reintentar
@@ -256,7 +256,7 @@ export default function ShopPage() {
                                 </p>
                                 <button
                                     type="button"
-                                    onClick={loadSizes}
+                                    onClick={loadTamanios}
                                     className="py-2 px-4 rounded-full border border-app-black text-app-black font-inter text-sm font-semibold"
                                 >
                                     Reintentar

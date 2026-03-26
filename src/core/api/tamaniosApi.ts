@@ -1,7 +1,7 @@
 import api from "./axiosInstance";
 import {Tamanio, TamaniosResponse} from "../models/Tamanio.ts";
 
-export const fetchSizes = async (): Promise<Tamanio[]> => {
+export const fetchTamanio = async (): Promise<Tamanio[]> => {
     const response = await api.get<TamaniosResponse | unknown[]>("/tamanio");
     const payload = response.data as
         | TamaniosResponse
