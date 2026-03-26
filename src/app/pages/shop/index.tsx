@@ -6,7 +6,7 @@ import ProductCard from "@/core/components/ProductCard";
 import {Brand} from "@/core/models/Brand";
 import {Categoria} from "@/core/models/Categoria.ts";
 import {Tamanio} from "@/core/models/Tamanio.ts";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {ROUTES} from "@/core/enum/common";
 import {useProductContext} from "@/store/ProductContext";
 import {Link, useNavigate} from "react-router-dom";
@@ -93,6 +93,31 @@ export default function ShopPage() {
         loadMarcas();
         loadTamanios();
     }, [loadCategorias, loadMarcas, loadTamanios]);
+
+    const sortedTamanios = useMemo(() => {
+        const getNumericValue = (value: string) => {
+            const normalized = value.replace(/,/g, ".");
+            const match = normalized.match(/\d+(?:\.\d+)?/);
+            return match ? Number(match[0]) : Number.NaN;
+        };
+
+        return tamanios
+            .map((item, index) => ({item, index, numeric: getNumericValue(item.name)}))
+            .sort((a, b) => {
+                const aIsNumber = Number.isFinite(a.numeric);
+                const bIsNumber = Number.isFinite(b.numeric);
+
+                if (aIsNumber && bIsNumber && a.numeric !== b.numeric) {
+                    return a.numeric - b.numeric;
+                }
+
+                if (aIsNumber && !bIsNumber) return -1;
+                if (!aIsNumber && bIsNumber) return 1;
+
+                return a.index - b.index;
+            })
+            .map(({item}) => item);
+    }, [tamanios]);
 
     return (
         <section className="px-8 lg:px-14">
@@ -265,8 +290,8 @@ export default function ShopPage() {
                         ) : (
                             <div
                                 className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
-                                {tamanios.length > 0 ? (
-                                    tamanios.map((s) => (
+                                {sortedTamanios.length > 0 ? (
+                                    sortedTamanios.map((s) => (
                                         <button
                                             key={s.id}
                                             className="font-inter w-fit text-sm/[22px] font-semibold text-app-gray"
