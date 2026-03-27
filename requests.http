@@ -1,4 +1,4 @@
-@baseUrl = http://127.0.0.1:8000/api
+@baseUrl = http://127.0.0.1:8001/api
 
 @carritoId = 69b89351fbb7da2b920d61c1
 @itemId = 69b89351fbb7da2b920d61c2
@@ -167,7 +167,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "nombre": "M"
+  "nombre": "1500"
 }
 
 ### GET tamanio por id
@@ -180,7 +180,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "nombre": "L"
+  "nombre": "1000"
 }
 
 ### DELETE tamanio
