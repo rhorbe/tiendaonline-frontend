@@ -3,7 +3,7 @@ import {fetchCategorias} from "@/core/api/categoriasApi.ts";
 import {fetchProducts} from "@/core/api/productosApi.ts";
 import {fetchTamanio} from "@/core/api/tamaniosApi.ts";
 import ProductCard from "@/core/components/ProductCard";
-import {Brand} from "@/core/models/Brand";
+import {Marca} from "@/core/models/Marca.ts";
 import {Categoria} from "@/core/models/Categoria.ts";
 import {Tamanio} from "@/core/models/Tamanio.ts";
 import {useCallback, useEffect, useMemo, useState} from "react";
@@ -21,7 +21,7 @@ export default function ShopPage() {
     const [loadingCategories, setLoadingCategorias] = useState(true);
     const [categoryError, setCategoriaError] = useState<string | null>(null);
 
-    const [marcas, setMarcas] = useState<Brand[]>([]);
+    const [marcas, setMarcas] = useState<Marca[]>([]);
     const [loadingBrands, setLoadingMarcas] = useState(true);
     const [brandError, setMarcaError] = useState<string | null>(null);
 

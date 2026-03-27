@@ -1,10 +1,10 @@
-export interface Brand {
+export interface Marca {
   id: string;
   name: string;  
 }
 
 export interface BrandsResponse {
   success: boolean;
-  data: Brand[];
+  data: Marca[];
   count: number;
 }
