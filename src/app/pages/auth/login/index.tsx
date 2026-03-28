@@ -41,13 +41,13 @@ const Login: FC = () => {
 
     return (
         <div className="grid md:grid-cols-2 h-screen text-app-black">
-            <div className="hidden md:block login-background min-h-[437px]">
+            <div className="hidden md:block login-background login-background-sm min-h-[437px]">
                 <div className="flex justify-center items-center mt-8">
                     <Link to={ROUTES.HOME}>
                         <img
-                            src="/images/logo_lessence_negro.png"
-                            alt="L'Essence Perfumes"
-                            className="h-14 w-auto"
+                            src="/images/logo_essences.svg"
+                            alt="Essences"
+                            className="h-auto w-auto scale-50 origin-center"
                         />
                     </Link>
                 </div>

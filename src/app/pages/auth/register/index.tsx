@@ -6,18 +6,18 @@ import { Link } from "react-router-dom";
 
 const Register: FC = () => {
   return (
-    <div className="grid md:grid-cols-2 h-screen text-app-black">
-      <div className="hidden md:block login-background min-h-[437px]">
-        <div className="flex justify-center items-center mt-8">
-          <Link to={ROUTES.HOME}>
-            <img
-              src="/images/logo_lessence_negro.png"
-              alt="L'Essence Perfumes"
-              className="h-14 w-auto"
-            />
-          </Link>
+      <div className="grid md:grid-cols-2 h-screen text-app-black">
+        <div className="hidden md:block login-background login-background-sm min-h-[437px]">
+          <div className="flex justify-center items-center mt-8">
+            <Link to={ROUTES.HOME}>
+              <img
+                  src="/images/logo_essences.svg"
+                  alt="Essences"
+                  className="h-auto w-auto scale-50 origin-center"
+              />
+            </Link>
+          </div>
         </div>
-      </div>
 
       <div className="flex items-center justify-center px-10">
         <form className="bg-white w-full max-w-[486px] space-y-8 py-10">

@@ -1,99 +1,48 @@
-import { FC } from "react";
+import { FC, Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { IRoute } from "@/core/interface/common";
 import { ROUTES } from "@/core/enum/common";
 
-import {
-  CartPage,
-  CheckOutPage,
-  ContactPage,
-  ErrorPage,
-  ForgotPassword,
-  HomePage,
-  LoginPage,
-  OtpPage,
-  ProductPage,
-  RegisterPage,
-  ShopPage,
-} from "@/app/pages";
-import OrderComplete from "../pages/order";
-import ProfilePage from "../pages/profile";
+const HomePage = lazy(() => import("../pages/home"));
+const LoginPage = lazy(() => import("../pages/auth/login"));
+const RegisterPage = lazy(() => import("../pages/auth/register"));
+const ShopPage = lazy(() => import("../pages/shop"));
+const ProductPage = lazy(() => import("../pages/product"));
+const CartPage = lazy(() => import("../pages/cart"));
+const CheckOutPage = lazy(() => import("../pages/checkout"));
+const OrderCompletePage = lazy(() => import("../pages/order"));
+const ProfilePage = lazy(() => import("../pages/profile"));
+const ContactPage = lazy(() => import("../pages/contact"));
+const ForgotPasswordPage = lazy(() => import("../pages/auth/password"));
+const OtpPage = lazy(() => import("../pages/auth/otp"));
+const ErrorPage = lazy(() => import("../pages/error"));
+
+const routeFallback = (
+  <div className="min-h-[40vh] w-full flex items-center justify-center text-app-gray">
+    Cargando...
+  </div>
+);
 
 const AppRoutes: FC = () => {
-  const routes: IRoute[] = [
-    {
-      name: "Login",
-      path: ROUTES.LOGIN,
-      component: LoginPage,
-    },
-    {
-      name: "Register",
-      path: ROUTES.REGISTER,
-      component: RegisterPage,
-    },
-    {
-      name: "Shop",
-      path: ROUTES.SHOP,
-      component: ShopPage,
-    },
-    {
-      name: "Product",
-      path: ROUTES.PRODUCT,
-      component: ProductPage,
-    },
-    {
-      name: "Cart",
-      path: ROUTES.CART,
-      component: CartPage,
-    },
-    {
-      name: "Checkout",
-      path: ROUTES.CHECKOUT,
-      component: CheckOutPage,
-    },
-    {
-      name: "Order",
-      path: ROUTES.ORDER,
-      component: OrderComplete,
-    },
-    {
-      name: "Profile",
-      path: ROUTES.PROFILE,
-      component: ProfilePage,
-    },
-    {
-      name: "Contact",
-      path: ROUTES.CONTACT,
-      component: ContactPage,
-    },
-    {
-      name: "Forgot Password",
-      path: ROUTES.FORGOT_PASSWORD,
-      component: ForgotPassword,
-    },
-    {
-      name: "Otp",
-      path: ROUTES.OTP_PAGE,
-      component: OtpPage,
-    },
-    {
-      name: "Error",
-      path: ROUTES.ERROR_PAGE,
-      component: ErrorPage,
-    },
-  ];
-
   return (
-    <Routes>
-      {/* <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.HOME} replace />} /> */}
+    <Suspense fallback={routeFallback}>
+      <Routes>
+        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+        <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+        <Route path={ROUTES.SHOP} element={<ShopPage />} />
+        <Route path={ROUTES.PRODUCT} element={<ProductPage />} />
+        <Route path={ROUTES.CART} element={<CartPage />} />
+        <Route path={ROUTES.CHECKOUT} element={<CheckOutPage />} />
+        <Route path={ROUTES.ORDER} element={<OrderCompletePage />} />
+        <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+        <Route path={ROUTES.CONTACT} element={<ContactPage />} />
+        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+        <Route path={ROUTES.OTP_PAGE} element={<OtpPage />} />
+        <Route path={ROUTES.ERROR_PAGE} element={<ErrorPage />} />
 
-      {routes.map((route, index) => (
-        <Route key={index} path={route.path} element={<route.component />} />
-      ))}
-
-      <Route path="*" element={<HomePage />} />
-    </Routes>
+        <Route path="*" element={<HomePage />} />
+      </Routes>
+    </Suspense>
   );
 };
 
