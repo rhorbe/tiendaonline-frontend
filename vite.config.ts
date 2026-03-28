@@ -29,20 +29,20 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes('node_modules')) {
-              if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-                return 'vendor-react';
-              }
+            if (!id.includes('node_modules')) {
+              return;
+            }
 
-              if (id.includes('swiper')) {
-                return 'vendor-swiper';
-              }
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor-react';
+            }
 
-              if (id.includes('flowbite')) {
-                return 'vendor-flowbite';
-              }
+            if (id.includes('swiper')) {
+              return 'vendor-swiper';
+            }
 
-              return 'vendor';
+            if (id.includes('flowbite')) {
+              return 'vendor-flowbite';
             }
           },
         },

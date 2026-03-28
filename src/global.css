@@ -23,7 +23,7 @@
 
 /* Login Page */
 .login-background {
-    background: url('public/images/login-img.jpg') no-repeat center center;
+    background: url('/images/login-img.jpg') no-repeat center center;
     background-color: #ffffff;
     background-size: contain;
     height: 100%;
@@ -109,7 +109,7 @@
 
 .shop-page-banner-bg {
     background: linear-gradient(180deg, rgba(243, 245, 247, 0.00) 27.68%, rgba(243, 245, 247, 0.60) 66.63%, rgba(243, 245, 247, 0.20) 100%),
-    url('/public/images/shop-bg.png') lightgray 50% / cover no-repeat;
+    url('/images/shop-bg.png') lightgray 50% / cover no-repeat;
     background-color: #F3F5F7;
     background-blend-mode: normal, multiply;
 }
