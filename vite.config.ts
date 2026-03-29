@@ -7,14 +7,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const proxyTarget = env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:8001';
+  const proxyTarget = env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:8000';
 
   return {
     plugins: [react()],
     server: {
       port: 3002,
       proxy: {
-        '/api': {
+        '/backend': {
           target: proxyTarget,
           changeOrigin: true,
         },
