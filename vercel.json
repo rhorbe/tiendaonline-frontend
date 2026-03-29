@@ -1,8 +1,9 @@
 {
   "routes": [
     {
-      "src": "^/(?!backend(?:/|$))[^.]*$",
-      "dest": "/index.html"
+      "src": "/[^.]+",
+      "dest": "/",
+      "status": 200
     }
   ]
 }
