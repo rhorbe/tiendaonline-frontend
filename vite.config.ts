@@ -1,52 +1,18 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-  const proxyTarget = env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:8000';
-
-  return {
-    plugins: [react()],
-    server: {
-      port: 3002,
-      proxy: {
-        '/backend': {
-          target: proxyTarget,
-          changeOrigin: true,
-        },
-      },
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 3002, // Custom port
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'), // Points '@' to 'src' folder
     },
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, 'src'),
-      },
-    },
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (!id.includes('node_modules')) {
-              return;
-            }
-
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-              return 'vendor-react';
-            }
-
-            if (id.includes('swiper')) {
-              return 'vendor-swiper';
-            }
-
-            if (id.includes('flowbite')) {
-              return 'vendor-flowbite';
-            }
-          },
-        },
-      },
-    },
-  };
+  },
 });
