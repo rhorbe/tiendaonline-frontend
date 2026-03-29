@@ -1,18 +1,21 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  const proxyTarget = env.VITE_API_PROXY_TARGET;
+
   return {
     plugins: [react()],
     server: {
       port: 3002,
       proxy: {
         '/backend': {
-          target: 'https://tiendaonline-backend-git-dev-rhorbes-projects.vercel.app',
+          target: proxyTarget,
           changeOrigin: true,
         },
       },
