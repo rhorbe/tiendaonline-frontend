@@ -1,35 +1,12 @@
-import { Product } from "@/core/models/Product";
-import React, { createContext, useContext, useReducer, ReactNode } from "react";
-
-type State = {
-  products: Product[];
-};
-
-type Action = { type: "SET_PRODUCTS"; payload: Product[] };
-
-const initialState: State = {
-  products: [],
-};
-
-const ProductContext = createContext<{
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}>({
-  state: initialState,
-  dispatch: () => null,
-});
-
-const productReducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "SET_PRODUCTS":
-      return { ...state, products: action.payload };
-    default:
-      return state;
-  }
-};
+import { ReactNode, useReducer } from "react";
+import {
+  initialProductState,
+  productReducer,
+  ProductContext,
+} from "@/store/productContext";
 
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(productReducer, initialState);
+  const [state, dispatch] = useReducer(productReducer, initialProductState);
 
   return (
     <ProductContext.Provider value={{ state, dispatch }}>
@@ -38,4 +15,3 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useProductContext = () => useContext(ProductContext);

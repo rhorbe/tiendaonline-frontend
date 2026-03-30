@@ -8,7 +8,7 @@ import {Categoria} from "@/core/models/Categoria.ts";
 import {Tamanio} from "@/core/models/Tamanio.ts";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {ROUTES} from "@/core/enum/common";
-import {useProductContext} from "@/store/ProductContext";
+import {useProductContext} from "@/store/useProductContext";
 import {Link, useNavigate} from "react-router-dom";
 
 export default function ShopPage() {
@@ -30,7 +30,7 @@ export default function ShopPage() {
     const [tamanioError, setTamanioError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (state.products.length === 0) {
+        if (state.productos.length === 0) {
             fetchProducts()
                 .then((data) => {
                     dispatch({type: "SET_PRODUCTS", payload: data});
@@ -40,7 +40,7 @@ export default function ShopPage() {
         } else {
             setLoading(false);
         }
-    }, [state.products.length, dispatch]);
+    }, [state.productos.length, dispatch]);
 
     const handleProductClick = (id: string) => {
         navigate(ROUTES.PRODUCT.replace(":id", String(id)));
@@ -331,12 +331,12 @@ export default function ShopPage() {
                     ) : (
                         <>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
-                                {state.products.map((p) => (
+                                {state.productos.map((p) => (
                                     <div key={p.id} className="cursor-pointer">
                                         <ProductCard
                                             imageUrl={p.image_url ?? ""}
-                                            name={p.name}
-                                            price={p.price}
+                                            name={p.nombre}
+                                            price={p.precio}
                                             rating={5}
                                             onClick={() => handleProductClick(p.id)}
                                         />

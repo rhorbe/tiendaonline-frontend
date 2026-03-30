@@ -1,7 +1,7 @@
 import api from "./axiosInstance";
-import { Product, ProductsResponse } from "../models/Product";
+import { Producto, ProductsResponse } from "../models/Producto.ts";
 
-export const fetchProducts = async (): Promise<Product[]> => {
+export const fetchProducts = async (): Promise<Producto[]> => {
 
   const response = await api.get<ProductsResponse>('/producto');
 

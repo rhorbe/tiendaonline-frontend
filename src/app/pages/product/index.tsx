@@ -1,13 +1,13 @@
 import ProductSlider from "@/core/components/ProductSlider";
 import { Link, useParams } from "react-router-dom";
-import { useProductContext } from "@/store/ProductContext";
+import { useProductContext } from "@/store/useProductContext";
 import { ROUTES } from "@/core/enum/common";
 import { useState } from "react";
 
 export default function ProductPage() {
   const { id } = useParams();
   const { state } = useProductContext();
-  const product = state.products.find((p) => p.id === id);
+  const producto = state.productos.find((p) => p.id === id);
 
   const [quantity, setQuantity] = useState(1);
 
@@ -26,7 +26,7 @@ export default function ProductPage() {
       minimumFractionDigits: 2,
     });
 
-  if (!product) {
+  if (!producto) {
     return (
       <div className="flex justify-center items-center h-40">
         <p className="font-inter w-fit text-sm/[22px] font-semibold  text-taup-gray">
@@ -53,14 +53,14 @@ export default function ProductPage() {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-        <div className="">
-          <ProductSlider productImageUrls={[product.image_url ?? ""]} />
+        <div className="bg-white">
+          <ProductSlider productImageUrls={[producto.image_url ?? ""]} />
         </div>
         <div>
           <div className="space-y-4 pb-6 border-b border-app-light-gray">
             <div className="flex gap-[10px] items-center">
               <div className="flex gap-0.5">
-                {Array.from({ length: 5 }, (_, idx) => (
+                {Array.from({ length: producto.valoracion }, (_, idx) => (
                   <img
                     key={idx}
                     src="/images/star-icon.svg"
@@ -71,14 +71,14 @@ export default function ProductPage() {
               </div>
             </div>
             <h1 className="text-app-black font-poppins text-[40px]/[44px] font-medium tracking-[-0.4px]">
-              {product.name}
+              {producto.nombre }
             </h1>
             <p className="text-app-gray text-base/[26px] font-inter">
-              {product.description}
+              {producto.descripcion}
             </p>
             <div className="flex gap-3 items-center">
               <p className="text-app-black font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
-                {priceAsCurrency(cleanPrice(product.price) * quantity)}
+                {priceAsCurrency(cleanPrice(producto.precio) * quantity)}
               </p>
             </div>
 
@@ -125,7 +125,7 @@ export default function ProductPage() {
                     CATEGORÍA
                   </p>
                   <p className="text-app-black font-inter text-xs/5 font-normal">
-                    {product.category_id}
+                    {producto.categoria_id}
                   </p>
                 </div>
               </div>

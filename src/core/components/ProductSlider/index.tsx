@@ -37,7 +37,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({ productImageUrls }) => {
       >
         {(productImageUrls ?? []).map((imgSrc, idx) => (
           <SwiperSlide key={idx}>
-            <div className="relative h-[414px] md:h-[729px] w-full bg-primary">
+            <div className="relative h-[414px] md:h-[729px] w-full bg-white">
               <div className="absolute top-6 md:top-8 left-6 md:left-8">
                 <div className="px-4 py-2 bg-white rounded">
                   <p className="text-app-black font-inter text-base font-bold uppercase">
