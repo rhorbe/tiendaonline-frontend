@@ -337,7 +337,7 @@ export default function ShopPage() {
                                             imageUrl={p.image_url ?? ""}
                                             name={p.nombre}
                                             price={p.precio}
-                                            rating={5}
+                                            rating={Math.max(0, Math.min(5, Math.round(p.valoracion ?? 0)))}
                                             onClick={() => handleProductClick(p.id)}
                                         />
                                     </div>
