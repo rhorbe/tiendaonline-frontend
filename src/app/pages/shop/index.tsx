@@ -148,7 +148,7 @@ export default function ShopPage() {
                     </div>
                 </div>
             </div>
-            <div className="pt-8 md:pt-[60px] pb-[100px] grid md:grid-cols-4 gap-6">
+            <div className="pt-8 md:pt-[60px] pb-[100px] grid md:grid-cols-4 lg:grid-cols-[3fr_13fr] gap-6">
                 <div
                     className="flex md:hidden border-y border-app-light-gray col-span-3 justify-between items-center py-2">
                     <div className="flex items-center gap-2">
@@ -321,7 +321,7 @@ export default function ShopPage() {
                         </div>
                     </div>
                 </div>
-                <div className="col-span-3">
+                <div className="md:col-span-3 lg:col-span-1">
                     {loading ? (
                         <div className="flex justify-center items-center h-40">
                             <p className="font-inter w-fit text-sm/[22px] font-semibold  text-taup-gray">

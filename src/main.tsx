@@ -5,7 +5,7 @@ import "flowbite";
 import "@/global.css";
 
 import App from "./app";
-import { ProductProvider } from "./store/ProductContext";
+import { ProductProvider } from "./store/productProvider";
 import { AuthProvider } from "./store/AuthContext";
 
 createRoot(document.getElementById("root")!).render(
