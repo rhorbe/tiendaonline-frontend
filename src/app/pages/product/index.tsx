@@ -2,7 +2,7 @@ import ProductSlider from "@/core/components/ProductSlider";
 import { Link, useParams } from "react-router-dom";
 import { useProductContext } from "@/store/useProductContext";
 import { ROUTES } from "@/core/enum/common";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -35,6 +35,38 @@ export default function ProductPage() {
       </div>
     );
   }
+
+  const productVariants = producto.variantes ?? producto.variante ?? [];
+
+  const firstAvailableVariante = useMemo(
+    () =>
+      productVariants.find((variant) => variant.activa && variant.stock > 0) ??
+      productVariants[0],
+    [productVariants],
+  );
+
+  const [selectedVarianteId, setSelectedVarianteId] = useState<string | undefined>(
+    firstAvailableVariante?.id,
+  );
+
+  useEffect(() => {
+    setSelectedVarianteId(firstAvailableVariante?.id);
+  }, [firstAvailableVariante?.id]);
+
+  const selectedVariante = useMemo(
+    () =>
+      productVariants.find((variant) => variant.id === selectedVarianteId) ??
+      firstAvailableVariante,
+    [firstAvailableVariante, productVariants, selectedVarianteId],
+  );
+
+  const basePrice = selectedVariante?.precio ?? 50000;
+
+  const categoriaNombre =
+    typeof producto.categoria === "string"
+      ? producto.categoria
+      : producto.categoria?.nombre ?? producto.categoria_id ?? "-";
+
   return (
     <section className="px-8 lg:px-14 border-t border-app-light-gray">
       <div className="w-fit flex gap-3 md:gap-4 py-4">
@@ -78,9 +110,38 @@ export default function ProductPage() {
             </p>
             <div className="flex gap-3 items-center">
               <p className="text-app-black font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
-                {priceAsCurrency(cleanPrice(producto.precio) * quantity)}
+                {priceAsCurrency(cleanPrice(basePrice) * quantity)}
               </p>
             </div>
+            {productVariants.length > 0 && (
+              <div className="flex gap-2 flex-wrap">
+                {productVariants.map((variant) => {
+                  const variantLabel = variant.tamanio?.nombre ?? variant.tamano;
+                  const isSelected = variant.id === selectedVariante?.id;
+                  const isDisabled = !variant.activa || variant.stock <= 0;
+
+                  return (
+                    <button
+                      key={variant.id}
+                      type="button"
+                      disabled={isDisabled}
+                      onClick={() => {
+                        if (!isDisabled) {
+                          setSelectedVarianteId(variant.id);
+                        }
+                      }}
+                      className={`min-w-14 px-3 py-2 rounded-md border text-sm/[22px] font-inter transition-colors ${
+                        isSelected
+                          ? "border-[#2A6F97] text-app-black"
+                          : "border-[#D9D9D9] text-app-gray"
+                      } ${isDisabled ? "opacity-50 cursor-not-allowed" : "hover:border-[#2A6F97]"}`}
+                    >
+                      {variantLabel ? `${variantLabel} ML` : "-"}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             <div className="py-6">
               <div className="py-8">
@@ -125,7 +186,7 @@ export default function ProductPage() {
                     CATEGORÍA
                   </p>
                   <p className="text-app-black font-inter text-xs/5 font-normal">
-                    {producto.categoria_id}
+                    {categoriaNombre}
                   </p>
                 </div>
               </div>

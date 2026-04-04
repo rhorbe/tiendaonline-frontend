@@ -333,17 +333,26 @@ export default function ShopPage() {
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
                                 {state.productos.map((p) => (
                                     <div key={p.id} className="cursor-pointer">
+                                        {(() => {
+                                            const productVariants = p.variantes ?? p.variante ?? [];
+                                            const defaultVariant =
+                                                productVariants.find((variant) => variant.activa && variant.stock > 0) ??
+                                                productVariants[0];
 
-                                        <ProductCard
-                                            label={p.nuevo ? "Nuevo" : ""}
-                                            discount="-20%"
-                                            oldPrice="1000"
-                                            imageUrl={p.image_url ?? ""}
-                                            name={p.nombre}
-                                            price="2000"
-                                            rating={Math.max(0, Math.min(5, Math.round(p.valoracion ?? 0)))}
-                                            onClick={() => handleProductClick(p.id)}
-                                        />
+                                            return (
+                                                <ProductCard
+                                                    label={p.nuevo ? "Nuevo" : ""}
+                                                    discount="-20%"
+                                                    oldPrice="1000"
+                                                    imageUrl={p.image_url ?? ""}
+                                                    name={p.nombre}
+                                                    price={defaultVariant?.precio ?? 0}
+                                                    variantes={productVariants}
+                                                    rating={Math.max(0, Math.min(5, Math.round(p.valoracion ?? 0)))}
+                                                    onClick={() => handleProductClick(p.id)}
+                                                />
+                                            );
+                                        })()}
                                         <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto">
                                             {JSON.stringify(p, null, 2)}
                                         </pre>

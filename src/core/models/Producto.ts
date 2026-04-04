@@ -6,9 +6,23 @@ export interface Producto {
   descripcion: string;
   image_id: string | null;
   image_url: string | null;
-  categoria: string;
-  marca: string;
-  variante: VarianteProducto[];
+  precio: string | number;
+  categoria:
+    | string
+    | {
+        id: string;
+        nombre: string;
+      };
+  categoria_id?: string;
+  marca:
+    | string
+    | {
+        id: string;
+        nombre: string;
+      };
+  marca_id?: string;
+  variantes?: VarianteProducto[];
+  variante?: VarianteProducto[];
   activo: boolean;
   destacado: boolean;
   nuevo:boolean;
