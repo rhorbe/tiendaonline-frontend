@@ -1,6 +1,6 @@
 import {fetchBrands} from "@/core/api/marcasApi.ts";
 import {fetchCategorias} from "@/core/api/categoriasApi.ts";
-import {fetchProducts} from "@/core/api/productosApi.ts";
+import {fetchProducts, ProductFilters} from "@/core/api/productosApi.ts";
 import {fetchTamanio} from "@/core/api/tamaniosApi.ts";
 import ProductCard from "@/core/components/ProductCard";
 import {Marca} from "@/core/models/Marca.ts";
@@ -31,10 +31,10 @@ export default function ShopPage() {
     const [loadingTamanios, setLoadingTamanios] = useState(true);
     const [tamanioError, setTamanioError] = useState<string | null>(null);
 
-    const loadProducts = useCallback((filters?: {categoriaId?: string; marcaId?: string}) => {
+    const loadProducts = useCallback((filters?: ProductFilters) => {
         setLoading(true);
 
-        fetchProducts(filters as any)
+        fetchProducts(filters)
             .then((data) => {
                 dispatch({type: "SET_PRODUCTS", payload: data});
             })
@@ -54,13 +54,6 @@ export default function ShopPage() {
         });
     };
 
-    const handleClearCategoryFilter = () => {
-        setSelectedCategoryId(null);
-        loadProducts({
-            marcaId: selectedBrandId ?? undefined,
-        });
-    };
-
     const handleBrandClick = (marcaId: string) => {
         setSelectedBrandId(marcaId);
         loadProducts({
@@ -69,12 +62,17 @@ export default function ShopPage() {
         });
     };
 
-    const handleClearBrandFilter = () => {
+    const handleClearAllFilters = () => {
+        if (!selectedCategoryId && !selectedBrandId) {
+            return;
+        }
+
+        setSelectedCategoryId(null);
         setSelectedBrandId(null);
-        loadProducts({
-            categoriaId: selectedCategoryId ?? undefined,
-        });
+        loadProducts();
     };
+
+    const hasActiveFilters = Boolean(selectedCategoryId || selectedBrandId);
 
     const handleProductClick = (id: string) => {
         navigate(ROUTES.PRODUCT.replace(":id", String(id)));
@@ -208,15 +206,25 @@ export default function ShopPage() {
                 </div>
 
                 <div className="col-span-1 hidden md:flex flex-col gap-6">
-                    <div className="flex items-center gap-2">
-                        <img
-                            src="/images/filter.svg"
-                            alt="icono filtro"
-                            className="h-6 w-6"
-                        />
-                        <p className="text-app-black font-inter text-xl/8 font-semibold">
-                            Filtro
-                        </p>
+                    <div className="flex flex-col gap-3">
+                        <div className="flex items-center gap-2">
+                            <img
+                                src="/images/filter.svg"
+                                alt="icono filtro"
+                                className="h-6 w-6"
+                            />
+                            <p className="text-app-black font-inter text-xl/8 font-semibold">
+                                Filtro
+                            </p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={handleClearAllFilters}
+                            disabled={!hasActiveFilters}
+                            className="py-1.5 px-5 rounded-[80px] border border-app-black text-center font-inter text-sm/[22px] font-semibold text-app-black tracking-[-0.2px] transition-colors hover:bg-app-black hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Limpiar filtros
+                        </button>
                     </div>
                     <div className="space-y-2">
                         <h1 className="text-app-black font-inter text-base/[26px] font-semibold">
@@ -237,15 +245,6 @@ export default function ShopPage() {
                         ) : (
                             <div
                                 className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
-                                {selectedCategoryId && (
-                                    <button
-                                        type="button"
-                                        onClick={handleClearCategoryFilter}
-                                        className="font-inter w-fit text-sm/[22px] font-semibold text-app-black underline"
-                                    >
-                                        Limpiar filtro
-                                    </button>
-                                )}
                                 {categorias.length > 0 ? (
                                     categorias.map((c) => (
                                         <button
@@ -287,15 +286,6 @@ export default function ShopPage() {
                         ) : (
                             <div
                                 className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
-                                {selectedBrandId && (
-                                    <button
-                                        type="button"
-                                        onClick={handleClearBrandFilter}
-                                        className="font-inter w-fit text-sm/[22px] font-semibold text-app-black underline"
-                                    >
-                                        Limpiar filtro
-                                    </button>
-                                )}
                                 {marcas.length > 0 ? (
                                     marcas.map((b) => (
                                         <button
