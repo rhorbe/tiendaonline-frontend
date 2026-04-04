@@ -41,6 +41,10 @@ export default function ProductPage() {
         setSelectedVarianteId(firstAvailableVariante?.id);
     }, [firstAvailableVariante?.id]);
 
+    useEffect(() => {
+        window.scrollTo({top: 0, left: 0, behavior: "auto"});
+    }, [id]);
+
     const selectedVariante = useMemo(
         () =>
             productVariants.find((variant) => variant.id === selectedVarianteId) ??
@@ -86,7 +90,7 @@ export default function ProductPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
                 <div className="bg-white">
-                    <ProductSlider productImageUrls={[producto.image_url ?? ""]}/>
+                    <ProductSlider productImageUrls={[producto.image_url ?? ""]}  />
                 </div>
                 <div className="space-y-6">
                     <div className="space-y-4 pb-6 border-b border-app-light-gray">

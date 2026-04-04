@@ -93,12 +93,11 @@ const ProductCard: React.FC<ProductCardProps> = (
                             </p>
                         </div>
                     </div>
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onToggleWishlist?.();
-                        }}
-                        className="bg-white p-1.5 rounded-3xl h-8 w-8 shadow-wishlist-icon"
+                    <button onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleWishlist?.();
+                    }}
+                            className="bg-white p-1.5 rounded-3xl h-8 w-8 shadow-wishlist-icon"
                     >
                     </button>
                 </div>

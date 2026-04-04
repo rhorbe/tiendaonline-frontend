@@ -7,8 +7,14 @@ import { Swiper as SwiperType } from "swiper";
 
 interface ProductSliderProps {
   productImageUrls?: string[];
+  etiqueta?: string;
+  descuento?: string;
 }
-const ProductSlider: React.FC<ProductSliderProps> = ({ productImageUrls }) => {
+const ProductSlider: React.FC<ProductSliderProps> = ({
+  productImageUrls,
+  etiqueta = "",
+  descuento = "",
+}) => {
   const [controlledSwiper, setControlledSwiper] = useState<SwiperType | null>(
     null
   );
@@ -39,16 +45,20 @@ const ProductSlider: React.FC<ProductSliderProps> = ({ productImageUrls }) => {
           <SwiperSlide key={idx}>
             <div className="relative h-[414px] md:h-[729px] w-full bg-white">
               <div className="absolute top-6 md:top-8 left-6 md:left-8">
-                <div className="px-4 py-2 bg-white rounded">
-                  <p className="text-app-black font-inter text-base font-bold uppercase">
-                    New
-                  </p>
-                </div>
-                <div className="px-4 py-2 bg-app-green rounded mt-2">
-                  <p className="text-white font-inter text-base font-bold uppercase">
-                    -50%
-                  </p>
-                </div>
+                {etiqueta && (
+                  <div className="px-4 py-2 bg-white rounded">
+                    <p className="text-app-black font-inter text-base font-bold uppercase">
+                      {etiqueta}
+                    </p>
+                  </div>
+                )}
+                {descuento && (
+                  <div className="px-4 py-2 bg-app-green rounded mt-2">
+                    <p className="text-white font-inter text-base font-bold uppercase">
+                      {descuento}
+                    </p>
+                  </div>
+                )}
               </div>
               <img
                 src={imgSrc}
