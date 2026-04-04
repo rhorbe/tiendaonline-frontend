@@ -16,6 +16,7 @@ export default function ShopPage() {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(true);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [loadingCategories, setLoadingCategorias] = useState(true);
@@ -29,18 +30,30 @@ export default function ShopPage() {
     const [loadingTamanios, setLoadingTamanios] = useState(true);
     const [tamanioError, setTamanioError] = useState<string | null>(null);
 
+    const loadProducts = useCallback((categoriaId?: string) => {
+        setLoading(true);
+
+        fetchProducts(categoriaId)
+            .then((data) => {
+                dispatch({type: "SET_PRODUCTS", payload: data});
+            })
+            .catch((err) => console.error("Error recuperando productos:", err))
+            .finally(() => setLoading(false));
+    }, [dispatch]);
+
     useEffect(() => {
-        if (state.productos.length === 0) {
-            fetchProducts()
-                .then((data) => {
-                    dispatch({type: "SET_PRODUCTS", payload: data});
-                })
-                .catch((err) => console.error("Error recuperando productos:", err))
-                .finally(() => setLoading(false));
-        } else {
-            setLoading(false);
-        }
-    }, [state.productos.length, dispatch]);
+        loadProducts();
+    }, [loadProducts]);
+
+    const handleCategoryClick = (categoriaId: string) => {
+        setSelectedCategoryId(categoriaId);
+        loadProducts(categoriaId);
+    };
+
+    const handleClearCategoryFilter = () => {
+        setSelectedCategoryId(null);
+        loadProducts();
+    };
 
     const handleProductClick = (id: string) => {
         navigate(ROUTES.PRODUCT.replace(":id", String(id)));
@@ -203,11 +216,24 @@ export default function ShopPage() {
                         ) : (
                             <div
                                 className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
+                                {selectedCategoryId && (
+                                    <button
+                                        type="button"
+                                        onClick={handleClearCategoryFilter}
+                                        className="font-inter w-fit text-sm/[22px] font-semibold text-app-black underline"
+                                    >
+                                        Limpiar filtro
+                                    </button>
+                                )}
                                 {categorias.length > 0 ? (
                                     categorias.map((c) => (
                                         <button
                                             key={c.id}
-                                            className={`font-inter w-fit text-sm/[22px] font-semibold text-app-gray`}
+                                            type="button"
+                                            onClick={() => handleCategoryClick(c.id)}
+                                            className={`font-inter w-fit text-sm/[22px] font-semibold ${
+                                                selectedCategoryId === c.id ? "text-app-black" : "text-app-gray"
+                                            }`}
                                         >
                                             {c.nombre}
                                         </button>
