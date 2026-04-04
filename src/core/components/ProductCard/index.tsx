@@ -4,7 +4,7 @@ import {VarianteProducto} from "@/core/models/VarianteProducto.ts";
 interface ProductCardProps {
     imageUrl?: string;
     label?: string;
-    discount?: string;
+    descuento?: string;
     rating?: number;
     brand?: string;
     name?: string;
@@ -20,11 +20,10 @@ const ProductCard: React.FC<ProductCardProps> = (
     {
         imageUrl,
         label,
-        discount = "-50%",
+        descuento = "-50%",
         rating = 0,
         brand = "",
         name,
-        price,
         oldPrice,
         variantes = [],
         onAddToCart,
@@ -49,7 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = (
         [firstAvailableVariante, selectedVarianteId, variantes],
     );
 
-    const displayedPrice = selectedVariante?.precio ?? price;
+    const displayedPrice = selectedVariante?.precio;
     const cleanPrice =
         typeof displayedPrice === "string" ? displayedPrice.replace(/,/g, "") : displayedPrice;
 
@@ -89,7 +88,7 @@ const ProductCard: React.FC<ProductCardProps> = (
                         </div>
                         <div className="px-3 py-1 bg-app-green rounded mt-2">
                             <p className="text-white font-inter text-base font-bold uppercase">
-                                {discount}
+                                {descuento}
                             </p>
                         </div>
                     </div>

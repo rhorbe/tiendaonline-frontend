@@ -14,6 +14,8 @@ export interface Producto {
     destacado: boolean;
     nuevo: boolean;
     oferta: boolean;
+    label?: string;
+    descuento?: string | number;
     valoracion: number;
 }
 

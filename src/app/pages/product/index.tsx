@@ -70,6 +70,10 @@ export default function ProductPage() {
     const basePrice = selectedVariante?.precio ?? 50000;
     const totalPrice = formatCurrency(normalizePrice(basePrice) * quantity);
     const rating = Math.max(0, producto.valoracion ?? 0);
+    const descuento =
+        producto.descuento !== undefined && producto.descuento !== null
+            ? String(producto.descuento)
+            : undefined;
 
     return (
         <section className="px-8 lg:px-14 border-t border-app-light-gray">
@@ -90,7 +94,11 @@ export default function ProductPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
                 <div className="bg-white">
-                    <ProductSlider productImageUrls={[producto.image_url ?? ""]}  />
+                    <ProductSlider
+                        productImageUrls={[producto.image_url ?? ""]}
+                        etiqueta={producto.label}
+                        descuento={descuento}
+                    />
                 </div>
                 <div className="space-y-6">
                     <div className="space-y-4 pb-6 border-b border-app-light-gray">
