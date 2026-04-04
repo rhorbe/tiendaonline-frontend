@@ -17,6 +17,7 @@ export default function ShopPage() {
 
     const [loading, setLoading] = useState(true);
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+    const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null);
 
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [loadingCategories, setLoadingCategorias] = useState(true);
@@ -30,10 +31,10 @@ export default function ShopPage() {
     const [loadingTamanios, setLoadingTamanios] = useState(true);
     const [tamanioError, setTamanioError] = useState<string | null>(null);
 
-    const loadProducts = useCallback((categoriaId?: string) => {
+    const loadProducts = useCallback((filters?: {categoriaId?: string; marcaId?: string}) => {
         setLoading(true);
 
-        fetchProducts(categoriaId)
+        fetchProducts(filters as any)
             .then((data) => {
                 dispatch({type: "SET_PRODUCTS", payload: data});
             })
@@ -47,12 +48,32 @@ export default function ShopPage() {
 
     const handleCategoryClick = (categoriaId: string) => {
         setSelectedCategoryId(categoriaId);
-        loadProducts(categoriaId);
+        loadProducts({
+            categoriaId,
+            marcaId: selectedBrandId ?? undefined,
+        });
     };
 
     const handleClearCategoryFilter = () => {
         setSelectedCategoryId(null);
-        loadProducts();
+        loadProducts({
+            marcaId: selectedBrandId ?? undefined,
+        });
+    };
+
+    const handleBrandClick = (marcaId: string) => {
+        setSelectedBrandId(marcaId);
+        loadProducts({
+            categoriaId: selectedCategoryId ?? undefined,
+            marcaId,
+        });
+    };
+
+    const handleClearBrandFilter = () => {
+        setSelectedBrandId(null);
+        loadProducts({
+            categoriaId: selectedCategoryId ?? undefined,
+        });
     };
 
     const handleProductClick = (id: string) => {
@@ -266,11 +287,24 @@ export default function ShopPage() {
                         ) : (
                             <div
                                 className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
+                                {selectedBrandId && (
+                                    <button
+                                        type="button"
+                                        onClick={handleClearBrandFilter}
+                                        className="font-inter w-fit text-sm/[22px] font-semibold text-app-black underline"
+                                    >
+                                        Limpiar filtro
+                                    </button>
+                                )}
                                 {marcas.length > 0 ? (
                                     marcas.map((b) => (
                                         <button
                                             key={b.id}
-                                            className="font-inter w-fit text-sm/[22px] font-semibold text-app-gray"
+                                            type="button"
+                                            onClick={() => handleBrandClick(b.id)}
+                                            className={`font-inter w-fit text-sm/[22px] font-semibold ${
+                                                selectedBrandId === b.id ? "text-app-black" : "text-app-gray"
+                                            }`}
                                         >
                                             {b.name}
                                         </button>
