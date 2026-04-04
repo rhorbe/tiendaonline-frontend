@@ -122,7 +122,7 @@ export default function ShopPage() {
     return (
         <section className="px-8 lg:px-14">
             <div
-                className="shop-page-banner-bg min-h-[208px] md:h-[292px] max-h-[292px] flex justify-center items-center">
+                className="shop-page-banner-bg min-h-[208px] md:h-[208px] flex justify-center items-center">
                 <div className="max-w-fit flex flex-col items-center gap-4 md:gap-6">
                     <h1 className="text-app-black font-poppins text-[40px]/[44px] md:text-[54px]/[58px] tracking-[-0.4px] md:tracking-[-1px] font-medium">
                         Tienda
@@ -334,7 +334,7 @@ export default function ShopPage() {
                                 {state.productos.map((p) => (
                                     <div key={p.id} className="cursor-pointer">
                                         {(() => {
-                                            const productVariants = p.variantes ?? p.variante ?? [];
+                                            const productVariants = p.variantes ?? [];
                                             const defaultVariant =
                                                 productVariants.find((variant) => variant.activa && variant.stock > 0) ??
                                                 productVariants[0];
@@ -345,6 +345,7 @@ export default function ShopPage() {
                                                     discount="-20%"
                                                     oldPrice="1000"
                                                     imageUrl={p.image_url ?? ""}
+                                                    brand={p.marca ?? ""}
                                                     name={p.nombre}
                                                     price={defaultVariant?.precio ?? 0}
                                                     variantes={productVariants}

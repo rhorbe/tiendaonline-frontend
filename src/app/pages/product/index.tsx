@@ -148,15 +148,15 @@ export default function ProductPage() {
                     </div>
 
                     <div className="flex items-center gap-24">
-                        <p className="text-app-gray font-inter text-xs/5 font-normal">
+                        <p className="text-app-gray font-inter text-sm/[22px] font-normal">
                             CATEGORÍA
                         </p>
-                        <p className="text-app-black font-inter text-xs/5 font-normal">
+                        <p className="text-app-black font-inter text-sm/[22px] font-normal">
                             {producto.categoria}
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-6 pb-6">
                         <div className="flex flex-shrink-0 items-center gap-6 rounded bg-primary px-4 py-3 w-fit">
                             <button type="button" onClick={handleClickDecrease}>
                                 <img
