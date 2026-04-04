@@ -354,9 +354,6 @@ export default function ShopPage() {
                                                 />
                                             );
                                         })()}
-                                        <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto">
-                                            {JSON.stringify(p, null, 2)}
-                                        </pre>
                                     </div>
                                 ))}
                             </div>

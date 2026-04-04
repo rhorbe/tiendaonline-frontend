@@ -100,23 +100,8 @@ const ProductCard: React.FC<ProductCardProps> = (
                         }}
                         className="bg-white p-1.5 rounded-3xl h-8 w-8 shadow-wishlist-icon"
                     >
-                        <img
-                            src="/images/wishlist.svg"
-                            alt="favoritos"
-                            className="h-5 w-5"
-                        />
                     </button>
                 </div>
-
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onAddToCart?.(selectedVariante);
-                    }}
-                    className="text-white text-center font-inter text-base/6 md:text-base/7 font-medium tracking-[-0.4px] bg-app-black rounded-lg w-full px-4 md:px-10 py-2 md:py-[10px]"
-                >
-                    Agregar al carrito
-                </button>
             </div>
 
             <div className="mt-3">
@@ -171,6 +156,16 @@ const ProductCard: React.FC<ProductCardProps> = (
                         </p>
                     )}
                 </div>
+
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onAddToCart?.(selectedVariante);
+                    }}
+                    className="text-white text-center font-inter text-base/6 md:text-base/7 font-medium tracking-[-0.4px] bg-app-black rounded-lg w-full px-4 md:px-10 py-2 md:py-[10px]"
+                >
+                    Agregar al carrito
+                </button>
             </div>
         </div>
     );
