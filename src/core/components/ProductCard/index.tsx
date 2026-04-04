@@ -15,7 +15,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({
   imageUrl,
-  label = "Nuevo",
+  label,
   discount = "-50%",
   rating = 1,
   name,

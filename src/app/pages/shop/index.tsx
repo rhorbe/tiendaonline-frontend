@@ -333,13 +333,20 @@ export default function ShopPage() {
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
                                 {state.productos.map((p) => (
                                     <div key={p.id} className="cursor-pointer">
+
                                         <ProductCard
+                                            label={p.nuevo ? "Nuevo" : ""}
+                                            discount="-20%"
+                                            oldPrice="1000"
                                             imageUrl={p.image_url ?? ""}
                                             name={p.nombre}
-                                            price={p.precio}
+                                            price="2000"
                                             rating={Math.max(0, Math.min(5, Math.round(p.valoracion ?? 0)))}
                                             onClick={() => handleProductClick(p.id)}
                                         />
+                                        <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto">
+                                            {JSON.stringify(p, null, 2)}
+                                        </pre>
                                     </div>
                                 ))}
                             </div>
