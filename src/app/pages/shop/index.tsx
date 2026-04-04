@@ -342,7 +342,7 @@ export default function ShopPage() {
                                             return (
                                                 <ProductCard
                                                     label={p.nuevo ? "Nuevo" : ""}
-                                                    discount="-20%"
+                                                    descuento="-20%"
                                                     oldPrice="1000"
                                                     imageUrl={p.image_url ?? ""}
                                                     brand={p.marca ?? ""}

@@ -48,17 +48,20 @@ const ProductCard: React.FC<ProductCardProps> = (
         [firstAvailableVariante, selectedVarianteId, variantes],
     );
 
-    const displayedPrice = selectedVariante?.precio;
-    const cleanPrice =
-        typeof displayedPrice === "string" ? displayedPrice.replace(/,/g, "") : displayedPrice;
-
-    const priceAsCurrency = displayedPrice
-        ? Number(cleanPrice).toLocaleString("es-AR", {
+    const formatPriceToARS = (price: string | number | undefined): string => {
+        if (!price) return "";
+        const cleanPrice =
+            typeof price === "string" ? price.replace(/,/g, "") : price;
+        return Number(cleanPrice).toLocaleString("es-AR", {
             style: "currency",
             currency: "ARS",
             minimumFractionDigits: 2,
-        })
-        : "";
+        });
+    };
+
+    const displayedPrice = selectedVariante?.precio;
+    const priceAsCurrency = formatPriceToARS(displayedPrice);
+    const oldPriceFormatted = formatPriceToARS(oldPrice);
 
     return (
         <div
@@ -102,7 +105,7 @@ const ProductCard: React.FC<ProductCardProps> = (
                 </div>
             </div>
 
-            <div className="mt-3">
+            <div className="mt-1.5">
                 <div className="flex gap-0.5 mb-2">
                     {Array.from({length: rating}, (_, i) => (
                         <img key={i} src="/images/star-icon.svg" alt="estrella"/>
@@ -144,15 +147,16 @@ const ProductCard: React.FC<ProductCardProps> = (
                         })}
                     </div>
                 )}
-                <div className="flex gap-3.5 items-center">
-                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                        {priceAsCurrency}
-                    </p>
+                <div className="flex gap-3.5 items-center mb-3">
                     {oldPrice && (
                         <p className="text-app-gray font-inter text-sm/[22px] font-semibold line-through">
-                            {oldPrice}
+                            {oldPriceFormatted}
                         </p>
                     )}
+                    <p className="text-app-black font-inter text-lg/[28px] font-semibold">
+                        {priceAsCurrency}
+                    </p>
+
                 </div>
 
                 <button
