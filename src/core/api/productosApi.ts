@@ -1,14 +1,19 @@
 import api from "./axiosInstance";
-import { Producto, ProductsResponse } from "../models/Producto.ts";
+import { Producto, ProductsMeta, ProductsResponse } from "../models/Producto.ts";
 
 export interface ProductFilters {
   categoriaId?: string;
   marcaId?: string;
 }
 
+export interface FetchProductsResult {
+  data: Producto[];
+  meta?: ProductsMeta;
+}
+
 export const fetchProducts = async (
   filtersOrCategoriaId?: ProductFilters | string,
-): Promise<Producto[]> => {
+): Promise<FetchProductsResult> => {
   const filters: ProductFilters =
     typeof filtersOrCategoriaId === "string"
       ? { categoriaId: filtersOrCategoriaId }
@@ -28,5 +33,8 @@ export const fetchProducts = async (
     throw new Error("No se pudo obtener la lista de productos");
   }
 
-  return response.data.data;
+  return {
+    data: response.data.data,
+    meta: response.data.meta,
+  };
 };

@@ -35,8 +35,14 @@ export default function ShopPage() {
         setLoading(true);
 
         fetchProducts(filters)
-            .then((data) => {
-                dispatch({type: "SET_PRODUCTS", payload: data});
+            .then((response) => {
+                dispatch({
+                    type: "SET_PRODUCTS",
+                    payload: {
+                        productos: response.data,
+                        meta: response.meta,
+                    },
+                });
             })
             .catch((err) => console.error("Error recuperando productos:", err))
             .finally(() => setLoading(false));
@@ -73,6 +79,8 @@ export default function ShopPage() {
     };
 
     const hasActiveFilters = Boolean(selectedCategoryId || selectedBrandId);
+    const hasMoreProducts = (state.meta?.total ?? 0) > (state.meta?.to ?? 0);
+    const emptyAfterFilters = hasActiveFilters && state.productos.length === 0;
 
     const handleProductClick = (id: string) => {
         navigate(ROUTES.PRODUCT.replace(":id", String(id)));
@@ -378,6 +386,19 @@ export default function ShopPage() {
                                 Cargando...
                             </p>
                         </div>
+                    ) : emptyAfterFilters ? (
+                        <div className="flex flex-col items-center justify-center gap-3 h-40">
+                            <p className="font-inter text-sm/[22px] font-semibold text-taup-gray text-center">
+                                No se encontraron productos con los filtros seleccionados.
+                            </p>
+                            <button
+                                type="button"
+                                onClick={handleClearAllFilters}
+                                className="py-1.5 px-5 rounded-[80px] border border-app-black text-center font-inter text-sm/[22px] font-semibold text-app-black tracking-[-0.2px] transition-colors hover:bg-app-black hover:text-white"
+                            >
+                                Limpiar filtros
+                            </button>
+                        </div>
                     ) : (
                         <>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
@@ -408,12 +429,14 @@ export default function ShopPage() {
                                 ))}
                             </div>
 
-                            <div className="flex justify-center">
-                                <button
-                                    className="py-1.5 px-10 rounded-[80px] border border-app-black text-center font-inter text-base/7 font-semibold tracking-[-0.4px]">
-                                    Ver más
-                                </button>
-                            </div>
+                            {hasMoreProducts && (
+                                <div className="flex justify-center">
+                                    <button
+                                        className="py-1.5 px-10 rounded-[80px] border border-app-black text-center font-inter text-base/7 font-semibold tracking-[-0.4px]">
+                                        Ver más
+                                    </button>
+                                </div>
+                            )}
                         </>
                     )}
                 </div>

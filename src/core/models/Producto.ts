@@ -19,8 +19,14 @@ export interface Producto {
     valoracion: number;
 }
 
+export interface ProductsMeta {
+    total: number;
+    to: number;
+}
+
 export interface ProductsResponse {
     success: boolean;
     data: Producto[];
     count: number;
+    meta?: ProductsMeta;
 }

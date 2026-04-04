@@ -1,11 +1,20 @@
 import { Producto } from "@/core/models/Producto.ts";
 import { createContext, type Dispatch } from "react";
 
-export type ProductState = {
-  productos: Producto[];
+type ProductListMeta = {
+  total: number;
+  to: number;
 };
 
-export type ProductAction = { type: "SET_PRODUCTS"; payload: Producto[] };
+export type ProductState = {
+  productos: Producto[];
+  meta: ProductListMeta | null;
+};
+
+export type ProductAction = {
+  type: "SET_PRODUCTS";
+  payload: { productos: Producto[]; meta?: ProductListMeta };
+};
 
 export type ProductContextValue = {
   state: ProductState;
@@ -14,6 +23,7 @@ export type ProductContextValue = {
 
 export const initialProductState: ProductState = {
   productos: [],
+  meta: null,
 };
 
 export const ProductContext = createContext<ProductContextValue>({
@@ -27,7 +37,11 @@ export const productReducer = (
 ): ProductState => {
   switch (action.type) {
     case "SET_PRODUCTS":
-      return { ...state, productos: action.payload };
+      return {
+        ...state,
+        productos: action.payload.productos,
+        meta: action.payload.meta ?? null,
+      };
     default:
       return state;
   }
