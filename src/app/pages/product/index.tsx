@@ -2,7 +2,7 @@ import ProductSlider from "@/core/components/ProductSlider";
 import {Link, useParams} from "react-router-dom";
 import {useProductContext} from "@/store/useProductContext";
 import {ROUTES} from "@/core/enum/common";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {VarianteProducto} from "@/core/models/VarianteProducto.ts";
 import {fetchProductById} from "@/core/api/productosApi.ts";
 import {Producto} from "@/core/models/Producto.ts";
@@ -81,6 +81,9 @@ export default function ProductPage() {
     }, [id, productoEnContexto]);
 
     const [quantity, setQuantity] = useState(1);
+    const [descripcionExpandida, setDescripcionExpandida] = useState(false);
+    const [mostrarToggleDescripcion, setMostrarToggleDescripcion] = useState(false);
+    const descripcionRef = useRef<HTMLParagraphElement>(null);
     const productVariants = useMemo<VarianteProducto[]>(
         () => producto?.variantes ?? [],
         [producto],
@@ -104,6 +107,41 @@ export default function ProductPage() {
     useEffect(() => {
         window.scrollTo({top: 0, left: 0, behavior: "auto"});
     }, [id]);
+
+    useEffect(() => {
+        setDescripcionExpandida(false);
+    }, [producto?.id]);
+
+    useEffect(() => {
+        const validateDescriptionOverflow = () => {
+            const descripcionElement = descripcionRef.current;
+
+            if (!descripcionElement || !producto?.descripcion) {
+                setMostrarToggleDescripcion(false);
+                return;
+            }
+
+            const lineHeight = Number.parseFloat(
+                window.getComputedStyle(descripcionElement).lineHeight,
+            );
+
+            if (!lineHeight) {
+                setMostrarToggleDescripcion(false);
+                return;
+            }
+
+            const maxVisibleHeight = lineHeight * 6;
+            const fullHeight = descripcionElement.scrollHeight;
+            setMostrarToggleDescripcion(fullHeight > maxVisibleHeight + 1);
+        };
+
+        validateDescriptionOverflow();
+        window.addEventListener("resize", validateDescriptionOverflow);
+
+        return () => {
+            window.removeEventListener("resize", validateDescriptionOverflow);
+        };
+    }, [producto?.descripcion]);
 
     const selectedVariante = useMemo(
         () =>
@@ -219,9 +257,31 @@ export default function ProductPage() {
                             {producto.categoria}
                         </p>
                         <div className="border-t border-app-light-gray"/>
-                        <p className="text-app-gray text-base/[26px] font-inter">
+                        <p
+                            ref={descripcionRef}
+                            className="text-app-gray text-base/[26px] font-inter"
+                            style={
+                                descripcionExpandida
+                                    ? undefined
+                                    : {
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 6,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                    }
+                            }
+                        >
                             {producto.descripcion || ""}
                         </p>
+                        {mostrarToggleDescripcion && (
+                            <button
+                                type="button"
+                                onClick={() => setDescripcionExpandida((prev) => !prev)}
+                                className="mt-[18px] w-fit text-sm/[22px] font-inter font-medium text-app-black  hover:underline"
+                            >
+                                {descripcionExpandida ? "Ver menos" : "Ver más"}
+                            </button>
+                        )}
                         <p className="text-app-black font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
                             {totalPrice}
                         </p>
