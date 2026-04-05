@@ -11,10 +11,16 @@ import {ROUTES} from "@/core/enum/common";
 import {useProductContext} from "@/store/useProductContext";
 import {normalizePrice} from "@/store/productContext";
 import {Link, useNavigate} from "react-router-dom";
+import {useAuth} from "@/store/AuthContext";
+import {addItemToCart, getAddItemCartErrorMessage} from "@/core/api/carritoApi";
+import Modal from "@/core/components/Modal";
 
 export default function ShopPage() {
     const {state, dispatch} = useProductContext();
     const navigate = useNavigate();
+    const {user} = useAuth();
+    const [isCartErrorModalOpen, setIsCartErrorModalOpen] = useState(false);
+    const [cartErrorMessage, setCartErrorMessage] = useState("");
 
     const getVariantLabel = (label: unknown) => {
         if (typeof label === "string") {
@@ -436,9 +442,23 @@ export default function ShopPage() {
                                                     variantes={productVariants}
                                                     rating={Math.max(0, Math.min(5, Math.round(p.valoracion ?? 0)))}
                                                     onClick={() => handleProductClick(p.id)}
-                                                    onAddToCart={(selectedVariante) => {
+                                                    onAddToCart={async (selectedVariante) => {
                                                         if (!selectedVariante) {
                                                             return;
+                                                        }
+
+                                                        if (user?.id) {
+                                                            try {
+                                                                await addItemToCart({
+                                                                    cliente_id: user.id,
+                                                                    variante_producto_id: selectedVariante.id,
+                                                                    cantidad: 1,
+                                                                });
+                                                            } catch (error: unknown) {
+                                                                setCartErrorMessage(getAddItemCartErrorMessage(error));
+                                                                setIsCartErrorModalOpen(true);
+                                                                return;
+                                                            }
                                                         }
 
                                                         dispatch({
@@ -477,6 +497,15 @@ export default function ShopPage() {
                     )}
                 </div>
             </div>
+            <Modal
+                isOpen={isCartErrorModalOpen}
+                onClose={() => setIsCartErrorModalOpen(false)}
+                title="No se pudo agregar al carrito"
+                description={cartErrorMessage}
+                buttonText="Entendido"
+                iconSrc="/images/warning.svg"
+                iconAlt="Error al agregar al carrito"
+            />
         </section>
     );
 }

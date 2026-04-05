@@ -7,6 +7,9 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import {VarianteProducto} from "@/core/models/VarianteProducto.ts";
 import {fetchProductById} from "@/core/api/productosApi.ts";
 import {Producto} from "@/core/models/Producto.ts";
+import {useAuth} from "@/store/AuthContext";
+import {addItemToCart, getAddItemCartErrorMessage} from "@/core/api/carritoApi";
+import Modal from "@/core/components/Modal";
 
 const formatCurrency = (price: number) =>
     price.toLocaleString("es-AR", {
@@ -23,6 +26,10 @@ export default function ProductPage() {
     const [cargandoProducto, setCargandoProducto] = useState(false);
     const [errorProducto, setErrorProducto] = useState<string | null>(null);
     const producto = productoEnContexto ?? productoRemoto;
+    const {user} = useAuth();
+    const [isCartErrorModalOpen, setIsCartErrorModalOpen] = useState(false);
+    const [cartErrorMessage, setCartErrorMessage] = useState("");
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
@@ -218,9 +225,27 @@ export default function ProductPage() {
         return "";
     };
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         if (!selectedVariante || quantity <= 0) {
             return;
+        }
+
+        if (user?.id) {
+            setIsAddingToCart(true);
+
+            try {
+                await addItemToCart({
+                    cliente_id: user.id,
+                    variante_producto_id: selectedVariante.id,
+                    cantidad: quantity,
+                });
+            } catch (error: unknown) {
+                setCartErrorMessage(getAddItemCartErrorMessage(error));
+                setIsCartErrorModalOpen(true);
+                return;
+            } finally {
+                setIsAddingToCart(false);
+            }
         }
 
         dispatch({
@@ -240,183 +265,194 @@ export default function ProductPage() {
     };
 
     return (
-        <section className="px-8 lg:px-14 border-t border-app-light-gray">
-            <div className="w-fit flex gap-3 md:gap-4 py-4">
-                <div className="flex items-center gap-1">
-                    <p className="text-grayish-brown font-inter text-xs/5 md:text-sm/6 font-medium">
-                        <Link to={ROUTES.HOME}>Inicio</Link>
+        <>
+            <section className="px-8 lg:px-14 border-t border-app-light-gray">
+                <div className="w-fit flex gap-3 md:gap-4 py-4">
+                    <div className="flex items-center gap-1">
+                        <p className="text-grayish-brown font-inter text-xs/5 md:text-sm/6 font-medium">
+                            <Link to={ROUTES.HOME}>Inicio</Link>
+                        </p>
+                        <img
+                            src="/images/right-icon.svg"
+                            alt="icono flecha derecha"
+                            className="w-3 h-3 object-contain"
+                        />
+                    </div>
+                    <p className="text-app-black font-inter text-sm/[25px] font-medium">
+                        <Link to={ROUTES.SHOP}>Tienda</Link>
                     </p>
-                    <img
-                        src="/images/right-icon.svg"
-                        alt="icono flecha derecha"
-                        className="w-3 h-3 object-contain"
-                    />
                 </div>
-                <p className="text-app-black font-inter text-sm/[25px] font-medium">
-                    <Link to={ROUTES.SHOP}>Tienda</Link>
-                </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                <div className="bg-white">
-                    <ProductSlider
-                        productImageUrls={[producto.image_url ?? ""]}
-                        etiqueta={producto.label}
-                        descuento={descuento}
-                    />
-                </div>
-                <div className="space-y-6">
-                    <div className="space-y-4 pb-6 border-b border-app-light-gray">
-                        <div className="flex gap-[10px] items-center">
-                            <div className="flex gap-0.5">
-                                {Array.from({length: rating}, (_, idx) => (
-                                    <img
-                                        key={idx}
-                                        src="/images/star-icon.svg"
-                                        alt="icono estrella"
-                                        className="h-4 w-4"
-                                    />
-                                ))}
-                            </div>
-                        </div>
-
-                        <h1 className="text-app-gray font-poppins text-[30px]/[34px] font-medium tracking-[-0.4px]">
-                            {producto.marca || ""}
-                        </h1>
-                        <h1 className="text-app-black font-poppins text-[40px]/[44px] font-medium tracking-[-0.4px]">
-                            {producto.nombre || ""}
-                        </h1>
-                        <p className="text-app-black font-inter text-sm/[22px] font-normal">
-                            {producto.categoria}
-                        </p>
-                        <div className="border-t border-app-light-gray"/>
-                        <p
-                            ref={descripcionRef}
-                            className="text-app-gray text-base/[26px] font-inter"
-                            style={
-                                descripcionExpandida
-                                    ? undefined
-                                    : {
-                                        display: "-webkit-box",
-                                        WebkitLineClamp: 6,
-                                        WebkitBoxOrient: "vertical",
-                                        overflow: "hidden",
-                                    }
-                            }
-                        >
-                            {producto.descripcion || ""}
-                        </p>
-                        {mostrarToggleDescripcion && (
-                            <button
-                                type="button"
-                                onClick={() => setDescripcionExpandida((prev) => !prev)}
-                                className="mt-[18px] w-fit text-sm/[22px] font-inter font-medium text-app-black  hover:underline"
-                            >
-                                {descripcionExpandida ? "Ver menos" : "Ver más"}
-                            </button>
-                        )}
-                        <p className="text-app-black font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
-                            {totalPrice}
-                        </p>
-
-                        {productVariants.length > 0 && (
-                            <div className="space-y-3">
-                                <div className="flex flex-wrap gap-2">
-                                    {productVariants.map((variant) => {
-                                        const variantLabel = variant.tamanio;
-                                        const isSelected = variant.id === selectedVariante?.id;
-                                        const isDisabled = !variant.activa || variant.stock <= 0;
-
-                                        return (
-                                            <button
-                                                key={variant.id}
-                                                type="button"
-                                                disabled={isDisabled}
-                                                onClick={() => {
-                                                    if (!isDisabled) {
-                                                        setSelectedVarianteId(variant.id);
-                                                    }
-                                                }}
-                                                className={`min-w-14 rounded-md border px-3 py-2 text-sm/[22px] font-inter transition-colors ${
-                                                    isSelected
-                                                        ? "border-[#2A6F97] text-app-black"
-                                                        : "border-[#D9D9D9] text-app-gray"
-                                                } ${isDisabled ? "cursor-not-allowed opacity-50" : "hover:border-[#2A6F97]"}`}
-                                            >
-                                                {variantLabel ? `${variantLabel} ML` : "-"}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <p className="text-app-gray font-inter text-sm/[22px] font-normal">
-                                        Disponibles
-                                    </p>
-                                    <p className="text-app-black font-inter text-sm/[22px] font-normal">
-                                        {selectedVariante?.stock ?? 0}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                    <div className="bg-white">
+                        <ProductSlider
+                            productImageUrls={[producto.image_url ?? ""]}
+                            etiqueta={producto.label}
+                            descuento={descuento}
+                        />
                     </div>
+                    <div className="space-y-6">
+                        <div className="space-y-4 pb-6 border-b border-app-light-gray">
+                            <div className="flex gap-[10px] items-center">
+                                <div className="flex gap-0.5">
+                                    {Array.from({length: rating}, (_, idx) => (
+                                        <img
+                                            key={idx}
+                                            src="/images/star-icon.svg"
+                                            alt="icono estrella"
+                                            className="h-4 w-4"
+                                        />
+                                    ))}
+                                </div>
+                            </div>
 
-
-                    <div className="flex items-center gap-6 pb-6">
-                        <div className="flex flex-shrink-0 items-center gap-6 rounded bg-primary px-4 py-3 w-fit">
-                            <button
-                                type="button"
-                                onClick={handleClickDecrease}
-                                disabled={quantity <= minQuantity}
-                            >
-                                <img
-                                    src="/images/minus.svg"
-                                    alt="quitar uno"
-                                    className="h-5 w-5"
-                                />
-                            </button>
-                            <p className="text-app-black font-inter text-base/[26px] font-semibold">
-                                {quantity}
+                            <h1 className="text-app-gray font-poppins text-[30px]/[34px] font-medium tracking-[-0.4px]">
+                                {producto.marca || ""}
+                            </h1>
+                            <h1 className="text-app-black font-poppins text-[40px]/[44px] font-medium tracking-[-0.4px]">
+                                {producto.nombre || ""}
+                            </h1>
+                            <p className="text-app-black font-inter text-sm/[22px] font-normal">
+                                {producto.categoria}
                             </p>
-                            <button
-                                type="button"
-                                onClick={handleClickIncrease}
-                                disabled={selectedStock === 0 || quantity >= selectedStock}
+                            <div className="border-t border-app-light-gray"/>
+                            <p
+                                ref={descripcionRef}
+                                className="text-app-gray text-base/[26px] font-inter"
+                                style={
+                                    descripcionExpandida
+                                        ? undefined
+                                        : {
+                                            display: "-webkit-box",
+                                            WebkitLineClamp: 6,
+                                            WebkitBoxOrient: "vertical",
+                                            overflow: "hidden",
+                                        }
+                                }
                             >
-                                <img
-                                    src="/images/add.svg"
-                                    alt="agregar uno"
-                                    className="h-5 w-5"
-                                />
-                            </button>
+                                {producto.descripcion || ""}
+                            </p>
+                            {mostrarToggleDescripcion && (
+                                <button
+                                    type="button"
+                                    onClick={() => setDescripcionExpandida((prev) => !prev)}
+                                    className="mt-[18px] w-fit text-sm/[22px] font-inter font-medium text-app-black  hover:underline"
+                                >
+                                    {descripcionExpandida ? "Ver menos" : "Ver más"}
+                                </button>
+                            )}
+                            <p className="text-app-black font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
+                                {totalPrice}
+                            </p>
+
+                            {productVariants.length > 0 && (
+                                <div className="space-y-3">
+                                    <div className="flex flex-wrap gap-2">
+                                        {productVariants.map((variant) => {
+                                            const variantLabel = variant.tamanio;
+                                            const isSelected = variant.id === selectedVariante?.id;
+                                            const isDisabled = !variant.activa || variant.stock <= 0;
+
+                                            return (
+                                                <button
+                                                    key={variant.id}
+                                                    type="button"
+                                                    disabled={isDisabled}
+                                                    onClick={() => {
+                                                        if (!isDisabled) {
+                                                            setSelectedVarianteId(variant.id);
+                                                        }
+                                                    }}
+                                                    className={`min-w-14 rounded-md border px-3 py-2 text-sm/[22px] font-inter transition-colors ${
+                                                        isSelected
+                                                            ? "border-[#2A6F97] text-app-black"
+                                                            : "border-[#D9D9D9] text-app-gray"
+                                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : "hover:border-[#2A6F97]"}`}
+                                                >
+                                                    {variantLabel ? `${variantLabel} ML` : "-"}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                        <p className="text-app-gray font-inter text-sm/[22px] font-normal">
+                                            Disponibles
+                                        </p>
+                                        <p className="text-app-black font-inter text-sm/[22px] font-normal">
+                                            {selectedVariante?.stock ?? 0}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
-                        <button
-                            type="button"
-                            disabled={selectedStock === 0}
-                            onClick={handleAddToCart}
-                            className="flex w-full items-center justify-center rounded-lg bg-app-black px-10 py-[10px] text-white transition-colors hover:bg-app-black/90 disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                            <span
-                                className="hidden md:block text-center font-inter text-base font-medium leading-[28px] tracking-[-0.4px]">
-                                Agregar al carrito
-                            </span>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                                className="block md:hidden size-6"
+
+                        <div className="flex items-center gap-6 pb-6">
+                            <div className="flex flex-shrink-0 items-center gap-6 rounded bg-primary px-4 py-3 w-fit">
+                                <button
+                                    type="button"
+                                    onClick={handleClickDecrease}
+                                    disabled={quantity <= minQuantity}
+                                >
+                                    <img
+                                        src="/images/minus.svg"
+                                        alt="quitar uno"
+                                        className="h-5 w-5"
+                                    />
+                                </button>
+                                <p className="text-app-black font-inter text-base/[26px] font-semibold">
+                                    {quantity}
+                                </p>
+                                <button
+                                    type="button"
+                                    onClick={handleClickIncrease}
+                                    disabled={selectedStock === 0 || quantity >= selectedStock}
+                                >
+                                    <img
+                                        src="/images/add.svg"
+                                        alt="agregar uno"
+                                        className="h-5 w-5"
+                                    />
+                                </button>
+                            </div>
+
+                            <button
+                                type="button"
+                                disabled={selectedStock === 0 || isAddingToCart}
+                                onClick={handleAddToCart}
+                                className="flex w-full items-center justify-center rounded-lg bg-app-black px-10 py-[10px] text-white transition-colors hover:bg-app-black/90 disabled:cursor-not-allowed disabled:opacity-60"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                                />
-                            </svg>
-                        </button>
+                                <span
+                                    className="hidden md:block text-center font-inter text-base font-medium leading-[28px] tracking-[-0.4px]">
+                                    {isAddingToCart ? "Agregando..." : "Agregar al carrito"}
+                                </span>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth="1.5"
+                                    stroke="currentColor"
+                                    className="block md:hidden size-6"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+            <Modal
+                isOpen={isCartErrorModalOpen}
+                onClose={() => setIsCartErrorModalOpen(false)}
+                title="No se pudo agregar al carrito"
+                description={cartErrorMessage}
+                buttonText="Entendido"
+                iconSrc="/images/warning.svg"
+                iconAlt="Error al agregar al carrito"
+            />
+        </>
     );
 }

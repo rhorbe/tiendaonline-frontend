@@ -109,7 +109,7 @@ export default function CheckOutPage() {
                                     className="appearance-none w-5 h-5 border border-app-black rounded-full checked:bg-app-black checked:border-app-black text-app-black"
                                 />
                                 <p className="text-app-black font-inter text-base/[26px]">
-                                    Pagar con tarjeta de crédito
+                                    Tarjeta de crédito
                                 </p>
                             </div>
                             <img src="/images/finance.svg" alt="finance" className="h-6 w-6 object-contain" />
@@ -125,11 +125,10 @@ export default function CheckOutPage() {
                                     name="payment"
                                     id="paypal"
                                     checked={selectedOption === 'paypal'}
-
                                     className="appearance-none w-5 h-5 border border-app-black rounded-full checked:bg-app-black checked:border-app-black text-app-black"
                                 />
                                 <p className="text-app-black font-inter text-base/[26px]">
-                                    PayPal
+                                    Mercado Pago
                                 </p>
                             </div>
                             {/* <img src="/images/finance.svg" alt="finance" className="h-6 w-6 object-contain" /> */}
