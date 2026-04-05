@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../Button/Button";
 import { ROUTES } from "@/core/enum/common";
@@ -7,6 +8,16 @@ interface FlayoutMenuProps {
 }
 
 export const Flayout = ({ setOpen }: FlayoutMenuProps) => {
+    const [quantity, setQuantity] = useState(2);
+
+    const handleDecrease = () => {
+        setQuantity((prev) => Math.max(1, prev - 1));
+    };
+
+    const handleIncrease = () => {
+        setQuantity((prev) => prev + 1);
+    };
+
     return (
         <div className="h-screen bg-white py-10 px-6 flex flex-col justify-between w-full md:w-[413px] max-w-[413px]">
             <div className="relative">
@@ -28,11 +39,11 @@ export const Flayout = ({ setOpen }: FlayoutMenuProps) => {
                                     Color: Negro
                                 </p>
                                 <div className="flex gap-3 items-center border border-app-gray rounded py-3 px-2 w-fit">
-                                    <button>
+                                    <button type="button" onClick={handleDecrease} aria-label="Disminuir cantidad">
                                         <img src="/images/minus.svg" alt="" className="h-4 w-4" />
                                     </button>
-                                    <p className="text-app-black font-inter font-semibold text-sm/[20px]">2</p>
-                                    <button>
+                                    <p className="text-app-black font-inter font-semibold text-sm/[20px]">{quantity}</p>
+                                    <button type="button" onClick={handleIncrease} aria-label="Aumentar cantidad">
                                         <img src="/images/add.svg" alt="" className="h-4 w-4" />
                                     </button>
                                 </div>

@@ -229,30 +229,6 @@ export default function CartPage() {
           </div>
         </div>
       </div>
-      <div className="max-w-[424px]">
-        <p className="text-app-black font-poppins text-xl/7 font-medium mb-2">
-          Have a coupon?
-        </p>
-        <p className="text-app-gray font-inter text-base/[26px] mb-4">
-          Add your code for an instant cart discount
-        </p>
-        <div className="px-4 border border-app-black flex gap-2 items-center w-full">
-          <img
-            src="/images/ticket-percent.svg"
-            alt=""
-            className="h-4 md:h-6 w-4 md:w-6"
-          />
-          <input
-            type="text"
-            name="coupon"
-            id="coupon"
-            className="border-none outline-none ring-0 focus:ring-0 w-full"
-          />
-          <button className="text-app-black font-inter text-base/7 font-medium tracking-[-0.4px]">
-            Apply
-          </button>
-        </div>
-      </div>
     </section>
   );
 }
