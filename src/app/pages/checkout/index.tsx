@@ -200,21 +200,6 @@ export default function CheckOutPage() {
                             }
 
                         </div>
-                        <div className="flex gap-3 mt-6 mb-4 ">
-                            <input placeholder="Código de descuento" type="text" name="coupon" id="coupon" className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md" />
-                            <Button text="Aplicar" className="max-w-fit" />
-                        </div>
-                        <div className="flex gap-4 items-center py-3 justify-between border-b border-app-light-gray">
-                            <div className="flex gap-3">
-                                <img src="/images/ticket-percent.svg" alt="" className='h-4 md:h-6 w-4 md:w-6' />
-                                <p className="text-app-black font-inter text-base/[26px] font-normal">
-                                    JenkateMW
-                                </p>
-                            </div>
-                            <p className="text-app-green font-inter text-base/[26px] font-semibold text-right">
-                                -$25.00 [Quitar]
-                           </p>
-                        </div>
                         <div className="flex gap-4 items-center py-3 justify-between border-b border-app-light-gray">
                             <p className="text-app-black font-inter text-base/[26px] font-normal">
                                 Envío

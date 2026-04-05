@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import api from "@/core/api/axiosInstance";
 import {CustomInput} from "@/core/components";
 import PasswordInput from "@/core/components/PasswordInput";
+import Modal from "@/core/components/Modal";
 import {ROUTES} from "@/core/enum/common";
 import {useAuth} from "@/store/AuthContext";
 import {LoginResponse} from "@/core/models/User";
@@ -12,6 +13,8 @@ const Login: FC = () => {
     const {login} = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+    const [errorModalMessage, setErrorModalMessage] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,7 +44,8 @@ const Login: FC = () => {
                     ? "Correo o contraseña inválidos"
                     : error.response?.data?.message ?? error.response?.data?.error ?? "Error de conexión";
 
-            alert(errorMessage);
+            setErrorModalMessage(errorMessage);
+            setIsErrorModalOpen(true);
         }
     };
 
@@ -113,6 +117,15 @@ const Login: FC = () => {
                     </button>
                 </form>
             </div>
+            <Modal
+                isOpen={isErrorModalOpen}
+                onClose={() => setIsErrorModalOpen(false)}
+                title="Error al iniciar sesión"
+                description={errorModalMessage}
+                buttonText="Intentar de nuevo"
+                iconSrc="images/warning.svg"
+                iconAlt="Error de autenticación"
+            />
         </div>
     );
 };

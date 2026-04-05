@@ -104,13 +104,13 @@ const Header: FC = () => {
       {open && <MobileMenu setOpen={setOpen} />}
 
       {/* Carrito */}
-      <div
-        className={`cart-transition ${
-          cartOpen ? "cart-open absolute top-0 right-0 z-50" : ""
-        }`}
-      >
-        {cartOpen && <Flayout setOpen={setCartOpen} />}
-      </div>
+      {cartOpen && (
+        <div className="fixed inset-0 z-50 bg-gray-200/70">
+          <div className="absolute top-0 right-0 h-full cart-transition cart-open">
+            <Flayout setOpen={setCartOpen} />
+          </div>
+        </div>
+      )}
     </header>
   );
 };
