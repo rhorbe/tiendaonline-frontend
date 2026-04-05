@@ -4,6 +4,8 @@ import {useProductContext} from "@/store/useProductContext";
 import {ROUTES} from "@/core/enum/common";
 import {useEffect, useMemo, useState} from "react";
 import {VarianteProducto} from "@/core/models/VarianteProducto.ts";
+import {fetchProductById} from "@/core/api/productosApi.ts";
+import {Producto} from "@/core/models/Producto.ts";
 
 const normalizePrice = (price: string | number | undefined) =>
     typeof price === "string" ? Number(price.replace(/,/g, "")) : price ?? 0;
@@ -18,7 +20,65 @@ const formatCurrency = (price: number) =>
 export default function ProductPage() {
     const {id} = useParams();
     const {state} = useProductContext();
-    const producto = state.productos.find((p) => p.id === id);
+    const productoEnContexto = state.productos.find((p) => p.id === id);
+    const [productoRemoto, setProductoRemoto] = useState<Producto | null>(null);
+    const [cargandoProducto, setCargandoProducto] = useState(false);
+    const [errorProducto, setErrorProducto] = useState<string | null>(null);
+    const producto = productoEnContexto ?? productoRemoto;
+
+    useEffect(() => {
+        let isMounted = true;
+
+        setProductoRemoto(null);
+        setErrorProducto(null);
+
+        if (!id) {
+            setCargandoProducto(false);
+            setErrorProducto("Producto no encontrado.");
+            return;
+        }
+
+        if (productoEnContexto) {
+            setCargandoProducto(false);
+            return;
+        }
+
+        setCargandoProducto(true);
+
+        fetchProductById(id)
+            .then((product) => {
+                if (!isMounted) {
+                    return;
+                }
+
+                setProductoRemoto(product);
+            })
+            .catch((error: unknown) => {
+                if (!isMounted) {
+                    return;
+                }
+
+                const status =
+                    typeof error === "object" && error !== null && "response" in error
+                        ? (error as {response?: {status?: number}}).response?.status
+                        : undefined;
+
+                setErrorProducto(
+                    status === 404
+                        ? "Producto no encontrado."
+                        : "No se pudo cargar el producto. Intenta nuevamente.",
+                );
+            })
+            .finally(() => {
+                if (isMounted) {
+                    setCargandoProducto(false);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [id, productoEnContexto]);
 
     const [quantity, setQuantity] = useState(1);
     const productVariants = useMemo<VarianteProducto[]>(
@@ -69,11 +129,21 @@ export default function ProductPage() {
         });
     }, [selectedStock]);
 
+    if (cargandoProducto) {
+        return (
+            <div className="flex h-40 items-center justify-center">
+                <p className="w-fit font-inter text-sm/[22px] font-semibold text-taup-gray">
+                    Cargando producto...
+                </p>
+            </div>
+        );
+    }
+
     if (!producto) {
         return (
             <div className="flex h-40 items-center justify-center">
                 <p className="w-fit font-inter text-sm/[22px] font-semibold text-taup-gray">
-                    Producto no encontrado.
+                    {errorProducto ?? "Producto no encontrado."}
                 </p>
             </div>
         );

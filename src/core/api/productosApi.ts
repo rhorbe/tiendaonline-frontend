@@ -11,6 +11,11 @@ export interface FetchProductsResult {
   meta?: ProductsMeta;
 }
 
+interface ProductByIdResponse {
+  success: boolean;
+  data: Producto | Producto[] | null;
+}
+
 export const fetchProducts = async (
   filtersOrCategoriaId?: ProductFilters | string,
 ): Promise<FetchProductsResult> => {
@@ -38,3 +43,21 @@ export const fetchProducts = async (
     meta: response.data.meta,
   };
 };
+
+export const fetchProductById = async (id: string): Promise<Producto> => {
+  const response = await api.get<ProductByIdResponse>(`/producto/${id}`);
+
+  if (!response.data.success) {
+    throw new Error("No se pudo obtener el producto");
+  }
+
+  const payload = response.data.data;
+  const product = Array.isArray(payload) ? payload[0] : payload;
+
+  if (!product) {
+    throw new Error("Producto no encontrado");
+  }
+
+  return product;
+};
+
