@@ -9,11 +9,25 @@ import {Tamanio} from "@/core/models/Tamanio.ts";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {ROUTES} from "@/core/enum/common";
 import {useProductContext} from "@/store/useProductContext";
+import {normalizePrice} from "@/store/productContext";
 import {Link, useNavigate} from "react-router-dom";
 
 export default function ShopPage() {
     const {state, dispatch} = useProductContext();
     const navigate = useNavigate();
+
+    const getVariantLabel = (label: unknown) => {
+        if (typeof label === "string") {
+            return label;
+        }
+
+        if (label && typeof label === "object" && "nombre" in label) {
+            const value = (label as { nombre?: unknown }).nombre;
+            return typeof value === "string" ? value : "";
+        }
+
+        return "";
+    };
 
     const [loading, setLoading] = useState(true);
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
@@ -422,6 +436,28 @@ export default function ShopPage() {
                                                     variantes={productVariants}
                                                     rating={Math.max(0, Math.min(5, Math.round(p.valoracion ?? 0)))}
                                                     onClick={() => handleProductClick(p.id)}
+                                                    onAddToCart={(selectedVariante) => {
+                                                        if (!selectedVariante) {
+                                                            return;
+                                                        }
+
+                                                        dispatch({
+                                                            type: "ADD_TO_CART",
+                                                            payload: {
+                                                                varianteId: selectedVariante.id,
+                                                                productId: p.id,
+                                                                nombre: p.nombre ?? "",
+                                                                marca: p.marca ?? "",
+                                                                imageUrl: p.image_url ?? "/images/cart-product.png",
+                                                                varianteLabel:
+                                                                    selectedVariante.tamano ??
+                                                                    getVariantLabel(selectedVariante.tamanio),
+                                                                unitPrice: normalizePrice(selectedVariante.precio),
+                                                                quantity: 1,
+                                                                stock: selectedVariante.stock,
+                                                            },
+                                                        });
+                                                    }}
                                                 />
                                             );
                                         })()}

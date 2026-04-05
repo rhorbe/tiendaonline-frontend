@@ -1,14 +1,12 @@
 import ProductSlider from "@/core/components/ProductSlider";
 import {Link, useParams} from "react-router-dom";
 import {useProductContext} from "@/store/useProductContext";
+import {normalizePrice} from "@/store/productContext";
 import {ROUTES} from "@/core/enum/common";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {VarianteProducto} from "@/core/models/VarianteProducto.ts";
 import {fetchProductById} from "@/core/api/productosApi.ts";
 import {Producto} from "@/core/models/Producto.ts";
-
-const normalizePrice = (price: string | number | undefined) =>
-    typeof price === "string" ? Number(price.replace(/,/g, "")) : price ?? 0;
 
 const formatCurrency = (price: number) =>
     price.toLocaleString("es-AR", {
@@ -19,7 +17,7 @@ const formatCurrency = (price: number) =>
 
 export default function ProductPage() {
     const {id} = useParams();
-    const {state} = useProductContext();
+    const {state, dispatch} = useProductContext();
     const productoEnContexto = state.productos.find((p) => p.id === id);
     const [productoRemoto, setProductoRemoto] = useState<Producto | null>(null);
     const [cargandoProducto, setCargandoProducto] = useState(false);
@@ -207,6 +205,40 @@ export default function ProductPage() {
             ? String(producto.descuento)
             : undefined;
 
+    const getVariantLabel = (label: unknown) => {
+        if (typeof label === "string") {
+            return label;
+        }
+
+        if (label && typeof label === "object" && "nombre" in label) {
+            const value = (label as { nombre?: unknown }).nombre;
+            return typeof value === "string" ? value : "";
+        }
+
+        return "";
+    };
+
+    const handleAddToCart = () => {
+        if (!selectedVariante || quantity <= 0) {
+            return;
+        }
+
+        dispatch({
+            type: "ADD_TO_CART",
+            payload: {
+                varianteId: selectedVariante.id,
+                productId: producto.id,
+                nombre: producto.nombre ?? "",
+                marca: producto.marca ?? "",
+                imageUrl: producto.image_url ?? "/images/cart-product.png",
+                varianteLabel: selectedVariante.tamano ?? getVariantLabel(selectedVariante.tamanio),
+                unitPrice: normalizePrice(selectedVariante.precio),
+                quantity,
+                stock: selectedVariante.stock,
+            },
+        });
+    };
+
     return (
         <section className="px-8 lg:px-14 border-t border-app-light-gray">
             <div className="w-fit flex gap-3 md:gap-4 py-4">
@@ -360,6 +392,7 @@ export default function ProductPage() {
                         <button
                             type="button"
                             disabled={selectedStock === 0}
+                            onClick={handleAddToCart}
                             className="flex w-full items-center justify-center rounded-lg bg-app-black px-10 py-[10px] text-white transition-colors hover:bg-app-black/90 disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             <span

@@ -4,10 +4,13 @@ import MobileMenu from "./MobileMenu";
 import { Flayout } from "../../Cart/Flayout";
 import { ROUTES } from "@/core/enum/common";
 import UserDropdown from "../../UserDropdown";
+import { useProductContext } from "@/store/useProductContext";
 
 const Header: FC = () => {
   const [open, setOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const { state } = useProductContext();
+  const cartItemsCount = state.cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   const navLinks = [
     { name: "Tienda", url: ROUTES.SHOP },
@@ -54,7 +57,7 @@ const Header: FC = () => {
             />
             <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
               <p className="text-white text-center font-inter text-xs font-bold leading-[10px]">
-                2
+                {cartItemsCount}
               </p>
             </div>
           </button>
@@ -89,7 +92,7 @@ const Header: FC = () => {
               />
               <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
                 <p className="text-white text-center font-inter text-xs font-bold leading-[10px]">
-                  22
+                  {cartItemsCount}
                 </p>
               </div>
             </button>
