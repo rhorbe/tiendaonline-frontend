@@ -60,7 +60,7 @@ export default function ProductPage() {
 
                 const status =
                     typeof error === "object" && error !== null && "response" in error
-                        ? (error as {response?: {status?: number}}).response?.status
+                        ? (error as { response?: { status?: number } }).response?.status
                         : undefined;
 
                 setErrorProducto(
@@ -215,16 +215,10 @@ export default function ProductPage() {
                         <h1 className="text-app-black font-poppins text-[40px]/[44px] font-medium tracking-[-0.4px]">
                             {producto.nombre || ""}
                         </h1>
-
-
-                        <div className="flex items-center gap-24">
-                            <p className="text-app-gray font-inter text-sm/[22px] font-normal">
-                                CATEGORÍA
-                            </p>
-                            <p className="text-app-black font-inter text-sm/[22px] font-normal">
-                                {producto.categoria}
-                            </p>
-                        </div>
+                        <p className="text-app-black font-inter text-sm/[22px] font-normal">
+                            {producto.categoria}
+                        </p>
+                        <div className="border-t border-app-light-gray"/>
                         <p className="text-app-gray text-base/[26px] font-inter">
                             {producto.descripcion || ""}
                         </p>
@@ -308,7 +302,8 @@ export default function ProductPage() {
                             disabled={selectedStock === 0}
                             className="flex w-full items-center justify-center rounded-lg bg-app-black px-10 py-[10px] text-white transition-colors hover:bg-app-black/90 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            <span className="hidden md:block text-center font-inter text-base font-medium leading-[28px] tracking-[-0.4px]">
+                            <span
+                                className="hidden md:block text-center font-inter text-base font-medium leading-[28px] tracking-[-0.4px]">
                                 Agregar al carrito
                             </span>
                             <svg
