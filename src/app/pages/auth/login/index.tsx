@@ -25,17 +25,23 @@ const Login: FC = () => {
             localStorage.setItem("token", data.token);
 
             login({
-                id: data.user.id,
+                id: data.user._id,
                 name: data.user.name,
                 email: data.user.email,
                 email_verified_at: data.user.email_verified_at,
-                remember_token: data.user.remember_token,
+                active: data.user.active,
             });
 
             navigate(ROUTES.SHOP);
         } catch (err: unknown) {
             const error = err as ErrorResponse;
-            alert(error.response?.data?.message ?? "Error de conexión");
+            const status = error.response?.status;
+            const errorMessage =
+                status === 401
+                    ? "Correo o contraseña inválidos"
+                    : error.response?.data?.message ?? error.response?.data?.error ?? "Error de conexión";
+
+            alert(errorMessage);
         }
     };
 

@@ -14,7 +14,7 @@ export const setupInterceptors = (api: AxiosInstance): void => {
     (res: AxiosResponse) => res,
     (err) => {
       if (err.response?.status === 401) {
-        // ...
+        localStorage.removeItem('token');
       }
       return Promise.reject(err);
     }

@@ -33,10 +33,10 @@ export const Flayout = ({ setOpen }: FlayoutMenuProps) => {
                             <img src="/images/cart-product.png" alt="producto en carrito" className="w-20" />
                             <div>
                                 <h3 className="max-w-[210px] text-app-black font-inter text-sm/[22px] font-semibold mb-2">
-                                    Mesa Auxiliar
+                                    Light Blue
                                 </h3>
                                 <p className="text-app-gray font-inter text-sm/[20px] mb-2">
-                                    Color: Negro
+                                    Dolce & Gabbana
                                 </p>
                                 <div className="flex gap-3 items-center border border-app-gray rounded py-3 px-2 w-fit">
                                     <button type="button" onClick={handleDecrease} aria-label="Disminuir cantidad">

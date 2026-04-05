@@ -4,7 +4,10 @@ import { setupInterceptors } from './interceptors';
 
 const api: AxiosInstance = axios.create({
   baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
 });
 
 setupInterceptors(api);
