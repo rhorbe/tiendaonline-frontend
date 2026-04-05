@@ -72,8 +72,8 @@ const Header: FC = () => {
           </button>
           <Link to={ROUTES.HOME}>
             <img
-              src="/images/logo_lessence_negro.png"
-              alt="L'Essence Perfumes"
+              src="/images/logo_essences.svg"
+              alt="Essences Perfumes"
               className="h-6 w-auto"
             />
           </Link>

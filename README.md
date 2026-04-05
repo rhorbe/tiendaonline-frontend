@@ -14,7 +14,7 @@ El texto completo de la licencia se encuentra en el archivo [LICENSE](./LICENSE)
 Este proyecto se utiliza únicamente con fines de aprendizaje y demostración. No está destinado a uso comercial.
 
 
-# Educational React Project "L'Essence Perfumería On-line"
+# Educational React Project "Essences Perfumería On-line"
 
 This project is based on the work of [Muhammed Resvan K](https://github.com/Resvan/3legant), originally released under the MIT License.
 

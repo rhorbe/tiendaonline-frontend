@@ -16,8 +16,8 @@ export default function OtpPage() {
         <div className="flex justify-center items-center mt-8">
           <Link to={ROUTES.HOME}>
             <img
-              src="/images/logo_lessence_negro.png"
-              alt="L'Essence Perfumes"
+              src="/images/logo_essences.svg"
+              alt="Essences Perfumes"
               className="h-14 w-auto"
             />
           </Link>

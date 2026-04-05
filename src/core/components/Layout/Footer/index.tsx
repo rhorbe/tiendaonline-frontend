@@ -15,7 +15,7 @@ export default function Footer() {
           <Link to={ROUTES.HOME} className="flex items-center">
             <img
               src="/images/logo_essences_blanco.svg"
-              alt="L'Essence Perfumes"
+              alt="Essence Perfumes"
               className="h-10 w-auto p-2"
             />
           </Link>

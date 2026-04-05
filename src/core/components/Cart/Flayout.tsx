@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Button from "../Button/Button";
 import { ROUTES } from "@/core/enum/common";
@@ -17,6 +18,21 @@ interface FlayoutMenuProps {
 export const Flayout = ({ setOpen }: FlayoutMenuProps) => {
     const { state, dispatch } = useProductContext();
     const { cartItems } = state;
+    const flayoutRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (flayoutRef.current && !flayoutRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [setOpen]);
 
     const handleDecrease = (varianteId: string, currentQty: number) => {
         dispatch({
@@ -36,7 +52,10 @@ export const Flayout = ({ setOpen }: FlayoutMenuProps) => {
     const total = subtotal;
 
     return (
-        <div className="h-screen bg-white py-10 px-6 flex flex-col justify-between w-full md:w-[413px] max-w-[413px]">
+        <div
+            ref={flayoutRef}
+            className="h-screen bg-white py-10 px-6 flex flex-col justify-between w-full md:w-[413px] max-w-[413px]"
+        >
             <div className="relative">
                 <button onClick={() => setOpen(false)} className="absolute right-0 top-0.5">
                     <img src="/images/close.svg" alt="" />
