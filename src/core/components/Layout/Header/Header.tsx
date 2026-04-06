@@ -18,7 +18,7 @@ const Header: FC = () => {
   ];
 
   return (
-    <header className="relative">
+    <header className="sticky top-0 z-40 bg-white">
       {/* Desktop */}
       <div className="hidden md:flex justify-between items-center mx-auto px-4 md:px-7 lg:px-14 py-4">
         <div className="flex items-center">
