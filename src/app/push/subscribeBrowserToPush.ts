@@ -5,18 +5,49 @@ import {
 } from '@/core/api/pushApi';
 import {registrarServiceWorker} from '@/app/registerServiceWorker';
 
+const PUSH_SERVICE_ERROR_REGEX = /push service error/i;
+
+function mapearErrorSuscripcionPush(error: unknown): Error {
+    if (error instanceof DOMException) {
+        if (error.name === 'NotAllowedError') {
+            return new Error('El navegador bloqueó la suscripción push. Revisa permisos de notificaciones.');
+        }
+
+        if (error.name === 'InvalidStateError') {
+            return new Error('El service worker no está activo o no se puede usar para push todavía.');
+        }
+
+        if (error.name === 'AbortError') {
+            return new Error('El servicio push del navegador rechazó la suscripción. Intenta nuevamente.');
+        }
+
+        return new Error(`No se pudo crear la suscripción push (${error.name}): ${error.message}`);
+    }
+
+    return new Error('No se pudo crear la suscripción push por un error inesperado.');
+}
+
+function convertirClaveVapid(publicKey: string): Uint8Array {
+    const vapidKey = vapidPublicKeyToUint8Array(publicKey);
+
+    // Para Web Push, una clave pública P-256 suele tener 65 bytes descomprimidos.
+    if (vapidKey.length !== 65) {
+        throw new Error('La clave VAPID pública recibida no tiene un tamaño válido.');
+    }
+
+    return vapidKey;
+}
+
 export async function pedirPermisoNotificaciones(): Promise<NotificationPermission> {
     if (!('Notification' in window)) {
         throw new Error('Este navegador no soporta notificaciones.');
     }
 
-    console.warn( 'Notification.permission: ', Notification.permission);
     if (Notification.permission === 'granted') {
         return 'granted';
     }
 
     const permission = await Notification.requestPermission();
-    console.warn('Permiso de notificaciones solicitado, resultado:', permission);
     if (permission !== 'granted') {
         throw new Error('Permiso de notificaciones no concedido.');
     }
@@ -33,31 +64,53 @@ export async function suscribirseAPush(): Promise<PushSubscription> {
     if (!registration) {
         throw new Error('No fue posible registrar el service worker para push.');
     }
+
     await pedirPermisoNotificaciones();
 
+    const readyRegistration = await navigator.serviceWorker.ready;
+    const pushManager = readyRegistration.pushManager;
+
     const publicKey = await fetchVapidPublicKey();
+    const applicationServerKey = convertirClaveVapid(publicKey);
 
-    const existingSubscription = await registration.pushManager.getSubscription();
-
-    console.warn('existingSubscription', existingSubscription);
+    const existingSubscription = await pushManager.getSubscription();
 
     if (existingSubscription) {
         await guardarSuscripcionEnBackend(existingSubscription);
-        console.warn('guardarSuscripcionEnBackend realizada')
 
         return existingSubscription;
     }
 
-    console.warn('existingSubscription salteada')
+    try {
+        const subscription = await pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey,
+        });
 
-    const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: vapidPublicKeyToUint8Array(publicKey),
-    });
-    console.warn('subscription realizada')
+        await guardarSuscripcionEnBackend(subscription);
+        return subscription;
+    } catch (error) {
+        const shouldRetry =
+            error instanceof DOMException && PUSH_SERVICE_ERROR_REGEX.test(error.message);
 
-    await guardarSuscripcionEnBackend(subscription);
-    console.warn('subscription');
-    return subscription;
+        if (!shouldRetry) {
+            throw mapearErrorSuscripcionPush(error);
+        }
+
+        const refreshedKey = await fetchVapidPublicKey(true);
+        const refreshedApplicationServerKey = convertirClaveVapid(refreshedKey);
+
+        try {
+            const subscription = await pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: refreshedApplicationServerKey,
+            });
+
+            await guardarSuscripcionEnBackend(subscription);
+            return subscription;
+        } catch (retryError) {
+            throw mapearErrorSuscripcionPush(retryError);
+        }
+    }
 }
 
