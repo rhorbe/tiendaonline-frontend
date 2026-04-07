@@ -1,6 +1,27 @@
+import { useState } from 'react';
+import { suscribirseAPush } from '@/app/push/subscribeBrowserToPush';
 import Button from "../Button/Button";
 
 export default function AccountDetails() {
+    const [activandoPush, setActivandoPush] = useState(false);
+
+    const handleActivarNotificaciones = async () => {
+        if (activandoPush) {
+            return;
+        }
+
+        try {
+            setActivandoPush(true);
+            await suscribirseAPush();
+            alert('Notificaciones activadas');
+        } catch (error) {
+            console.error(error);
+            alert('No se pudo activar la notificacion');
+        } finally {
+            setActivandoPush(false);
+        }
+    };
+
     return (
         <form className="space-y-10 w-full py-10 md:py-0 md:px-[72px]">
             <div className="space-y-5">
@@ -59,7 +80,15 @@ export default function AccountDetails() {
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
             </div>
-            <Button text="Save changes" className="max-w-fit"/>
+            <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                <Button
+                    text={activandoPush ? 'Activando...' : 'Activar notificaciones'}
+                    className="max-w-fit"
+                    onClick={handleActivarNotificaciones}
+                    disabled={activandoPush}
+                />
+                <Button text="Guardar cambios" className="max-w-fit"/>
+            </div>
         </form>
     )
 }
