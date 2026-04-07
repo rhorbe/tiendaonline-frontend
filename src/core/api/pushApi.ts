@@ -8,12 +8,16 @@ let cachedVapidPublicKey: string | null = null;
 const VAPID_KEY_CANDIDATE_PATHS: ReadonlyArray<ReadonlyArray<string>> = [
   ['publicKey'],
   ['vapidPublicKey'],
+  ['vapid_public_key'],
   ['key'],
   ['vapidKey'],
   ['data', 'publicKey'],
   ['data', 'vapidPublicKey'],
+  ['data', 'vapid_public_key'],
   ['result', 'publicKey'],
+  ['result', 'vapid_public_key'],
   ['payload', 'publicKey'],
+  ['payload', 'vapid_public_key'],
 ];
 
 const isObjectRecord = (value: unknown): value is Record<string, unknown> => {
@@ -82,6 +86,8 @@ export const fetchVapidPublicKey = async (forceRefresh = false): Promise<string>
   }
 
   const response = await api.get<unknown>(VAPID_PUBLIC_KEY_ENDPOINT);
+
+
   const publicKey = extractVapidPublicKey(response.data);
 
   if (!publicKey) {
