@@ -15,7 +15,7 @@ export async function pedirPermisoNotificaciones(): Promise<NotificationPermissi
     }
 
     const permission = await Notification.requestPermission();
-
+    console.warn('Permiso de notificaciones solicitado, resultado:', permission);
     if (permission !== 'granted') {
         throw new Error('Permiso de notificaciones no concedido.');
     }
