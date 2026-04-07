@@ -1,13 +1,63 @@
 import api from './axiosInstance';
 
-interface VapidPublicKeyResponse {
-  publicKey?: string;
-}
-
 const VAPID_PUBLIC_KEY_ENDPOINT = '/webpush/vapid-public-key';
 const PUSH_SUBSCRIBE_ENDPOINT = '/push/subscribe';
 
 let cachedVapidPublicKey: string | null = null;
+
+const VAPID_KEY_CANDIDATE_PATHS: ReadonlyArray<ReadonlyArray<string>> = [
+  ['publicKey'],
+  ['vapidPublicKey'],
+  ['key'],
+  ['vapidKey'],
+  ['data', 'publicKey'],
+  ['data', 'vapidPublicKey'],
+  ['result', 'publicKey'],
+  ['payload', 'publicKey'],
+];
+
+const isObjectRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === 'object' && value !== null;
+};
+
+const readTrimmedString = (value: unknown): string | null => {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const normalized = value.trim();
+  return normalized ? normalized : null;
+};
+
+const getValueFromPath = (payload: unknown, path: ReadonlyArray<string>): unknown => {
+  return path.reduce<unknown>((current, segment) => {
+    if (!isObjectRecord(current)) {
+      return undefined;
+    }
+
+    return current[segment];
+  }, payload);
+};
+
+const extractVapidPublicKey = (payload: unknown): string | null => {
+  const directValue = readTrimmedString(payload);
+  if (directValue) {
+    return directValue;
+  }
+
+  for (const path of VAPID_KEY_CANDIDATE_PATHS) {
+    const candidate = readTrimmedString(getValueFromPath(payload, path));
+    if (candidate) {
+      return candidate;
+    }
+  }
+
+  return null;
+};
+
+const isBase64Url = (value: string): boolean => {
+  return /^[A-Za-z0-9_-]+$/.test(value);
+};
 
 const getCsrfToken = (): string => {
   if (typeof document === 'undefined') {
@@ -31,11 +81,15 @@ export const fetchVapidPublicKey = async (forceRefresh = false): Promise<string>
     return cachedVapidPublicKey;
   }
 
-  const response = await api.get<VapidPublicKeyResponse>(VAPID_PUBLIC_KEY_ENDPOINT);
-  const publicKey = response.data.publicKey?.trim();
+  const response = await api.get<unknown>(VAPID_PUBLIC_KEY_ENDPOINT);
+  const publicKey = extractVapidPublicKey(response.data);
 
   if (!publicKey) {
     throw new Error('La API no devolvió una clave VAPID publica válida.');
+  }
+
+  if (!isBase64Url(publicKey)) {
+    throw new Error('La API devolvió una clave VAPID con formato inválido.');
   }
 
   cachedVapidPublicKey = publicKey;
