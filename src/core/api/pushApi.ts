@@ -35,7 +35,7 @@ export const fetchVapidPublicKey = async (forceRefresh = false): Promise<string>
   const publicKey = response.data.publicKey?.trim();
 
   if (!publicKey) {
-    throw new Error('La API no devolvio una clave VAPID publica valida.');
+    throw new Error('La API no devolvió una clave VAPID publica válida.');
   }
 
   cachedVapidPublicKey = publicKey;
@@ -46,7 +46,7 @@ export const guardarSuscripcionEnBackend = async (subscription: PushSubscription
   const payload = serializePushSubscription(subscription);
 
   if (!payload.endpoint || !payload.keys?.auth || !payload.keys?.p256dh) {
-    throw new Error('La suscripcion push no es valida para enviarla al backend.');
+    throw new Error('La suscripción push no es valida para enviarla al backend.');
   }
 
   const csrfToken = getCsrfToken();
