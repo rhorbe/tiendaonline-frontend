@@ -10,6 +10,7 @@ export async function pedirPermisoNotificaciones(): Promise<NotificationPermissi
         throw new Error('Este navegador no soporta notificaciones.');
     }
 
+    console.warn( 'Notification.permission: ', Notification.permission);
     if (Notification.permission === 'granted') {
         return 'granted';
     }
