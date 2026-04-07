@@ -49,12 +49,11 @@ export async function suscribirseAPush(): Promise<PushSubscription> {
 
     console.warn('existingSubscription salteada')
 
-
-
     const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: vapidPublicKeyToUint8Array(publicKey),
     });
+    console.warn('subscription realizada')
 
     await guardarSuscripcionEnBackend(subscription);
     console.warn('subscription');
