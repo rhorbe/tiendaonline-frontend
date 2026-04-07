@@ -4,7 +4,7 @@ interface VapidPublicKeyResponse {
   publicKey?: string;
 }
 
-const VAPID_PUBLIC_KEY_ENDPOINT = '/push/public-key';
+const VAPID_PUBLIC_KEY_ENDPOINT = '/webpush/vapid-public-key';
 const PUSH_SUBSCRIBE_ENDPOINT = '/push/subscribe';
 
 let cachedVapidPublicKey: string | null = null;
