@@ -1,6 +1,36 @@
 import { useState } from 'react';
+import { isAxiosError } from 'axios';
 import { suscribirseAPush } from '@/app/push/subscribeBrowserToPush';
 import Button from "../Button/Button";
+
+const obtenerMensajeErrorPush = (error: unknown): string => {
+    if (isAxiosError(error)) {
+        const status = error.response?.status;
+        const backendMessage =
+            (error.response?.data as { message?: string } | undefined)?.message?.trim() ||
+            (error.response?.data as { detail?: string } | undefined)?.detail?.trim();
+
+        if (backendMessage) {
+            return backendMessage;
+        }
+
+        if (status === 401 || status === 403) {
+            return 'Debes iniciar sesion para activar notificaciones.';
+        }
+
+        if (status) {
+            return `El servidor rechazo la solicitud de notificaciones (HTTP ${status}).`;
+        }
+
+        return 'No hubo respuesta del servidor. Revisa tu conexion e intenta de nuevo.';
+    }
+
+    if (error instanceof Error && error.message.trim()) {
+        return error.message;
+    }
+
+    return 'No se pudo activar la notificacion.';
+};
 
 export default function AccountDetails() {
     const [activandoPush, setActivandoPush] = useState(false);
@@ -16,7 +46,7 @@ export default function AccountDetails() {
             alert('Notificaciones activadas');
         } catch (error) {
             console.error(error);
-            alert('No se pudo activar la notificacion');
+            alert(obtenerMensajeErrorPush(error));
         } finally {
             setActivandoPush(false);
         }
