@@ -7,6 +7,10 @@ import {registrarServiceWorker} from '@/app/registerServiceWorker';
 
 const PUSH_SERVICE_ERROR_REGEX = /push service error/i;
 
+function esErrorRecuperableDeServicioPush(error: unknown): error is DOMException {
+    return error instanceof DOMException && PUSH_SERVICE_ERROR_REGEX.test(error.message);
+}
+
 function mapearErrorSuscripcionPush(error: unknown): Error {
     if (error instanceof DOMException) {
         if (error.name === 'NotAllowedError') {
@@ -36,6 +40,24 @@ function convertirClaveVapid(publicKey: string): Uint8Array {
     }
 
     return vapidKey;
+}
+
+async function obtenerClaveAplicacionPush(forceRefresh = false): Promise<Uint8Array> {
+    const publicKey = await fetchVapidPublicKey(forceRefresh);
+    return convertirClaveVapid(publicKey);
+}
+
+async function suscribirYGuardar(
+    pushManager: PushManager,
+    applicationServerKey: Uint8Array,
+): Promise<PushSubscription> {
+    const subscription = await pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey,
+    });
+
+    await guardarSuscripcionEnBackend(subscription);
+    return subscription;
 }
 
 export async function pedirPermisoNotificaciones(): Promise<NotificationPermission> {
@@ -70,9 +92,6 @@ export async function suscribirseAPush(): Promise<PushSubscription> {
     const readyRegistration = await navigator.serviceWorker.ready;
     const pushManager = readyRegistration.pushManager;
 
-    const publicKey = await fetchVapidPublicKey();
-    const applicationServerKey = convertirClaveVapid(publicKey);
-
     const existingSubscription = await pushManager.getSubscription();
 
     if (existingSubscription) {
@@ -81,33 +100,21 @@ export async function suscribirseAPush(): Promise<PushSubscription> {
         return existingSubscription;
     }
 
+    const applicationServerKey = await obtenerClaveAplicacionPush();
+
     try {
-        const subscription = await pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey,
-        });
-
-        await guardarSuscripcionEnBackend(subscription);
-        return subscription;
+        console.warn('suscribirYGuardar1')
+        return await suscribirYGuardar(pushManager, applicationServerKey);
     } catch (error) {
-        const shouldRetry =
-            error instanceof DOMException && PUSH_SERVICE_ERROR_REGEX.test(error.message);
-
-        if (!shouldRetry) {
+        if (!esErrorRecuperableDeServicioPush(error)) {
             throw mapearErrorSuscripcionPush(error);
         }
 
-        const refreshedKey = await fetchVapidPublicKey(true);
-        const refreshedApplicationServerKey = convertirClaveVapid(refreshedKey);
+        const refreshedApplicationServerKey = await obtenerClaveAplicacionPush(true);
 
         try {
-            const subscription = await pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: refreshedApplicationServerKey,
-            });
-
-            await guardarSuscripcionEnBackend(subscription);
-            return subscription;
+            console.warn('suscribirYGuardar2')
+            return await suscribirYGuardar(pushManager, refreshedApplicationServerKey);
         } catch (retryError) {
             throw mapearErrorSuscripcionPush(retryError);
         }
