@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { isAxiosError } from 'axios';
 import { suscribirseAPush } from '@/app/push/subscribeBrowserToPush';
+import { desuscribirseDePush } from '@/app/push/unsubscribeBrowserFromPush';
 import Button from "../Button/Button";
 
 const obtenerMensajeErrorPush = (error: unknown): string => {
@@ -34,6 +35,7 @@ const obtenerMensajeErrorPush = (error: unknown): string => {
 
 export default function AccountDetails() {
     const [activandoPush, setActivandoPush] = useState(false);
+    const [desactivandoPush, setDesactivandoPush] = useState(false);
 
     const handleActivarNotificaciones = async () => {
         if (activandoPush) {
@@ -49,6 +51,23 @@ export default function AccountDetails() {
             alert(obtenerMensajeErrorPush(error));
         } finally {
             setActivandoPush(false);
+        }
+    };
+
+    const handleDesactivarNotificaciones = async () => {
+        if (desactivandoPush) {
+            return;
+        }
+
+        try {
+            setDesactivandoPush(true);
+            const desuscrito = await desuscribirseDePush();
+            alert(desuscrito ? 'Notificaciones desactivadas' : 'No habia una suscripcion push activa.');
+        } catch (error) {
+            console.error(error);
+            alert(obtenerMensajeErrorPush(error));
+        } finally {
+            setDesactivandoPush(false);
         }
     };
 
@@ -115,7 +134,13 @@ export default function AccountDetails() {
                     text={activandoPush ? 'Activando...' : 'Activar notificaciones'}
                     className="max-w-fit"
                     onClick={handleActivarNotificaciones}
-                    disabled={activandoPush}
+                    disabled={activandoPush || desactivandoPush}
+                />
+                <Button
+                    text={desactivandoPush ? 'Desactivando...' : 'Desactivar notificaciones'}
+                    className="max-w-fit"
+                    onClick={handleDesactivarNotificaciones}
+                    disabled={activandoPush || desactivandoPush}
                 />
                 <Button text="Guardar cambios" className="max-w-fit"/>
             </div>

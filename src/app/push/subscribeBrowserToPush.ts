@@ -28,7 +28,7 @@ function mapearErrorSuscripcionPush(error: unknown): Error {
         return new Error(`No se pudo crear la suscripción push (${error.name}): ${error.message}`);
     }
 
-    return new Error('No se pudo crear la suscripción push por un error inesperado.');
+    return new Error('No se pudo crear la suscripción push por un error inesperado.' + error);
 }
 
 function convertirClaveVapid(publicKey: string): Uint8Array {
@@ -55,7 +55,7 @@ async function suscribirYGuardar(
         userVisibleOnly: true,
         applicationServerKey,
     });
-
+    console.warn('Suscripción push creada exitosamente. Guardando en backend...');
     await guardarSuscripcionEnBackend(subscription);
     return subscription;
 }
@@ -103,7 +103,6 @@ export async function suscribirseAPush(): Promise<PushSubscription> {
     const applicationServerKey = await obtenerClaveAplicacionPush();
 
     try {
-        console.warn('suscribirYGuardar1')
         return await suscribirYGuardar(pushManager, applicationServerKey);
     } catch (error) {
         if (!esErrorRecuperableDeServicioPush(error)) {
@@ -113,7 +112,6 @@ export async function suscribirseAPush(): Promise<PushSubscription> {
         const refreshedApplicationServerKey = await obtenerClaveAplicacionPush(true);
 
         try {
-            console.warn('suscribirYGuardar2')
             return await suscribirYGuardar(pushManager, refreshedApplicationServerKey);
         } catch (retryError) {
             throw mapearErrorSuscripcionPush(retryError);
