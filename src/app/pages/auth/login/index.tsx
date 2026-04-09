@@ -27,6 +27,8 @@ const Login: FC = () => {
 
             localStorage.setItem("token", data.token);
 
+            console.log("Login successful:", data);
+
             login({
                 id: data.user._id,
                 name: data.user.name,
