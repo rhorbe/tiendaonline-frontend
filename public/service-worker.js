@@ -1,12 +1,15 @@
 self.addEventListener('install', function () {
+    console.log('Service Worker instalado');
   self.skipWaiting();
 });
 
 self.addEventListener('activate', function (event) {
+    console.log('Service Worker activado');
   event.waitUntil(self.clients.claim());
 });
 
 self.addEventListener('push', function (event) {
+    console.log('Evento push recibido');
   var data = {
     title: 'Nueva notificación',
     body: 'Hay una novedad',
@@ -14,7 +17,7 @@ self.addEventListener('push', function (event) {
     icon: '/images/favicon.ico',
     badge: '/images/favicon.ico'
   };
-
+  console.log('Push recibido:', event.data ? event.data.text() : 'No hay datos');
   if (event.data) {
     try {
       var payload = event.data.json();
@@ -50,6 +53,7 @@ self.addEventListener('push', function (event) {
 });
 
 self.addEventListener('notificationclick', function (event) {
+    console.log('Notificación clickeada:', event.notification);
   event.notification.close();
 
   var targetUrl = (event.notification.data && event.notification.data.url) || '/';
