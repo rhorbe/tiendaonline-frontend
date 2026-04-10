@@ -1,6 +1,6 @@
 import api from './axiosInstance';
 
-const VAPID_PUBLIC_KEY_ENDPOINT = '/push/vapid-public-key';
+const VAPID_PUBLIC_KEY_ENDPOINT = '/push/public-key';
 const PUSH_SUBSCRIBE_ENDPOINT = '/push/subscribe';
 const PUSH_UNSUBSCRIBE_ENDPOINT = '/push/unsubscribe';
 
