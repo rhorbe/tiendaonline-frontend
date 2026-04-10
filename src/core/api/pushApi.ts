@@ -1,8 +1,8 @@
 import api from './axiosInstance';
 
-const VAPID_PUBLIC_KEY_ENDPOINT = '/webpush/vapid-public-key';
-const PUSH_SUBSCRIBE_ENDPOINT = '/webpush/subscribe';
-const PUSH_UNSUBSCRIBE_ENDPOINT = '/webpush/unsubscribe';
+const VAPID_PUBLIC_KEY_ENDPOINT = '/push/vapid-public-key';
+const PUSH_SUBSCRIBE_ENDPOINT = '/push/subscribe';
+const PUSH_UNSUBSCRIBE_ENDPOINT = '/push/unsubscribe';
 
 let cachedVapidPublicKey: string | null = null;
 
