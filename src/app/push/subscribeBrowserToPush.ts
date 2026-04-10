@@ -44,6 +44,7 @@ function convertirClaveVapid(publicKey: string): Uint8Array {
 
 async function obtenerClaveAplicacionPush(forceRefresh = false): Promise<Uint8Array> {
     const publicKey = await fetchVapidPublicKey(forceRefresh);
+    console.log('Clave VAPID pública obtenida del backend:', publicKey);
     return convertirClaveVapid(publicKey);
 }
 
@@ -51,11 +52,12 @@ async function suscribirYGuardar(
     pushManager: PushManager,
     applicationServerKey: Uint8Array,
 ): Promise<PushSubscription> {
+    console.log('suscribirYGuardar: Intentando crear suscripción push con la clave VAPID proporcionada...', applicationServerKey);
     const subscription = await pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey,
     });
-    console.warn('Suscripción push creada exitosamente. Guardando en backend...');
+    console.log('suscribirYGuardar: Suscripción push creada exitosamente:', subscription);
     await guardarSuscripcionEnBackend(subscription);
     return subscription;
 }
@@ -101,6 +103,7 @@ export async function suscribirseAPush(): Promise<PushSubscription> {
     }
 
     const applicationServerKey = await obtenerClaveAplicacionPush();
+    console.log('Obtenida clave VAPID para suscripción push:', applicationServerKey);
 
     try {
         return await suscribirYGuardar(pushManager, applicationServerKey);

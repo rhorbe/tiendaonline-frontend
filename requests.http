@@ -1,15 +1,12 @@
-@baseUrl = http://127.0.0.1:8001/backend
-# El token se guarda desde el bloque de login con: client.global.set("token", ...)
-@webPushEndpoint = https://fcm.googleapis.com/fcm/send/cIKcZeos5HU:APA91bFzoorZSrDpk8ASUBRpwU7CN2hP-FPXqvrP0VzPdmEO36kJyNkbPJhYEqZ_Q-ImvUexdSsiRo1Tn8nEzmXHdaPH7JzXEznr-gSdkK5M4uiPrgWFz3gL_CUa5MlT_EMeWn50dIpx
+@baseUrl = https://tiendaonline-backend-git-dev-rhorbes-projects.vercel.app/backend
+
 @carritoId = 69b89351fbb7da2b920d61c1
 @itemId = 69b89351fbb7da2b920d61c2
 @categoriaId = 69b89351fbb7da2b920d61c3
 @marcaId = 69b89351fbb7da2b920d61c4
 @pedidoId = 69b89351fbb7da2b920d61c5
 @productoId = 69b89351fbb7da2b920d61c6
-// @tamanioId = 69b89351fbb7da2b920d61c7
-@tamanioId = 69c7d5c8e93c4a7dfe079033
-
+@tamanioId = 69b89351fbb7da2b920d61c7
 
 ### GET carrito
 GET {{baseUrl}}/carrito
@@ -190,64 +187,21 @@ Content-Type: application/json
 DELETE {{baseUrl}}/tamanio/{{tamanioId}}
 Accept: application/json
 
+### GET clave pública VAPID
+GET {{baseUrl}}/webpush/vapid-public-key
+Accept: application/json
 
-### 1) Login y guardar JWT en variable global "token"
-POST {{baseUrl}}/login
+### POST suscripción Web Push
+POST {{baseUrl}}/webpush/subscribe
 Accept: application/json
 Content-Type: application/json
 
 {
-  "email": "demo@demo.com",
-  "password": "demo1234"
-}
-
-> {%
-    if (response.status === 200 && response.body.token) {
-        client.global.set("token", response.body.token);
-    } else {
-        throw new Error("No se pudo obtener token JWT en /login");
-    }
-%}
-
-### 2) GET VAPID public key
-GET {{baseUrl}}/push/public-key
-Accept: application/json
-Authorization: Bearer {{token}}
-
-
-### 3) POST suscripción Web Push
-POST {{baseUrl}}/push/subscribe
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "endpoint": "{{webPushEndpoint}}",
+  "endpoint": "https://fcm.googleapis.com/fcm/send/cN_qJQTBsVQ:APA91bEOlFyIi5miA8eRYNAGVfLCRL5Ad8C4KWRyLtQdxjW51eOh8_k1GSnuPnDEll3WSJ-GtrFCCNOx9gw2JlgP1RmDpGzcB8JmCR-VUaGJg3t3RUoIz-zqAEiNds73cRrLcYtDhJ5T",
   "expirationTime": null,
   "keys": {
-    "p256dh": "BGN53YsJBzbE-4eskwRBFMw2XrDBreb2ytl1bL2h6a_z7EvVERHT-MfPL3-nRTdLruUqO1zqDsln0q4hqXJlPXE",
-    "auth": "hqDmCTLXZJBTZepQMbI8nA"
+    "p256dh": "BCsH8Fi49vEkra2DwBCxCxJLjg_h8WnM8gP_sDiwnACENQyyWe9xcLGpLbqTPF6RWhFeEAIyVoJZc4ubB1Y-Tnw",
+    "auth": "PJ0t0ttzuy5zOvqqowkzvg"
   }
 }
 
-
-### 4) POST webpush unsubscribe
-POST {{baseUrl}}/push/unsubscribe
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "endpoint": "{{webPushEndpoint}}"
-}
-
-### 5) POST webpush test
-POST {{baseUrl}}/push/test
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-  "title": "Notificación de prueba",
-  "body": "Hola desde Laravel WebPush"
-}
