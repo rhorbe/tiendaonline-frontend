@@ -62,3 +62,30 @@ self.addEventListener('notificationclick', function (event) {
   );
 });
 
+/*
+De https://github.com/ERaufi/LaravelProjects/blob/ffc918dffaf1b753c025e6e5e001a3206d4b3950/public/service-worker.js#L4
+
+self.addEventListener("push", (event) => {
+    const notification = event.data.json();
+
+    event.waitUntil(
+        self.registration.showNotification(notification.title, {
+            body: notification.body,
+            icon: "./images/logo.png",
+            data: {
+                url: notification.url
+            }
+        })
+    )
+});
+
+
+self.addEventListener("notificationclick", (event) => {
+    event.waitUntil(
+        clients.openWindow(event.notification.data.url)
+    )
+})
+
+
+*/
+

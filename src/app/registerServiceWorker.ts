@@ -12,7 +12,7 @@ export async function registrarServiceWorker(): Promise<ServiceWorkerRegistratio
   }
 
   try {
-    const registration = await navigator.serviceWorker.register('/sw.js');
+    const registration = await navigator.serviceWorker.register('/service-worker.js');
     return registration;
   } catch (error) {
     console.error('No se pudo registrar el service worker', error);
