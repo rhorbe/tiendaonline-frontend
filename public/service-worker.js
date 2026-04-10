@@ -10,16 +10,26 @@ self.addEventListener('push', function (event) {
   var data = {
     title: 'Nueva notificación',
     body: 'Hay una novedad',
-    url: '/'
+    url: '/',
+    icon: '/images/favicon.ico',
+    badge: '/images/favicon.ico'
   };
 
   if (event.data) {
     try {
       var payload = event.data.json();
-      data = {
+      var payloadData = payload && typeof payload.data === 'object' && payload.data !== null
+        ? payload.data
+        : {};
+
+        data = {
         title: payload.title || data.title,
         body: payload.body || data.body,
-        url: payload.url || data.url
+        // Compatibilidad: acepta url en raiz o dentro de payload.data.url.
+        url: payload.url || payloadData.url || data.url,
+        // Compatibilidad: acepta icon/badge en raiz o dentro de payload.data.
+        icon: payload.icon || payloadData.icon || data.icon,
+        badge: payload.badge || payloadData.badge || data.badge
       };
     } catch (error) {
       // Si el payload no llega en JSON, se mantienen los valores por defecto.
@@ -30,8 +40,8 @@ self.addEventListener('push', function (event) {
   event.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
-      icon: '/images/favicon.ico',
-      badge: '/images/favicon.ico',
+      icon: data.icon,
+      badge: data.badge,
       data: {
         url: data.url || '/'
       }
