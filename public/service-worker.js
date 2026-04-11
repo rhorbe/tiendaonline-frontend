@@ -17,10 +17,12 @@ self.addEventListener('push', function (event) {
     icon: '/images/favicon.ico',
     badge: '/images/favicon.ico'
   };
-  console.log('Push recibido:', event.data ? event.data.text() : 'No hay datos');
   if (event.data) {
     try {
-      var payload = event.data.json();
+      var rawPayload = event.data.text();
+      console.log('Push recibido:', rawPayload || 'No hay datos');
+
+      var payload = rawPayload ? JSON.parse(rawPayload) : {};
       var payloadData = payload && typeof payload.data === 'object' && payload.data !== null
         ? payload.data
         : {};
@@ -38,6 +40,8 @@ self.addEventListener('push', function (event) {
       // Si el payload no llega en JSON, se mantienen los valores por defecto.
       console.warn('Push payload inválido', error);
     }
+  } else {
+    console.log('Push recibido: No hay datos');
   }
 
   event.waitUntil(
@@ -56,7 +60,8 @@ self.addEventListener('notificationclick', function (event) {
     console.log('Notificación clickeada:', event.notification);
   event.notification.close();
 
-  var targetUrl = (event.notification.data && event.notification.data.url) || '/';
+  var rawTargetUrl = (event.notification.data && event.notification.data.url) || '/';
+  var targetUrl = new URL(rawTargetUrl, self.location.origin).href;
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (windowClients) {

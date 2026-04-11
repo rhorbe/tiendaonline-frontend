@@ -1,11 +1,12 @@
 // AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from "react";
 import { User } from "@/core/models/User";
+import { desuscribirseDePush } from "@/app/push";
 
 interface AuthContextType {
   user: User | null;
   login: (userData: User) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,7 +31,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("user", JSON.stringify(userData));
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await desuscribirseDePush();
+    } catch (error) {
+      // El cierre de sesión no debe bloquearse por un fallo de push.
+      console.warn("No se pudo desuscribir push al cerrar sesión", error);
+    }
+
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");

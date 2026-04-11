@@ -8,6 +8,7 @@ import {ROUTES} from "@/core/enum/common";
 import {useAuth} from "@/store/AuthContext";
 import {LoginResponse} from "@/core/models/User";
 import {ErrorResponse} from "@/core/models/Error";
+import { suscribirseAPush } from "@/app/push";
 
 const Login: FC = () => {
     const {login} = useAuth();
@@ -35,6 +36,11 @@ const Login: FC = () => {
                 email: data.user.email,
                 email_verified_at: data.user.email_verified_at,
                 active: data.user.active,
+            });
+
+            // No bloquea el login si el usuario rechaza permisos o falla Push API.
+            void suscribirseAPush().catch((pushError) => {
+                console.warn("No se pudo completar la suscripción push tras login", pushError);
             });
 
             navigate(ROUTES.SHOP);
