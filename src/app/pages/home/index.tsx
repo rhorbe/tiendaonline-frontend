@@ -115,7 +115,7 @@ const Home: FC = () => {
         <div className="flex justify-center items-center">
           <p className="text-app-gray font-inter text-sm/[22px] md:text-base/[26px] font-normal max-w-[424px]">
             <span className="text-app-slate-gray font-inter text-base/[26px] font-semibold">
-              L'Essence
+              Essences
             </span>{" "}
             es la tienda de perfumes online más importante de la Patagonia
             Argentina.
@@ -131,7 +131,7 @@ const Home: FC = () => {
               alt={item.title}
               className="w-12 h-12 object-contain"
             />
-            <h3 className="text-app-black font-poppins text-xl font-medium font-semibold mt-4 text-nowrap">
+            <h3 className="text-app-black font-poppins text-xl font-medium mt-4 text-nowrap">
               {item.title}
             </h3>
             <p className="font-poppins text-sm/6 mt-3">{item.paragraph}</p>

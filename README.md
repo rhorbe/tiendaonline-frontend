@@ -1,4 +1,4 @@
-# Proyecto educativo en React "L'Essence Perfumería On-line"
+# Proyecto educativo en React "Essences Perfumería On-line"
 
 Este proyecto está basado en el trabajo de [Muhammed Resvan K](https://github.com/Resvan/3legant), publicado originalmente bajo la Licencia MIT.
 
@@ -7,7 +7,7 @@ El código original ha sido adaptado con fines exclusivamente educativos. Se rea
 ## Licencia
 
 Este proyecto incluye partes del código original de Muhammed Resvan K (2024), licenciado bajo la Licencia MIT.  
-El texto completo de la licencia se encuentra en el archivo [LICENSE](./LICENSE).
+El texto completo de la licencia se encuentra en el archivo [LICENCE](LICENSE).
 
 ## Descargo de responsabilidad
 
@@ -23,7 +23,7 @@ The original code has been adapted for educational purposes only. Modifications 
 ## License
 
 This project includes portions of code from the original work by Muhammed Resvan K (2024), which is licensed under the MIT License.  
-The full license text is available in the [LICENSE](./LICENSE) file.
+The full license text is available in the [LICENCE](LICENSE) file.
 
 ## Disclaimer
 
@@ -48,4 +48,3 @@ VITE_API_URL=http://127.0.0.1:8001/api
 - Se cachean recursos estaticos, imagenes y respuestas `GET` de `/backend` en `public/service-worker.js`.
 - Si falla la red en navegacion, se sirve `public/offline.html`.
 - Acciones que requieren servidor (por ejemplo login o carrito para usuarios autenticados) muestran aviso y no continúan sin conexion.
-
