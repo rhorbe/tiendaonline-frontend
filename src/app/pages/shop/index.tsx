@@ -14,6 +14,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {useAuth} from "@/store/AuthContext";
 import {addItemToCart, getAddItemCartErrorMessage} from "@/core/api/carritoApi";
 import Modal from "@/core/components/Modal";
+import {getOfflineErrorFromUnknown, isOfflineByNavigator} from "@/core/api/networkError";
 
 export default function ShopPage() {
     const {state, dispatch} = useProductContext();
@@ -36,6 +37,7 @@ export default function ShopPage() {
     };
 
     const [loading, setLoading] = useState(true);
+    const [productsError, setProductsError] = useState<string | null>(null);
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
     const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null);
 
@@ -53,6 +55,7 @@ export default function ShopPage() {
 
     const loadProducts = useCallback((filters?: ProductFilters) => {
         setLoading(true);
+        setProductsError(null);
 
         fetchProducts(filters)
             .then((response) => {
@@ -64,7 +67,13 @@ export default function ShopPage() {
                     },
                 });
             })
-            .catch((err) => console.error("Error recuperando productos:", err))
+            .catch((err) => {
+                console.error("Error recuperando productos:", err);
+                setProductsError(
+                    getOfflineErrorFromUnknown(err, "cargar productos") ??
+                    "No se pudieron cargar los productos.",
+                );
+            })
             .finally(() => setLoading(false));
     }, [dispatch]);
 
@@ -101,6 +110,8 @@ export default function ShopPage() {
     const hasActiveFilters = Boolean(selectedCategoryId || selectedBrandId);
     const hasMoreProducts = (state.meta?.total ?? 0) > (state.meta?.to ?? 0);
     const emptyAfterFilters = hasActiveFilters && state.productos.length === 0;
+    const isOffline = isOfflineByNavigator();
+    const requiresConnectionToAddCart = Boolean(user?.id);
 
     const handleProductClick = (id: string) => {
         navigate(ROUTES.PRODUCT.replace(":id", String(id)));
@@ -406,6 +417,22 @@ export default function ShopPage() {
                                 Cargando...
                             </p>
                         </div>
+                    ) : productsError ? (
+                        <div className="flex flex-col items-center justify-center gap-3 h-40">
+                            <p className="font-inter text-sm/[22px] font-semibold text-taup-gray text-center">
+                                {productsError}
+                            </p>
+                            <button
+                                type="button"
+                                onClick={() => loadProducts({
+                                    categoriaId: selectedCategoryId ?? undefined,
+                                    marcaId: selectedBrandId ?? undefined,
+                                })}
+                                className="py-1.5 px-5 rounded-[80px] border border-app-black text-center font-inter text-sm/[22px] font-semibold text-app-black tracking-[-0.2px] transition-colors hover:bg-app-black hover:text-white"
+                            >
+                                Reintentar
+                            </button>
+                        </div>
                     ) : emptyAfterFilters ? (
                         <div className="flex flex-col items-center justify-center gap-3 h-40">
                             <p className="font-inter text-sm/[22px] font-semibold text-taup-gray text-center">
@@ -442,6 +469,7 @@ export default function ShopPage() {
                                                     variantes={productVariants}
                                                     rating={Math.max(0, Math.min(5, Math.round(p.valoracion ?? 0)))}
                                                     onClick={() => handleProductClick(p.id)}
+                                                    disableAddToCart={requiresConnectionToAddCart && isOffline}
                                                     onAddToCart={async (selectedVariante) => {
                                                         if (!selectedVariante) {
                                                             return;
@@ -497,6 +525,13 @@ export default function ShopPage() {
                     )}
                 </div>
             </div>
+            {requiresConnectionToAddCart && isOffline && (
+                <div className="mb-6">
+                    <p className="text-center text-sm/[22px] font-inter font-semibold text-taup-gray">
+                        Sin conexion: para continuar y guardar en tu carrito debes reconectarte.
+                    </p>
+                </div>
+            )}
             <Modal
                 isOpen={isCartErrorModalOpen}
                 onClose={() => setIsCartErrorModalOpen(false)}

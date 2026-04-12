@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import api from "./axiosInstance";
+import { getOfflineErrorFromUnknown } from "./networkError";
 
 type CarritoItemPayload = {
   cliente_id: string;
@@ -42,6 +43,11 @@ export const addItemToCart = async (payload: CarritoItemPayload): Promise<Carrit
 };
 
 export const getAddItemCartErrorMessage = (error: unknown): string => {
+  const offlineMessage = getOfflineErrorFromUnknown(error, "guardar el producto en el carrito");
+  if (offlineMessage) {
+    return offlineMessage;
+  }
+
   const axiosError = error as AxiosError<BackendValidationError>;
   const backendData = axiosError.response?.data;
 

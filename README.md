@@ -42,3 +42,10 @@ VITE_API_URL=http://127.0.0.1:8001/api
 
 > Si no existe `.env`, la aplicacion usa ese mismo valor por defecto.
 
+## Modo cacheado y sin conexion
+
+- La aplicacion registra un Service Worker desde `src/app/registerServiceWorker.ts`.
+- Se cachean recursos estaticos, imagenes y respuestas `GET` de `/backend` en `public/service-worker.js`.
+- Si falla la red en navegacion, se sirve `public/offline.html`.
+- Acciones que requieren servidor (por ejemplo login o carrito para usuarios autenticados) muestran aviso y no continúan sin conexion.
+

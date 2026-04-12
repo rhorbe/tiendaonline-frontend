@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sin conexion</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: #f3f5f7;
+      color: #141718;
+    }
+
+    .container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      max-width: 520px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 24px;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+      color: #6c7275;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 0;
+      background: #141718;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <main class="card">
+    <h1>No hay conexion a internet</h1>
+    <p>
+      Puedes seguir viendo contenido cacheado. Para acciones que requieren servidor,
+      vuelve a conectarte e intenta nuevamente.
+    </p>
+    <button class="button" onclick="window.location.reload()">Reintentar</button>
+  </main>
+</div>
+</body>
+</html>
+

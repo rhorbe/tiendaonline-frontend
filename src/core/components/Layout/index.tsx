@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Header from './Header/Header';
 import Footer from './Footer';
 import { ROUTES } from '@/core/enum/common';
+import NetworkStatusBanner from '@/core/components/NetworkStatusBanner';
 
 type LayoutProps = {
   children: ReactNode;
@@ -18,6 +19,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
   return (
     <Fragment>
+      <NetworkStatusBanner />
       {!isNoLayoutRoute && <Header />}
       <main className='2xl:container mx-auto'>
         {children}

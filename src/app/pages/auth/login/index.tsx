@@ -9,6 +9,7 @@ import {useAuth} from "@/store/AuthContext";
 import {LoginResponse} from "@/core/models/User";
 import {ErrorResponse} from "@/core/models/Error";
 import { suscribirseAPush } from "@/app/push";
+import { getOfflineErrorFromUnknown } from "@/core/api/networkError";
 
 const Login: FC = () => {
     const {login} = useAuth();
@@ -47,10 +48,12 @@ const Login: FC = () => {
         } catch (err: unknown) {
             const error = err as ErrorResponse;
             const status = error.response?.status;
+            const offlineMessage = getOfflineErrorFromUnknown(err, "iniciar sesion");
             const errorMessage =
-                status === 401
+                offlineMessage ??
+                (status === 401
                     ? "Correo o contraseña inválidos"
-                    : error.response?.data?.message ?? error.response?.data?.error ?? "Error de conexión";
+                    : error.response?.data?.message ?? error.response?.data?.error ?? "Error de conexión");
 
             setErrorModalMessage(errorMessage);
             setIsErrorModalOpen(true);

@@ -1,11 +1,152 @@
-self.addEventListener('install', function () {
-    console.log('Service Worker instalado');
-  self.skipWaiting();
+var CACHE_VERSION = 'v2';
+var STATIC_CACHE = 'static-' + CACHE_VERSION;
+var IMAGE_CACHE = 'images-' + CACHE_VERSION;
+var API_CACHE = 'api-' + CACHE_VERSION;
+
+var CORE_ASSETS = [
+  '/',
+  '/index.html',
+  '/offline.html',
+  '/images/logo_essences.svg',
+  '/images/warning.svg'
+];
+
+var API_EXCLUDED_PATHS = [
+  '/backend/login',
+  '/backend/logout',
+  '/backend/carrito',
+  '/backend/checkout',
+  '/backend/push/subscribe',
+  '/backend/push/unsubscribe'
+];
+
+function shouldExcludeApiPath(pathname) {
+  return API_EXCLUDED_PATHS.some(function (blockedPath) {
+    return pathname.indexOf(blockedPath) === 0;
+  });
+}
+
+function isApiGetRequest(request, url) {
+  if (request.method !== 'GET' || url.origin !== self.location.origin) {
+    return false;
+  }
+
+  if (!url.pathname.startsWith('/backend')) {
+    return false;
+  }
+
+  return !shouldExcludeApiPath(url.pathname);
+}
+
+function isStaticAssetRequest(url) {
+  return /\.(?:js|css|woff2?|ttf)$/i.test(url.pathname);
+}
+
+function isNavigationRequest(request) {
+  return request.mode === 'navigate';
+}
+
+async function cacheFirst(request, cacheName) {
+  var cachedResponse = await caches.match(request);
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+
+  var networkResponse = await fetch(request);
+
+  if (networkResponse && networkResponse.ok) {
+    var cache = await caches.open(cacheName);
+    cache.put(request, networkResponse.clone());
+  }
+
+  return networkResponse;
+}
+
+async function staleWhileRevalidate(request, cacheName) {
+  var cache = await caches.open(cacheName);
+  var cachedResponse = await cache.match(request);
+
+  var networkFetch = fetch(request)
+    .then(function (networkResponse) {
+      if (networkResponse && networkResponse.ok) {
+        cache.put(request, networkResponse.clone());
+      }
+
+      return networkResponse;
+    })
+    .catch(function () {
+      return null;
+    });
+
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+
+  var networkResponse = await networkFetch;
+  if (networkResponse) {
+    return networkResponse;
+  }
+
+  throw new Error('No hay respuesta en cache ni en red.');
+}
+
+async function networkFirstNavigation(request) {
+  try {
+    var networkResponse = await fetch(request);
+
+    if (networkResponse && networkResponse.ok) {
+      var staticCache = await caches.open(STATIC_CACHE);
+      staticCache.put(request, networkResponse.clone());
+    }
+
+    return networkResponse;
+  } catch (error) {
+    var cachedPage = await caches.match(request);
+    if (cachedPage) {
+      return cachedPage;
+    }
+
+    var offlinePage = await caches.match('/offline.html');
+    if (offlinePage) {
+      return offlinePage;
+    }
+
+    throw error;
+  }
+}
+
+self.addEventListener('install', function (event) {
+  event.waitUntil(
+    caches
+      .open(STATIC_CACHE)
+      .then(function (cache) {
+        return cache.addAll(CORE_ASSETS);
+      })
+      .then(function () {
+        return self.skipWaiting();
+      })
+  );
 });
 
 self.addEventListener('activate', function (event) {
-    console.log('Service Worker activado');
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches
+      .keys()
+      .then(function (cacheNames) {
+        return Promise.all(
+          cacheNames
+            .filter(function (cacheName) {
+              return cacheName !== STATIC_CACHE && cacheName !== IMAGE_CACHE && cacheName !== API_CACHE;
+            })
+            .map(function (cacheName) {
+              return caches.delete(cacheName);
+            })
+        );
+      })
+      .then(function () {
+        return self.clients.claim();
+      })
+  );
 });
 
 self.addEventListener('push', function (event) {
@@ -79,6 +220,34 @@ self.addEventListener('notificationclick', function (event) {
       return undefined;
     })
   );
+});
+
+self.addEventListener('fetch', function (event) {
+  var request = event.request;
+  var url = new URL(request.url);
+
+  if (isNavigationRequest(request)) {
+    event.respondWith(networkFirstNavigation(request));
+    return;
+  }
+
+  if (request.method !== 'GET') {
+    return;
+  }
+
+  if (request.destination === 'image') {
+    event.respondWith(staleWhileRevalidate(request, IMAGE_CACHE));
+    return;
+  }
+
+  if (isStaticAssetRequest(url)) {
+    event.respondWith(cacheFirst(request, STATIC_CACHE));
+    return;
+  }
+
+  if (isApiGetRequest(request, url)) {
+    event.respondWith(staleWhileRevalidate(request, API_CACHE));
+  }
 });
 
 /*

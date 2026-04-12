@@ -188,11 +188,11 @@ DELETE {{baseUrl}}/tamanio/{{tamanioId}}
 Accept: application/json
 
 ### GET clave pública VAPID
-GET {{baseUrl}}/webpush/vapid-public-key
+GET {{baseUrl}}/push/public-key
 Accept: application/json
 
 ### POST suscripción Web Push
-POST {{baseUrl}}/webpush/subscribe
+POST {{baseUrl}}/push/subscribe
 Accept: application/json
 Content-Type: application/json
 
@@ -205,3 +205,16 @@ Content-Type: application/json
   }
 }
 
+### POST suscripción Web Push (nuevo endpoint)
+POST {{baseUrl}}/webpush/subscribe
+Accept: application/json
+Content-Type: application/json
+
+{
+  "endpoint": "https://fcm.googleapis.com/fcm/send/d7YZJBRTtIQ:APA91bER4kUmhsCAanewhVQpGZp7AY6_fVHlOkKRpGs8v3godVFtOp5tPdetWl_fIfrJkJIBh8bUZrOZkMuV2QT5PwRSk8jJ-ztAaWGcvPwXb3KKMCtatqwKzg3mK_4Jne8J51vBNP2n",
+  "expirationTime": null,
+  "keys": {
+    "p256dh": "BENsTG30_B_11-nmeUE-iJsahM_5ma34u-9ChfT1nqiNwiQlZfgy15NCNQwOvb7izwPiM6TRgE_WZYxu8GnrDe0",
+    "auth": "blPSeVogQh9SiN8nfedy-Q"
+  }
+}

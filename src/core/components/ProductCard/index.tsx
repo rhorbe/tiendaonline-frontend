@@ -14,6 +14,7 @@ interface ProductCardProps {
     onAddToCart?: (variante?: VarianteProducto) => void;
     onToggleWishlist?: () => void;
     onClick?: () => void;
+    disableAddToCart?: boolean;
 }
 
 const ProductCard: React.FC<ProductCardProps> = (
@@ -29,6 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = (
         onAddToCart,
         onToggleWishlist,
         onClick,
+        disableAddToCart = false,
     }) => {
     const firstAvailableVariante = useMemo(
         () => variantes.find((variant) => variant.activa && variant.stock > 0) ?? variantes[0],
@@ -160,11 +162,15 @@ const ProductCard: React.FC<ProductCardProps> = (
                 </div>
 
                 <button
+                    disabled={disableAddToCart}
                     onClick={(e) => {
                         e.stopPropagation();
+                        if (disableAddToCart) {
+                            return;
+                        }
                         onAddToCart?.(selectedVariante);
                     }}
-                    className="text-white text-center font-inter text-base/6 md:text-base/7 font-medium tracking-[-0.4px] bg-app-black rounded-lg w-full px-4 md:px-10 py-2 md:py-[10px]"
+                    className="text-white text-center font-inter text-base/6 md:text-base/7 font-medium tracking-[-0.4px] bg-app-black rounded-lg w-full px-4 md:px-10 py-2 md:py-[10px] disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                     Agregar al carrito
                 </button>

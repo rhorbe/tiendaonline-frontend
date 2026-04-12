@@ -10,6 +10,7 @@ import {Producto} from "@/core/models/Producto.ts";
 import {useAuth} from "@/store/AuthContext";
 import {addItemToCart, getAddItemCartErrorMessage} from "@/core/api/carritoApi";
 import Modal from "@/core/components/Modal";
+import {getOfflineErrorFromUnknown, isOfflineByNavigator} from "@/core/api/networkError";
 
 const formatCurrency = (price: number) =>
     price.toLocaleString("es-AR", {
@@ -71,7 +72,8 @@ export default function ProductPage() {
                 setErrorProducto(
                     status === 404
                         ? "Producto no encontrado."
-                        : "No se pudo cargar el producto. Intenta nuevamente.",
+                        : getOfflineErrorFromUnknown(error, "cargar este producto") ??
+                        "No se pudo cargar el producto. Intenta nuevamente.",
                 );
             })
             .finally(() => {
@@ -211,6 +213,8 @@ export default function ProductPage() {
         producto.descuento !== undefined && producto.descuento !== null
             ? String(producto.descuento)
             : undefined;
+    const requiresConnectionToAddCart = Boolean(user?.id);
+    const isOffline = isOfflineByNavigator();
 
     const getVariantLabel = (label: unknown) => {
         if (typeof label === "string") {
@@ -383,6 +387,12 @@ export default function ProductPage() {
                                     </div>
                                 </div>
                             )}
+
+                            {requiresConnectionToAddCart && isOffline && (
+                                <p className="text-sm/[22px] font-inter font-semibold text-taup-gray">
+                                    Sin conexion: para continuar y guardar en tu carrito debes reconectarte.
+                                </p>
+                            )}
                         </div>
 
 
@@ -417,7 +427,7 @@ export default function ProductPage() {
 
                             <button
                                 type="button"
-                                disabled={selectedStock === 0 || isAddingToCart}
+                                disabled={selectedStock === 0 || isAddingToCart || (requiresConnectionToAddCart && isOffline)}
                                 onClick={handleAddToCart}
                                 className="flex w-full items-center justify-center rounded-lg bg-app-black px-10 py-[10px] text-white transition-colors hover:bg-app-black/90 disabled:cursor-not-allowed disabled:opacity-60"
                             >
