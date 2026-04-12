@@ -12,7 +12,7 @@ export const getOfflineBlockingMessage = (actionDescription?: string): string =>
 };
 
 export const isOfflineByNavigator = (): boolean => {
-  return typeof navigator !== 'undefined' && navigator.onLine === false;
+  return typeof navigator !== 'undefined' && !navigator.onLine;
 };
 
 const hasNoHttpResponse = (error: AxiosError): boolean => {

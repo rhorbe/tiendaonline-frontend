@@ -54,7 +54,7 @@ export const getAddItemCartErrorMessage = (error: unknown): string => {
   if (axiosError.response?.status === 422 && backendData?.errors) {
     const firstError = Object.values(backendData.errors)
       .flat()
-      .find((message) => typeof message === "string" && message.trim().length > 0);
+      .find((message) => message.trim().length > 0);
 
     if (firstError) {
       return firstError;
