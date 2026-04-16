@@ -121,6 +121,9 @@ export default function ContactPage() {
             <img
               src="/images/map2.webp"
               alt="Ubicación"
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
               className="w-full h-full object-contain object-center"
             />
           </div>
