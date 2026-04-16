@@ -11,7 +11,7 @@ import {ROUTES} from "@/core/enum/common";
 import {useProductContext} from "@/store/useProductContext";
 import {normalizePrice} from "@/store/productContext";
 import {Link, useNavigate} from "react-router-dom";
-import {useAuth} from "@/store/AuthContext";
+import {useAuth} from "@/store/useAuth";
 import {addItemToCart, getAddItemCartErrorMessage} from "@/core/api/carritoApi";
 import Modal from "@/core/components/Modal";
 import {getOfflineErrorFromUnknown, isOfflineByNavigator} from "@/core/api/networkError";
