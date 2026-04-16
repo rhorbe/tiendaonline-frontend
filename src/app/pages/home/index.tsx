@@ -4,6 +4,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
+import "@/core/components/swiper-controls.css";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { ROUTES } from "@/core/enum/common";
 import { Link } from "react-router-dom";
@@ -75,6 +76,8 @@ const Home: FC = () => {
                 src={image}
                 alt={`imagen ${idx + 1}`}
                 className="max-h-[536px] w-full"
+                loading={idx === 0 ? "eager" : "lazy"}
+                fetchPriority={idx === 0 ? "high" : "auto"}
               />
             </Link>
           </SwiperSlide>

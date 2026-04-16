@@ -2,6 +2,7 @@ import Modal from "@/core/components/Modal";
 import { ROUTES } from "@/core/enum/common";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import "../auth.css";
 
 export default function OtpPage() {
   const [isModalOpen, setModalOpen] = useState(false);

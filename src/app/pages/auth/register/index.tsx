@@ -3,6 +3,7 @@ import PasswordInput from "@/core/components/PasswordInput";
 import { ROUTES } from "@/core/enum/common";
 import { FC } from "react";
 import { Link } from "react-router-dom";
+import "../auth.css";
 
 const Register: FC = () => {
   return (

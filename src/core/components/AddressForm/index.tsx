@@ -1,5 +1,6 @@
 import Button from "../Button/Button";
 import { FC, useEffect, useState } from "react";
+import "../custom-scrollbar.css";
 
 type ModalProps = {
     isOpen: boolean;

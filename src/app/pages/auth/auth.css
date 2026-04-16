@@ -1,0 +1,23 @@
+.login-background {
+    background: url('/images/login-img.jpg') no-repeat center center;
+    background-color: #ffffff;
+    background-size: contain;
+    height: 100%;
+}
+
+.login-background-sm {
+    background-size: 60%;
+}
+
+.hide-spinner {
+    appearance: none;
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.hide-spinner::-webkit-inner-spin-button,
+.hide-spinner::-webkit-outer-spin-button {
+    display: none;
+}
+

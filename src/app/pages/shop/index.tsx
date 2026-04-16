@@ -15,6 +15,8 @@ import {useAuth} from "@/store/AuthContext";
 import {addItemToCart, getAddItemCartErrorMessage} from "@/core/api/carritoApi";
 import Modal from "@/core/components/Modal";
 import {getOfflineErrorFromUnknown, isOfflineByNavigator} from "@/core/api/networkError";
+import "@/core/components/custom-scrollbar.css";
+import "./shop.css";
 
 export default function ShopPage() {
     const {state, dispatch} = useProductContext();

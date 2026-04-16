@@ -10,6 +10,7 @@ import {LoginResponse} from "@/core/models/User";
 import {ErrorResponse} from "@/core/models/Error";
 import { suscribirseAPush } from "@/app/push";
 import { getOfflineErrorFromUnknown } from "@/core/api/networkError";
+import "../auth.css";
 
 const Login: FC = () => {
     const {login} = useAuth();
