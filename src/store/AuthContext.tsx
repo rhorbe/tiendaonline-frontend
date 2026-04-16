@@ -1,7 +1,6 @@
 // AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from "react";
 import { User } from "@/core/models/User";
-import { desuscribirseDePush } from "@/app/push";
 
 interface AuthContextType {
   user: User | null;
@@ -33,6 +32,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
+      const { desuscribirseDePush } = await import("@/app/push");
       await desuscribirseDePush();
     } catch (error) {
       // El cierre de sesión no debe bloquearse por un fallo de push.

@@ -8,7 +8,6 @@ import {ROUTES} from "@/core/enum/common";
 import {useAuth} from "@/store/AuthContext";
 import {LoginResponse} from "@/core/models/User";
 import {ErrorResponse} from "@/core/models/Error";
-import { suscribirseAPush } from "@/app/push";
 import { getOfflineErrorFromUnknown } from "@/core/api/networkError";
 import "../auth.css";
 
@@ -41,9 +40,11 @@ const Login: FC = () => {
             });
 
             // No bloquea el login si el usuario rechaza permisos o falla Push API.
-            void suscribirseAPush().catch((pushError) => {
-                console.warn("No se pudo completar la suscripción push tras login", pushError);
-            });
+            void import("@/app/push")
+                .then(({ suscribirseAPush }) => suscribirseAPush())
+                .catch((pushError) => {
+                    console.warn("No se pudo completar la suscripción push tras login", pushError);
+                });
 
             navigate(ROUTES.SHOP);
         } catch (err: unknown) {

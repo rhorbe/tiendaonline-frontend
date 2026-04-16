@@ -41,10 +41,6 @@ export default defineConfig(({ mode }) => {
             if (id.includes('swiper')) {
               return 'vendor-swiper';
             }
-
-            if (id.includes('flowbite')) {
-              return 'vendor-flowbite';
-            }
           },
         },
       },

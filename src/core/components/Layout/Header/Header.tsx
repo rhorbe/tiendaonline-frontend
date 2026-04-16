@@ -1,10 +1,13 @@
-import { FC, useState } from "react";
+import { FC, Suspense, lazy, useState } from "react";
 import { Link } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
-import { Flayout } from "../../Cart/Flayout";
 import { ROUTES } from "@/core/enum/common";
 import UserDropdown from "../../UserDropdown";
 import { useProductContext } from "@/store/useProductContext";
+
+const Flayout = lazy(() =>
+  import("../../Cart/Flayout").then((module) => ({ default: module.Flayout }))
+);
 
 const Header: FC = () => {
   const [open, setOpen] = useState(false);
@@ -109,7 +112,13 @@ const Header: FC = () => {
       {cartOpen && (
         <div className="fixed inset-0 z-50 bg-gray-200/70">
           <div className="absolute top-0 right-0 h-full cart-transition cart-open">
-            <Flayout setOpen={setCartOpen} />
+            <Suspense
+              fallback={
+                <div className="h-full w-[320px] bg-white animate-pulse" aria-hidden="true" />
+              }
+            >
+              <Flayout setOpen={setCartOpen} />
+            </Suspense>
           </div>
         </div>
       )}
