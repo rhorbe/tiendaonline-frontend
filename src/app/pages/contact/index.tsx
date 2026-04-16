@@ -117,14 +117,14 @@ export default function ContactPage() {
             </div>
             <Button text="Enviar mensaje" className="max-w-fit" />
           </form>
-          <div className="h-full flex items-center justify-center">
+          <div className="h-full">
             <img
               src="/images/map2.webp"
               alt="Ubicación"
               fetchPriority="high"
               loading="eager"
               decoding="async"
-              className="w-full h-full max-w-[380px] max-h-[380px] object-contain object-center"
+              className="w-full h-full object-contain object-center"
             />
           </div>
         </div>
