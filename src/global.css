@@ -1,24 +1,9 @@
-@import 'flowbite';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
     scroll-behavior: smooth;
-}
-
-.smooth-shadow {
-    box-shadow: 0 1px 1px rgba(3, 7, 18, 0.00),
-    0 5px 4px rgba(3, 7, 18, 0.01),
-    0 12px 9px rgba(3, 7, 18, 0.01),
-    0 20px 15px rgba(3, 7, 18, 0.02),
-    0 32px 24px rgba(3, 7, 18, 0.02);
-}
-
-.light-shadow {
-    box-shadow: 0 8px 6px rgba(3, 7, 18, 0.01),
-    0 32px 24px rgba(3, 7, 18, 0.01);
 }
 
 /* Login Page */
@@ -91,22 +76,6 @@
     right: 20px;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-    height: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-    background-color: #ebebeb;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    background: #141718;
-}
-
 .shop-page-banner-bg {
     background: linear-gradient(180deg, rgba(243, 245, 247, 0.00) 27.68%, rgba(243, 245, 247, 0.60) 66.63%, rgba(243, 245, 247, 0.20) 100%),
     url('/images/shop-bg.png') lightgray 50% / cover no-repeat;
@@ -130,14 +99,6 @@
     background: #141718;
 }
 
-.hide-scrollbar {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-}
 
 .cart-transition {
     opacity: 0;
