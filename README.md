@@ -3,6 +3,21 @@
 Este proyecto es una aplicación web de comercio electrónico para una perfumería en línea, desarrollada con React.
 El objetivo principal es proporcionar una experiencia de compra fluida y atractiva para los usuarios, permitiéndoles explorar y adquirir productos de perfumería de manera sencilla.
 
+## Entorno de desarrollo
+
+- Gestor de paquetes oficial: `npm`.
+- Lockfile oficial: `package-lock.json`.
+- No se debe usar `yarn.lock` en este repositorio.
+
+Comandos base:
+
+```bash
+npm install
+npm run dev
+npm run build
+npm run lint
+```
+
 ## Licencia
 
 Este proyecto incluye partes del código original de Muhammed Resvan K (2024), licenciado bajo la Licencia MIT.  
