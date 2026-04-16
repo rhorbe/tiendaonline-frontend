@@ -15,7 +15,7 @@ export default function ContactPage() {
     {
       icon: "/images/mail.svg",
       title: "Email",
-      paragraph: "hola@lessence.com",
+      paragraph: "hola@essences.com",
     },
   ];
 
@@ -119,7 +119,7 @@ export default function ContactPage() {
           </form>
           <div className="h-full">
             <img
-              src="/images/map2.png"
+              src="/images/map2.webp"
               alt="Ubicación"
               className="w-full h-full object-contain object-center"
             />
