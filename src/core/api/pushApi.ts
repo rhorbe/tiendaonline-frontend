@@ -115,7 +115,7 @@ export const eliminarSuscripcionEnBackend = async (subscription: PushSubscriptio
   });
 };
 
-export const vapidPublicKeyToUint8Array = (publicKey: string): Uint8Array<ArrayBuffer> => {
+export const vapidPublicKeyToUint8Array = (publicKey: string): Uint8Array => {
   const padding = '='.repeat((4 - (publicKey.length % 4)) % 4);
   const base64 = (publicKey + padding).replace(/-/g, '+').replace(/_/g, '/');
   const rawData = window.atob(base64);

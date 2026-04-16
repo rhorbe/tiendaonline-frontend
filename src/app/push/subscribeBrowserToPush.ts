@@ -31,7 +31,7 @@ function mapearErrorSuscripcionPush(error: unknown): Error {
     return new Error('No se pudo crear la suscripción push por un error inesperado.' + error);
 }
 
-function convertirClaveVapid(publicKey: string): Uint8Array<ArrayBuffer> {
+function convertirClaveVapid(publicKey: string): Uint8Array {
     const vapidKey = vapidPublicKeyToUint8Array(publicKey);
 
     // Para Web Push, una clave pública P-256 suele tener 65 bytes descomprimidos.
@@ -42,7 +42,7 @@ function convertirClaveVapid(publicKey: string): Uint8Array<ArrayBuffer> {
     return vapidKey;
 }
 
-async function obtenerClaveAplicacionPush(forceRefresh = false): Promise<Uint8Array<ArrayBuffer>> {
+async function obtenerClaveAplicacionPush(forceRefresh = false): Promise<Uint8Array> {
     const publicKey = await fetchVapidPublicKey(forceRefresh);
     console.log('Clave VAPID pública obtenida del backend:', publicKey);
     return convertirClaveVapid(publicKey);
@@ -50,7 +50,7 @@ async function obtenerClaveAplicacionPush(forceRefresh = false): Promise<Uint8Ar
 
 async function suscribirYGuardar(
     pushManager: PushManager,
-    applicationServerKey: Uint8Array<ArrayBufferLike>,
+    applicationServerKey: Uint8Array,
 ): Promise<PushSubscription> {
     const normalizedApplicationServerKey = new Uint8Array(applicationServerKey);
 
