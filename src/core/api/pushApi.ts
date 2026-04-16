@@ -115,10 +115,13 @@ export const eliminarSuscripcionEnBackend = async (subscription: PushSubscriptio
   });
 };
 
-export const vapidPublicKeyToUint8Array = (publicKey: string): Uint8Array => {
+export const vapidPublicKeyToUint8Array = (publicKey: string): Uint8Array<ArrayBuffer> => {
   const padding = '='.repeat((4 - (publicKey.length % 4)) % 4);
   const base64 = (publicKey + padding).replace(/-/g, '+').replace(/_/g, '/');
   const rawData = window.atob(base64);
   console.log('Clave VAPID pública convertida a Uint8Array:', rawData);
-  return Uint8Array.from(rawData, (char) => char.charCodeAt(0));
+
+  // Fuerza un buffer ArrayBuffer concreto para cumplir BufferSource en libs DOM nuevas.
+  const bytes = Uint8Array.from(rawData, (char) => char.charCodeAt(0));
+  return new Uint8Array(bytes);
 };
