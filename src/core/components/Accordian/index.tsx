@@ -1,4 +1,3 @@
-import { Accordion } from 'flowbite';
 import { useEffect } from 'react';
 
 interface CustomAccordionProps {
@@ -9,13 +8,23 @@ interface CustomAccordionProps {
 
 const CustomAccordion = ({ title, content, id }: CustomAccordionProps) => {
     useEffect(() => {
-        // Get the accordion element
-        const accordionEl = document.getElementById(`accordion-flush-${id}`);
-        const triggerEl = document.querySelector(`[data-accordion-target="#accordion-flush-body-${id}"]`) as HTMLElement;
-        const targetEl = document.getElementById(`accordion-flush-body-${id}`) as HTMLElement;
+        let isMounted = true;
 
-        if (accordionEl && triggerEl && targetEl) {
-            // Initialize the Accordion
+        const initAccordion = async () => {
+            const accordionEl = document.getElementById(`accordion-flush-${id}`);
+            const triggerEl = document.querySelector(`[data-accordion-target="#accordion-flush-body-${id}"]`) as HTMLElement;
+            const targetEl = document.getElementById(`accordion-flush-body-${id}`) as HTMLElement;
+
+            if (!accordionEl || !triggerEl || !targetEl || !isMounted) {
+                return;
+            }
+
+            const { Accordion } = await import('flowbite');
+
+            if (!isMounted) {
+                return;
+            }
+
             new Accordion(accordionEl, [{
                 id: `accordion-flush-body-${id}`,
                 triggerEl,
@@ -26,7 +35,13 @@ const CustomAccordion = ({ title, content, id }: CustomAccordionProps) => {
                 activeClasses: 'bg-white text-app-black',
                 inactiveClasses: 'text-app-gray',
             });
-        }
+        };
+
+        void initAccordion();
+
+        return () => {
+            isMounted = false;
+        };
     }, [id]);
 
     return (
