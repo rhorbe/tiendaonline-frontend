@@ -1,8 +1,15 @@
 // AuthContext.tsx
-import { useState, useEffect } from "react";
-import { desuscribirseDePush } from "@/app/push";
-import { AuthContext } from "@/store/authContext";
+import { createContext, useContext, useState, useEffect } from "react";
 import { User } from "@/core/models/User";
+import { desuscribirseDePush } from "@/app/push";
+
+interface AuthContextType {
+  user: User | null;
+  login: (userData: User) => void;
+  logout: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -44,3 +51,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+// Hook personalizado
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth debe usarse dentro de AuthProvider");
+  return context;
+};

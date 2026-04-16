@@ -1,4 +1,4 @@
-import { useAuth } from "@/store/useAuth";
+import { useAuth } from "@/store/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 

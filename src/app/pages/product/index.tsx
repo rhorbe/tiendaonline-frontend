@@ -7,7 +7,7 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import {VarianteProducto} from "@/core/models/VarianteProducto.ts";
 import {fetchProductById} from "@/core/api/productosApi.ts";
 import {Producto} from "@/core/models/Producto.ts";
-import {useAuth} from "@/store/useAuth";
+import {useAuth} from "@/store/AuthContext";
 import {addItemToCart, getAddItemCartErrorMessage} from "@/core/api/carritoApi";
 import Modal from "@/core/components/Modal";
 import {getOfflineErrorFromUnknown, isOfflineByNavigator} from "@/core/api/networkError";
