@@ -26,6 +26,8 @@ const Header: FC = () => {
             <img
               src="/images/logo_essences_blanco.svg"
               alt="Essences"
+              width={75}
+              height={21}
               className="h-12 w-auto p-2"
             />
           </Link>

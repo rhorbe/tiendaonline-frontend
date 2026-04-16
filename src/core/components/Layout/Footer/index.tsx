@@ -16,6 +16,8 @@ export default function Footer() {
             <img
               src="/images/logo_essences_blanco.svg"
               alt="Essence Perfumes"
+              width={75}
+              height={21}
               className="h-10 w-auto p-2"
             />
           </Link>
