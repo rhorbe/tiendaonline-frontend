@@ -12,18 +12,18 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
   ];
 
   return (
-    <div className="p-6 bg-white absolute top-0 left-0 z-50 w-full h-screen flex flex-col justify-between md:hidden">
+    <div className="p-6 bg-app-black text-white absolute top-0 left-0 z-50 w-full h-screen flex flex-col justify-between md:hidden">
       <div>
         <div className="flex justify-between items-center self-stretch">
-          <img src="/images/logo_essences.svg" alt="Essence Perfumes" className='h-8 w-auto' />
+          <img src="/images/logo_essences_blanco.svg" alt="Essence Perfumes" className="h-8 w-auto" />
 
           <button onClick={() => setOpen(false)}>
-            <img src="/images/close.svg" alt="Cerrar" className="h-6 w-auto" />
+            <img src="/images/close.svg" alt="Cerrar" className="h-6 w-auto invert" />
           </button>
         </div>
         <input
           type="text"
-          className="border border-app-gray bg-white rounded-lg p-2 text-base w-full mt-4"
+          className="border border-app-gray bg-app-black rounded-lg p-2 text-base w-full mt-4 text-white placeholder:text-app-light-gray"
           placeholder="Buscar..."
         />
 
@@ -32,7 +32,7 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
             {navLinks.map((link, index) => (
               <li
                 key={index}
-                className="pt-4 w-full text-app-black font-inter text-sm font-semibold pb-2 border-b border-app-light-gray"
+                className="pt-4 w-full text-white font-inter text-sm font-semibold pb-2 border-b border-app-gray"
               >
                 <Link to={link.url} className="w-full">
                   {link.name}
@@ -43,9 +43,9 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
         </nav>
       </div>
       <div>
-        <div className="flex justify-between pb-3 border-b border-app-light-gray">
+        <div className="flex justify-between pb-3 border-b border-app-gray">
           <Link
-            className="text-lg/[32px] font-inter font-medium tracking-[-0.4px] text-app-gray"
+            className="text-lg/[32px] font-inter font-medium tracking-[-0.4px] text-white"
             to="/cart"
           >
             Carrito
@@ -54,10 +54,10 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
             <img
               src="/images/shopping bag.svg"
               alt="Carrito"
-              className="h-6 w-6"
+              className="h-6 w-6 invert"
             />
-            <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
-              <p className="text-white text-center font-inter text-xs font-bold leading-[10px]"> {/* Vista mobile */}
+            <div className="bg-white h-5 w-5 rounded-full flex justify-center items-center">
+              <p className="text-app-black text-center font-inter text-xs font-bold leading-[10px]"> {/* Vista mobile */}
                 222
               </p>
             </div>
@@ -67,21 +67,21 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
         <div className="flex gap-6">
           <Link to="https://www.instagram.com/ditunpsjb/">
             <img
-              src="/images/instagram-black.svg"
+              src="/images/instagram.svg"
               alt="Instagram"
               className="w-6 h-6"
             />
           </Link>
           <Link to="https://www.facebook.com/ditunpsjb">
             <img
-              src="/images/faceboo-black.svg"
+              src="/images/facebook.svg"
               alt="Facebook"
               className="w-6 h-6"
             />
           </Link>
           <Link to="https://www.youtube.com/@comunicaciondigitalunpsjb">
             <img
-              src="/images/youtube-black.svg"
+              src="/images/youtube.svg"
               alt="YouTube"
               className="w-6 h-6"
             />

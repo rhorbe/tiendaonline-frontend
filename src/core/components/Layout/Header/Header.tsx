@@ -18,13 +18,13 @@ const Header: FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white">
+    <header className="sticky top-0 z-40 bg-app-black border-b border-app-gray/40">
       {/* Desktop */}
       <div className="hidden md:flex justify-between items-center mx-auto px-4 md:px-7 lg:px-14 py-4">
         <div className="flex items-center">
           <Link to={ROUTES.HOME}>
             <img
-              src="/images/logo_essences.svg"
+              src="/images/logo_essences_blanco.svg"
               alt="Essences"
               className="h-12 w-auto p-2"
             />
@@ -36,7 +36,7 @@ const Header: FC = () => {
               <li key={link.url}>
                 <Link
                   to={link.url}
-                  className="text-app-black font-inter font-semibold"
+                  className="text-white font-inter font-semibold hover:text-app-light-gray transition-colors"
                 >
                   {link.name}
                 </Link>
@@ -53,10 +53,10 @@ const Header: FC = () => {
             <img
               src="/images/shopping bag.svg"
               alt="Carrito de compras"
-              className="h-6 w-6"
+              className="h-6 w-6 invert"
             />
-            <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
-              <p className="text-white text-center font-inter text-xs font-bold leading-[10px]">
+            <div className="bg-white h-5 w-5 rounded-full flex justify-center items-center">
+              <p className="text-app-black text-center font-inter text-xs font-bold leading-[10px]">
                 {cartItemsCount}
               </p>
             </div>
@@ -68,11 +68,11 @@ const Header: FC = () => {
       <div className="flex justify-between items-center md:hidden py-4 px-8">
         <div className="flex items-center gap-1">
           <button onClick={() => setOpen(!open)}>
-            <img src="/images/menu.svg" alt="Abrir menú" />
+            <img src="/images/menu.svg" alt="Abrir menú" className="invert" />
           </button>
           <Link to={ROUTES.HOME}>
             <img
-              src="/images/logo_essences.svg"
+              src="/images/logo_essences_blanco.svg"
               alt="Essences Perfumes"
               className="h-6 w-auto"
             />
@@ -88,10 +88,10 @@ const Header: FC = () => {
               <img
                 src="/images/shopping bag.svg"
                 alt="Ícono de carrito"
-                className="h-6 w-6"
+                className="h-6 w-6 invert"
               />
-              <div className="bg-app-black h-5 w-5 rounded-full flex justify-center items-center">
-                <p className="text-white text-center font-inter text-xs font-bold leading-[10px]">
+              <div className="bg-white h-5 w-5 rounded-full flex justify-center items-center">
+                <p className="text-app-black text-center font-inter text-xs font-bold leading-[10px]">
                   {cartItemsCount}
                 </p>
               </div>

@@ -25,12 +25,12 @@ export default function UserDropdown() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="p-2 rounded-full hover:bg-gray-200 transition"
+        className="p-2 rounded-full text-white hover:bg-white/10 transition"
       >
         {user ? (
           <span>{user.name}</span>
         ) : (
-          <img src="/images/user-circle.svg" alt="User" className="w-6 h-6" />
+          <img src="/images/user-circle.svg" alt="User" className="w-6 h-6 invert" />
         )}
       </button>
 
