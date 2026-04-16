@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { isAxiosError } from 'axios';
+import { suscribirseAPush } from '@/app/push/subscribeBrowserToPush';
+import { desuscribirseDePush } from '@/app/push/unsubscribeBrowserFromPush';
 import Button from "../Button/Button";
 
 const obtenerMensajeErrorPush = (error: unknown): string => {
@@ -42,7 +44,6 @@ export default function AccountDetails() {
 
         try {
             setActivandoPush(true);
-            const { suscribirseAPush } = await import('@/app/push/subscribeBrowserToPush');
             await suscribirseAPush();
             alert('Notificaciones activadas');
         } catch (error) {
@@ -60,7 +61,6 @@ export default function AccountDetails() {
 
         try {
             setDesactivandoPush(true);
-            const { desuscribirseDePush } = await import('@/app/push/unsubscribeBrowserFromPush');
             const desuscrito = await desuscribirseDePush();
             alert(desuscrito ? 'Notificaciones desactivadas' : 'No habia una suscripcion push activa.');
         } catch (error) {
