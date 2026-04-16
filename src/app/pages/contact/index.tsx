@@ -118,14 +118,17 @@ export default function ContactPage() {
             <Button text="Enviar mensaje" className="max-w-fit" />
           </form>
           <div className="h-full">
-            <img
-              src="/images/map2.webp"
-              alt="Ubicación"
-              fetchPriority="high"
-              loading="eager"
-              decoding="async"
-              className="w-full h-full object-contain object-center"
-            />
+            <picture>
+              <source media="(max-width: 767px)" srcSet="/images/map2.webp" />
+              <img
+                src="/images/map.webp"
+                alt="Ubicación"
+                fetchPriority="high"
+                loading="eager"
+                decoding="async"
+                className="w-full h-full object-contain object-center"
+              />
+            </picture>
           </div>
         </div>
       </section>
