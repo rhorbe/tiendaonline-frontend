@@ -1,3 +1,4 @@
+import { ROUTES } from "@/core/enum/common";
 import { useAuth } from "@/store/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -40,13 +41,13 @@ export default function UserDropdown() {
             {!user ? (
               <>
                 <Link
-                  to="/login"
+                  to={ROUTES.LOGIN}
                   className="block px-4 py-2 hover:bg-gray-100 transition"
                 >
                   Iniciar Sesión
                 </Link>
                 <Link
-                  to="/register"
+                  to={ROUTES.REGISTER}
                   className="block px-4 py-2 hover:bg-gray-100 transition"
                 >
                   Registrarse
@@ -55,7 +56,7 @@ export default function UserDropdown() {
             ) : (
               <>
                 <Link
-                  to="/profile"
+                  to={ROUTES.PROFILE}
                   className="block px-4 py-2 hover:bg-gray-100 transition"
                 >
                   Ver Perfil

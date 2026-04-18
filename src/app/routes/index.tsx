@@ -2,6 +2,7 @@ import { FC, Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { ROUTES } from "@/core/enum/common";
+import RequireAuth from "./RequireAuth";
 
 const HomePage = lazy(() => import("../pages/home"));
 const LoginPage = lazy(() => import("../pages/auth/login"));
@@ -31,10 +32,38 @@ const AppRoutes: FC = () => {
         <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
         <Route path={ROUTES.SHOP} element={<ShopPage />} />
         <Route path={ROUTES.PRODUCT} element={<ProductPage />} />
-        <Route path={ROUTES.CART} element={<CartPage />} />
-        <Route path={ROUTES.CHECKOUT} element={<CheckOutPage />} />
-        <Route path={ROUTES.ORDER} element={<OrderCompletePage />} />
-        <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+        <Route
+          path={ROUTES.CART}
+          element={
+            <RequireAuth>
+              <CartPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path={ROUTES.CHECKOUT}
+          element={
+            <RequireAuth>
+              <CheckOutPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path={ROUTES.ORDER}
+          element={
+            <RequireAuth>
+              <OrderCompletePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path={ROUTES.PROFILE}
+          element={
+            <RequireAuth>
+              <ProfilePage />
+            </RequireAuth>
+          }
+        />
         <Route path={ROUTES.CONTACT} element={<ContactPage />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
         <Route path={ROUTES.OTP_PAGE} element={<OtpPage />} />

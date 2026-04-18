@@ -46,7 +46,7 @@ export default function MobileMenu({ setOpen }: MobileMenuProps) {
         <div className="flex justify-between pb-3 border-b border-app-gray">
           <Link
             className="text-lg/[32px] font-inter font-medium tracking-[-0.4px] text-white"
-            to="/cart"
+            to={ROUTES.CART}
           >
             Carrito
           </Link>

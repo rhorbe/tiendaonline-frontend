@@ -1,5 +1,5 @@
 import {FC, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import api from "@/core/api/axiosInstance";
 import {CustomInput} from "@/core/components";
 import PasswordInput from "@/core/components/PasswordInput";
@@ -11,6 +11,14 @@ import {ErrorResponse} from "@/core/models/Error";
 import { getOfflineErrorFromUnknown } from "@/core/api/networkError";
 import "../auth.css";
 
+interface LoginLocationState {
+    from?: {
+        pathname: string;
+        search: string;
+        hash: string;
+    };
+}
+
 const Login: FC = () => {
     const {login} = useAuth();
     const [email, setEmail] = useState("");
@@ -18,6 +26,8 @@ const Login: FC = () => {
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
     const [errorModalMessage, setErrorModalMessage] = useState("");
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = (location.state as LoginLocationState | null)?.from;
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -45,6 +55,11 @@ const Login: FC = () => {
                 .catch((pushError) => {
                     console.warn("No se pudo completar la suscripción push tras login", pushError);
                 });
+
+            if (from?.pathname) {
+                navigate(`${from.pathname}${from.search ?? ""}${from.hash ?? ""}`, {replace: true});
+                return;
+            }
 
             navigate(ROUTES.SHOP);
         } catch (err: unknown) {

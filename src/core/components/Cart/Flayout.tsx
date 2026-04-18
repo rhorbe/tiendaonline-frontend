@@ -1,4 +1,5 @@
 import {useEffect, useRef} from "react";
+import {useNavigate} from "react-router-dom";
 import Button from "../Button/Button";
 import {ROUTES} from "@/core/enum/common";
 import {useProductContext} from "@/store/useProductContext";
@@ -18,6 +19,7 @@ interface FlayoutMenuProps {
 export const Flayout = ({setOpen}: FlayoutMenuProps) => {
     const {state, dispatch} = useProductContext();
     const {user} = useAuth();
+    const navigate = useNavigate();
     const {cartItems} = state;
     const flayoutRef = useRef<HTMLDivElement>(null);
     const userDebug = JSON.stringify(user ?? null, null, 2);
@@ -151,7 +153,8 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                     <Button
                         text="Continuar"
                         onClick={() => {
-                            window.location.href = user ? ROUTES.CHECKOUT : ROUTES.LOGIN;
+                            setOpen(false);
+                            navigate(user ? ROUTES.CART : ROUTES.LOGIN);
                         }}
                     />
                 </div>
