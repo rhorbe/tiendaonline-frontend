@@ -2,11 +2,15 @@ import Process from "@/core/components/Process";
 import {useState} from "react";
 import {useProductContext} from "@/store/useProductContext";
 import {formatCurrency} from "@/core/utils/formatCurrency";
+import {useNavigate} from "react-router-dom";
+import Button from "@/core/components/Button/Button";
+import {ROUTES} from "@/core/enum/common";
 
 export default function CartPage() {
     const [selectedOption, setSelectedOption] = useState("standard-shipping");
     const {state, dispatch} = useProductContext();
     const {cartItems} = state;
+    const navigate = useNavigate();
 
     const handleDecrease = (varianteId: string, currentQty: number) => {
         dispatch({
@@ -59,7 +63,7 @@ export default function CartPage() {
                                         colSpan={4}
                                         className="py-8 px-4 text-center text-app-gray font-inter text-sm/[22px]"
                                     >
-                                        Tu carrito esta vacio.
+                                        Tu carrito esta vacío.
                                     </td>
                                 </tr>
                             ) : (
@@ -314,6 +318,14 @@ export default function CartPage() {
                         <p className="text-app-black text-right font-inter text-xl/8 font-semibold">
                             {formatCurrency(subtotal)}
                         </p>
+                    </div>
+
+                    <div className="pt-2">
+                        <Button
+                            text="Continuar"
+                            onClick={() => navigate(ROUTES.CHECKOUT)}
+                            disabled={cartItems.length === 0}
+                        />
                     </div>
                 </div>
             </div>
