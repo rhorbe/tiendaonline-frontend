@@ -5,7 +5,7 @@ import {CustomInput} from "@/core/components";
 import PasswordInput from "@/core/components/PasswordInput";
 import Modal from "@/core/components/Modal";
 import {ROUTES} from "@/core/enum/common";
-import {useAuth} from "@/store/AuthContext";
+import {useAuth} from "@/store/useAuth";
 import {LoginResponse} from "@/core/models/User";
 import {ErrorResponse} from "@/core/models/Error";
 import { getOfflineErrorFromUnknown } from "@/core/api/networkError";

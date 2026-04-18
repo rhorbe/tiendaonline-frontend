@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
 import { ROUTES } from "@/core/enum/common";
-import { useAuth } from "@/store/AuthContext";
+import { useAuth } from "@/store/useAuth";
 
 interface RequireAuthProps {
   children: ReactElement;

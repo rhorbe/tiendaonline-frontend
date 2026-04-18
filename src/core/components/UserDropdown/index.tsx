@@ -1,5 +1,5 @@
 import { ROUTES } from "@/core/enum/common";
-import { useAuth } from "@/store/AuthContext";
+import { useAuth } from "@/store/useAuth";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 

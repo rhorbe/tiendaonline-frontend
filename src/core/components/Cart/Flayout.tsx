@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import Button from "../Button/Button";
 import {ROUTES} from "@/core/enum/common";
 import {useProductContext} from "@/store/useProductContext";
-import {useAuth} from "@/store/AuthContext";
+import {useAuth} from "@/store/useAuth";
 
 const formatCurrency = (price: number) =>
     price.toLocaleString("es-AR", {

@@ -2,9 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { useAppSelector } from '../index';
 
+type UserData = Record<string, unknown>;
+
 export interface UserSliceProps {
   token: string | null;
-  user: any | null;
+  user: UserData | null;
 }
 
 const initialState: UserSliceProps = {
@@ -19,7 +21,7 @@ const UserSlice = createSlice({
     saveToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
     },
-    saveUser: (state, action: PayloadAction<string>) => {
+    saveUser: (state, action: PayloadAction<UserData | null>) => {
       state.user = action.payload;
     },
   },
@@ -32,4 +34,4 @@ export const useUserSlice = () =>
   });
 
 export const UserReducer = UserSlice.reducer;
-export const { saveToken } = UserSlice.actions;
+export const { saveToken, saveUser } = UserSlice.actions;
