@@ -37,17 +37,21 @@ const Login: FC = () => {
                 password,
             });
 
+            const userId = data.user.id ?? data.user._id ?? "";
+
             localStorage.setItem("token", data.token);
 
             console.log("Login successful:", data);
 
             login({
-                id: data.user._id,
+                id: userId,
                 name: data.user.name,
                 email: data.user.email,
-                email_verified_at: data.user.email_verified_at,
+                email_verified_at: data.user.email_verified_at ?? null,
+                cliente_id: data.user.cliente_id,
                 active: data.user.active,
             });
+
 
             // No bloquea el login si el usuario rechaza permisos o falla Push API.
             void import("@/app/push")

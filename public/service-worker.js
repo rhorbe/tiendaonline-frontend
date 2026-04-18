@@ -14,6 +14,7 @@ var CORE_ASSETS = [
 var API_EXCLUDED_PATHS = [
   '/backend/login',
   '/backend/logout',
+  '/backend/cliente',
   '/backend/carrito',
   '/backend/checkout',
   '/backend/push/subscribe',

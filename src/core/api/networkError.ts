@@ -1,14 +1,14 @@
 import { AxiosError } from 'axios';
 
 const GENERIC_OFFLINE_MESSAGE =
-  'No hay conexion a internet. No es posible continuar hasta recuperar la conexion.';
+  'No hay conexión a internet. No es posible continuar hasta recuperar la conexión.';
 
 export const getOfflineBlockingMessage = (actionDescription?: string): string => {
   if (!actionDescription) {
     return GENERIC_OFFLINE_MESSAGE;
   }
 
-  return `No hay conexion a internet. No es posible ${actionDescription} sin conexion.`;
+  return `No hay conexión a internet. No es posible ${actionDescription} sin conexión.`;
 };
 
 export const isOfflineByNavigator = (): boolean => {

@@ -32,4 +32,4 @@ Este proyecto se utiliza únicamente con fines de aprendizaje y demostración. N
 - La aplicación registra un Service Worker desde `src/app/registerServiceWorker.ts`.
 - Se cachean recursos estaticos, imagenes y respuestas `GET` de `/backend` en `public/service-worker.js`.
 - Si falla la red en navegación, se sirve `public/offline.html`.
-- Acciones que requieren servidor (por ejemplo login o carrito para usuarios autenticados) muestran aviso y no continúan sin conexion.
+- Acciones que requieren servidor (por ejemplo login o carrito para usuarios autenticados) muestran aviso y no continúan sin conexión.

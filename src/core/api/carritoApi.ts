@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import api from "./axiosInstance";
 import { getOfflineErrorFromUnknown } from "./networkError";
+import { CartItem, normalizePrice } from "@/store/productContext";
 
 type CarritoItemPayload = {
   cliente_id: string;
@@ -20,9 +21,72 @@ type Carrito = {
   items: CarritoItem[];
 };
 
+type BackendProduct = {
+  id?: string;
+  _id?: string;
+  nombre?: string;
+  marca?: string;
+  image_url?: string | null;
+};
+
+type BackendCliente = {
+  id?: string;
+  _id?: string;
+  user_id?: string;
+  user?: {
+    id?: string;
+    _id?: string;
+  };
+};
+
+type BackendVariantSize = {
+  nombre?: string;
+};
+
+type BackendVariant = {
+  id?: string;
+  _id?: string;
+  producto_id?: string;
+  precio?: string | number;
+  stock?: number;
+  tamano?: string;
+  tamanio?: BackendVariantSize;
+  producto?: BackendProduct;
+};
+
+type BackendCartItem = {
+  id?: string;
+  _id?: string;
+  cantidad?: number;
+  variante_producto_id?: string;
+  variante_producto?: BackendVariant;
+  producto?: BackendProduct;
+  precio?: string | number;
+  precio_unitario?: string | number;
+};
+
+type BackendCart = {
+  id?: string;
+  _id?: string;
+  cliente_id?: string;
+  cliente?: BackendCliente;
+  items?: BackendCartItem[];
+};
+
 type AddCarritoItemResponse = {
   success: boolean;
   data: Carrito;
+};
+
+type GetCarritoResponse = {
+  success?: boolean;
+  data?: BackendCart;
+  items?: BackendCartItem[];
+};
+
+type GetCarritosResponse = {
+  success?: boolean;
+  data?: BackendCart[] | BackendCart;
 };
 
 type BackendValidationError = {
@@ -40,6 +104,120 @@ export const addItemToCart = async (payload: CarritoItemPayload): Promise<Carrit
   }
 
   return data.data;
+};
+
+const getVariantId = (item: BackendCartItem): string => {
+  return item.variante_producto_id ?? item.variante_producto?.id ?? item.variante_producto?._id ?? "";
+};
+
+const mapBackendItemToCartItem = (item: BackendCartItem): CartItem | null => {
+  const variantId = getVariantId(item);
+  if (!variantId) {
+    return null;
+  }
+
+  const variant = item.variante_producto;
+  const product = item.producto ?? variant?.producto;
+
+  return {
+    varianteId: variantId,
+    productId: product?.id ?? product?._id ?? variant?.producto_id ?? "",
+    nombre: product?.nombre ?? "Producto",
+    marca: product?.marca ?? "",
+    imageUrl: product?.image_url ?? "/images/cart-product.png",
+    varianteLabel: variant?.tamano ?? variant?.tamanio?.nombre ?? "",
+    unitPrice: normalizePrice(item.precio ?? item.precio_unitario ?? variant?.precio),
+    quantity: Math.max(1, item.cantidad ?? 1),
+    stock: Math.max(1, variant?.stock ?? item.cantidad ?? 1),
+  };
+};
+
+const toCartArray = (payload: GetCarritosResponse): BackendCart[] => {
+  if (Array.isArray(payload.data)) {
+    return payload.data;
+  }
+
+  if (payload.data) {
+    return [payload.data];
+  }
+
+  return [];
+};
+
+const getUserIdFromCart = (cart: BackendCart): string => {
+  return cart.cliente?.user_id ?? cart.cliente?.user?.id ?? cart.cliente?.user?._id ?? "";
+};
+
+const findCartByUserId = (carts: BackendCart[], userId: string): BackendCart | null => {
+  const found = carts.find((cart) => getUserIdFromCart(cart) === userId);
+  return found ?? null;
+};
+
+const getClienteIdFromCart = (cart: BackendCart): string => {
+  return cart.cliente_id ?? cart.cliente?.id ?? cart.cliente?._id ?? "";
+};
+
+export const getCartContextByUserId = async (
+  userId: string,
+): Promise<{ clienteId: string | null; cartItems: CartItem[] }> => {
+  const { data } = await api.get<GetCarritosResponse>("/carrito");
+  const carts = toCartArray(data);
+  const userCart = findCartByUserId(carts, userId);
+
+  if (!userCart) {
+    return {
+      clienteId: null,
+      cartItems: [],
+    };
+  }
+
+  const cartItems = (userCart.items ?? [])
+    .map(mapBackendItemToCartItem)
+    .filter((item): item is CartItem => item !== null);
+
+  return {
+    clienteId: getClienteIdFromCart(userCart) || null,
+    cartItems,
+  };
+};
+
+export const resolveClienteIdByUserId = async (userId: string): Promise<string | null> => {
+  const context = await getCartContextByUserId(userId);
+  return context.clienteId;
+};
+
+export const getCartByClient = async (clienteId: string): Promise<CartItem[]> => {
+  try {
+    const { data } = await api.get<GetCarritoResponse>(`/cliente/${clienteId}/carrito`);
+    const rawData = data as unknown;
+    const backendItems = Array.isArray(rawData)
+      ? (rawData as BackendCartItem[])
+      : data.data?.items ?? data.items ?? [];
+
+    return backendItems
+      .map(mapBackendItemToCartItem)
+      .filter((item): item is CartItem => item !== null);
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError;
+
+    if (axiosError.response?.status === 404) {
+      return [];
+    }
+
+    throw error;
+  }
+};
+
+export const getCartByClientErrorMessage = (error: unknown): string => {
+  const offlineMessage = getOfflineErrorFromUnknown(error, "obtener el carrito");
+  if (offlineMessage) {
+    return offlineMessage;
+  }
+
+  const axiosError = error as AxiosError<BackendValidationError>;
+  const backendData = axiosError.response?.data;
+
+  return backendData?.message ?? backendData?.error ?? "No se pudo sincronizar el carrito del usuario.";
 };
 
 export const getAddItemCartErrorMessage = (error: unknown): string => {

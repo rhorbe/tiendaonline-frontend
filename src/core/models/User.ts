@@ -3,16 +3,19 @@ export interface User {
   name: string;
   email: string;
   email_verified_at: string | null;
+  cliente_id?: string;
   active?: boolean;
   remember_token?: string | null;
 }
 
 export interface LoginUserResponse {
-  _id: string;
+  id?: string;
+  _id?: string;
   name: string;
   email: string;
   active: boolean;
-  email_verified_at: string | null;
+  cliente_id?: string;
+  email_verified_at?: string | null;
 }
 
 export interface LoginResponse {

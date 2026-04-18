@@ -61,6 +61,10 @@ export type ProductAction =
     }
   | {
       type: "CLEAR_CART";
+    }
+  | {
+      type: "SET_CART_ITEMS";
+      payload: { cartItems: CartItem[] };
     };
 
 export type ProductContextValue = {
@@ -151,6 +155,11 @@ export const productReducer = (
       return {
         ...state,
         cartItems: [],
+      };
+    case "SET_CART_ITEMS":
+      return {
+        ...state,
+        cartItems: action.payload.cartItems,
       };
     default:
       return state;

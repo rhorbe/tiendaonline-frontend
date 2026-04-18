@@ -3,6 +3,31 @@ import { useState, useEffect } from "react";
 import { User } from "@/core/models/User";
 import { AuthContext } from "./auth-context";
 
+type StoredUser = Partial<User> & { _id?: string };
+
+const normalizeStoredUser = (value: unknown): User | null => {
+  if (!value || typeof value !== "object") {
+    return null;
+  }
+
+  const candidate = value as StoredUser;
+  const normalizedId = candidate.id ?? candidate._id;
+
+  if (!normalizedId || !candidate.name || !candidate.email) {
+    return null;
+  }
+
+  return {
+    id: normalizedId,
+    name: candidate.name,
+    email: candidate.email,
+    email_verified_at: candidate.email_verified_at ?? null,
+    cliente_id: candidate.cliente_id,
+    active: candidate.active,
+    remember_token: candidate.remember_token,
+  };
+};
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
@@ -12,7 +37,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (!stored) return;
 
     try {
-      setUser(JSON.parse(stored));
+      const parsed = JSON.parse(stored);
+      const normalizedUser = normalizeStoredUser(parsed);
+
+      if (!normalizedUser) {
+        localStorage.removeItem("user");
+        return;
+      }
+
+      setUser(normalizedUser);
+      localStorage.setItem("user", JSON.stringify(normalizedUser));
     } catch {
       localStorage.removeItem("user");
     }

@@ -8,7 +8,11 @@ import {VarianteProducto} from "@/core/models/VarianteProducto.ts";
 import {fetchProductById} from "@/core/api/productosApi.ts";
 import {Producto} from "@/core/models/Producto.ts";
 import {useAuth} from "@/store/useAuth";
-import {addItemToCart, getAddItemCartErrorMessage} from "@/core/api/carritoApi";
+import {
+    addItemToCart,
+    getAddItemCartErrorMessage,
+    resolveClienteIdByUserId,
+} from "@/core/api/carritoApi";
 import Modal from "@/core/components/Modal";
 import {getOfflineErrorFromUnknown, isOfflineByNavigator} from "@/core/api/networkError";
 
@@ -238,8 +242,16 @@ export default function ProductPage() {
             setIsAddingToCart(true);
 
             try {
+                const clienteId = user.cliente_id ?? (await resolveClienteIdByUserId(user.id));
+
+                if (!clienteId) {
+                    setCartErrorMessage("No se pudo identificar el cliente para guardar el carrito.");
+                    setIsCartErrorModalOpen(true);
+                    return;
+                }
+
                 await addItemToCart({
-                    cliente_id: user.id,
+                    cliente_id: clienteId,
                     variante_producto_id: selectedVariante.id,
                     cantidad: quantity,
                 });

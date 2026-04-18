@@ -13,7 +13,11 @@ import {useProductContext} from "@/store/useProductContext";
 import {normalizePrice} from "@/store/productContext";
 import {Link, useNavigate} from "react-router-dom";
 import {useAuth} from "@/store/useAuth";
-import {addItemToCart, getAddItemCartErrorMessage} from "@/core/api/carritoApi";
+import {
+    addItemToCart,
+    getAddItemCartErrorMessage,
+    resolveClienteIdByUserId,
+} from "@/core/api/carritoApi";
 import Modal from "@/core/components/Modal";
 import {getOfflineErrorFromUnknown, isOfflineByNavigator} from "@/core/api/networkError";
 import "@/core/components/custom-scrollbar.css";
@@ -480,8 +484,17 @@ export default function ShopPage() {
 
                                                         if (user?.id) {
                                                             try {
+                                                                const clienteId =
+                                                                    user.cliente_id ?? (await resolveClienteIdByUserId(user.id));
+
+                                                                if (!clienteId) {
+                                                                    setCartErrorMessage("No se pudo identificar el cliente para guardar el carrito.");
+                                                                    setIsCartErrorModalOpen(true);
+                                                                    return;
+                                                                }
+
                                                                 await addItemToCart({
-                                                                    cliente_id: user.id,
+                                                                    cliente_id: clienteId,
                                                                     variante_producto_id: selectedVariante.id,
                                                                     cantidad: 1,
                                                                 });

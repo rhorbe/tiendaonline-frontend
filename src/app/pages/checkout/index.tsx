@@ -16,29 +16,6 @@ export default function CheckOutPage() {
                 <div className="md:col-span-2 space-y-6">
                     <div className="rounded-md border border-app-black py-10 px-6 space-y-5">
                         <p className="text-app-black font-poppins text-xl/7 font-medium">
-                            Información de contacto
-                        </p>
-                        <div className="flex flex-col md:flex-row gap-6 items-center justify-between" >
-                            <div className="space-y-3 w-full">
-                                <label htmlFor="firstname" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nombre</label>
-                                <input placeholder="Nombre" type="text" name="firstname" id="firstname" className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md" />
-                            </div>
-                            <div className="space-y-3 w-full">
-                                <label htmlFor="lastname" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Apellido</label>
-                                <input placeholder="Apellido" type="text" name="lastname" id="firstname" className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md" />
-                            </div>
-                        </div>
-                        <div className="space-y-3 w-full">
-                            <label htmlFor="phone" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Teléfono</label>
-                            <input placeholder="Teléfono" type="tel" name="phone" id="firstname" className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md" />
-                        </div>
-                        <div className="space-y-3 w-full">
-                            <label htmlFor="email" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Correo electrónico</label>
-                            <input placeholder="Correo electrónico" type="email" name="email" id="email" className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md" />
-                        </div>
-                    </div>
-                    <div className="rounded-md border border-app-black py-10 px-6 space-y-5">
-                        <p className="text-app-black font-poppins text-xl/7 font-medium">
                             Dirección de envío
                         </p>
                         <div className="space-y-3 w-full">
