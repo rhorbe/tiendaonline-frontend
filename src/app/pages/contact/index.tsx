@@ -9,7 +9,7 @@ export default function ContactPage() {
     },
     {
       icon: "/images/call.svg",
-      title: "Contáctanos",
+      title: "Contactanos",
       paragraph: "280 442-1080",
     },
     {

@@ -1,12 +1,13 @@
 import {fetchBrands} from "@/core/api/marcasApi.ts";
 import {fetchCategorias} from "@/core/api/categoriasApi.ts";
 import {fetchProducts, ProductFilters} from "@/core/api/productosApi.ts";
-import {fetchTamanio} from "@/core/api/tamaniosApi.ts";
+/*import {fetchTamanio} from "@/core/api/tamaniosApi.ts";*/
 import ProductCard from "@/core/components/ProductCard";
 import {Marca} from "@/core/models/Marca.ts";
 import {Categoria} from "@/core/models/Categoria.ts";
-import {Tamanio} from "@/core/models/Tamanio.ts";
-import {useCallback, useEffect, useMemo, useState} from "react";
+/*import {Tamanio} from "@/core/models/Tamanio.ts";*/
+/*import {useCallback, useEffect, useMemo, useState} from "react";*/
+import {useCallback, useEffect, useState} from "react";
 import {ROUTES} from "@/core/enum/common";
 import {useProductContext} from "@/store/useProductContext";
 import {normalizePrice} from "@/store/productContext";
@@ -51,9 +52,9 @@ export default function ShopPage() {
     const [loadingBrands, setLoadingMarcas] = useState(true);
     const [brandError, setMarcaError] = useState<string | null>(null);
 
-    const [tamanios, setTamanios] = useState<Tamanio[]>([]);
+  /*  const [tamanios, setTamanios] = useState<Tamanio[]>([]);
     const [loadingTamanios, setLoadingTamanios] = useState(true);
-    const [tamanioError, setTamanioError] = useState<string | null>(null);
+    const [tamanioError, setTamanioError] = useState<string | null>(null);*/
 
     const loadProducts = useCallback((filters?: ProductFilters) => {
         setLoading(true);
@@ -147,7 +148,7 @@ export default function ShopPage() {
             .finally(() => setLoadingMarcas(false));
     }, []);
 
-    const loadTamanios = useCallback(() => {
+ /*   const loadTamanios = useCallback(() => {
         setLoadingTamanios(true);
         setTamanioError(null);
 
@@ -159,15 +160,15 @@ export default function ShopPage() {
                 setTamanioError("No se pudieron cargar los tamaños.");
             })
             .finally(() => setLoadingTamanios(false));
-    }, []);
+    }, []);*/
 
     useEffect(() => {
         loadCategorias();
         loadMarcas();
-        loadTamanios();
-    }, [loadCategorias, loadMarcas, loadTamanios]);
+       /* loadTamanios();*/
+    }, [loadCategorias, loadMarcas, /*loadTamanios*/]);
 
-    const sortedTamanios = useMemo(() => {
+   /* const sortedTamanios = useMemo(() => {
         const getNumericValue = (value: string) => {
             const normalized = value.replace(/,/g, ".");
             const match = normalized.match(/\d+(?:\.\d+)?/);
@@ -190,7 +191,7 @@ export default function ShopPage() {
                 return a.index - b.index;
             })
             .map(({item}) => item);
-    }, [tamanios]);
+    }, [tamanios]);*/
 
     return (
         <section className="px-8 lg:px-14">
@@ -349,7 +350,7 @@ export default function ShopPage() {
                         )}
                     </div>
 
-                    <div className="space-y-2">
+{/*                    <div className="space-y-2">
                         <h1 className="text-app-black font-inter text-base/[26px] font-semibold">
                             TAMAÑOS
                         </h1>
@@ -384,8 +385,8 @@ export default function ShopPage() {
                                 )}
                             </div>
                         )}
-                    </div>
-                    <div>
+                    </div>*/}
+                   {/* <div>
                         <h1 className="text-app-black font-inter text-base/[26px] font-semibold mb-4">
                             PRECIO
                         </h1>
@@ -410,7 +411,7 @@ export default function ShopPage() {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </div>*/}
                 </div>
                 <div className="md:col-span-3 lg:col-span-1">
                     {loading ? (

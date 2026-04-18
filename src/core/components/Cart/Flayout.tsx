@@ -153,14 +153,7 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                         }}
                     />
                 </div>
-                <Link
-                    to={ROUTES.CART}
-                    className="inline-flex justify-center text-center w-full py-2"
-                >
-                    <p className="border-b border-app-black font-inter text-sm/[22px] font-semibold text-app-black">
-                        Ver carrito
-                    </p>
-                </Link>
+                <Link to={ROUTES.CART} className="inline-flex justify-center text-center w-full py-2"> </Link>
             </div>
         </div>
     );

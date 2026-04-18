@@ -198,19 +198,13 @@ export default function CartPage() {
             onClick={() => setSelectedOption("express-shipping")}
           >
             <div className="flex gap-3 items-center">
-              <input
-                type="radio"
-                name="shipping"
-                id="express-shipping"
-                checked={selectedOption === "express-shipping"}
-                className="appearance-none w-5 h-5 border border-app-black rounded-full checked:bg-app-black checked:border-app-black text-app-black"
-              />
               <p className="text-app-black font-inter text-base/[26px]">
                 Pick Up
               </p>
             </div>
             <p className="text-right font-inter text-base/[26px]">%21.00</p>
           </div>
+
           <div className="flex justify-between items-center border-b border-app-light-gray py-3">
             <p className="text-app-black font-inter text-base/[26px] font-normal ">
               Subtotal

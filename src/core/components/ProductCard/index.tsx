@@ -97,6 +97,7 @@ const ProductCard: React.FC<ProductCardProps> = (
                             </p>
                         </div>
                     </div>
+                    {/* TODO sacar botón o agregar funcionalidad */}
                     <button onClick={(e) => {
                         e.stopPropagation();
                         onToggleWishlist?.();
