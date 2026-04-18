@@ -1,8 +1,8 @@
 import {useEffect, useRef} from "react";
-import {Link} from "react-router-dom";
 import Button from "../Button/Button";
 import {ROUTES} from "@/core/enum/common";
 import {useProductContext} from "@/store/useProductContext";
+import {useAuth} from "@/store/AuthContext";
 
 const formatCurrency = (price: number) =>
     price.toLocaleString("es-AR", {
@@ -17,8 +17,10 @@ interface FlayoutMenuProps {
 
 export const Flayout = ({setOpen}: FlayoutMenuProps) => {
     const {state, dispatch} = useProductContext();
+    const {user} = useAuth();
     const {cartItems} = state;
     const flayoutRef = useRef<HTMLDivElement>(null);
+    const userDebug = JSON.stringify(user ?? null, null, 2);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -149,11 +151,14 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                     <Button
                         text="Continuar"
                         onClick={() => {
-                            window.location.href = ROUTES.CHECKOUT;
+                            window.location.href = user ? ROUTES.CHECKOUT : ROUTES.LOGIN;
                         }}
                     />
                 </div>
-                <Link to={ROUTES.CART} className="inline-flex justify-center text-center w-full py-2"> </Link>
+
+                <pre className="text-xs text-app-gray bg-app-light-gray/30 p-2 rounded overflow-auto">
+                    {userDebug}
+                </pre>
             </div>
         </div>
     );
