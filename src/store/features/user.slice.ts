@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { useAppSelector } from '../index';
+import { useAppSelector } from '@/store';
 
 type UserData = Record<string, unknown>;
 
