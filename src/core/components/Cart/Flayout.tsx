@@ -1,10 +1,17 @@
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Button from "../Button/Button";
 import {ROUTES} from "@/core/enum/common";
 import {formatCurrency} from "@/core/utils/formatCurrency";
 import {useProductContext} from "@/store/useProductContext";
 import {useAuth} from "@/store/useAuth";
+import Modal from "@/core/components/Modal";
+import {
+    getRemoveItemCartErrorMessage,
+    getUpdateCartItemErrorMessage,
+    removeItemFromUserCart,
+    updateItemQuantityInUserCart,
+} from "@/core/api/cartItemRemoveApi";
 
 
 interface FlayoutMenuProps {
@@ -14,6 +21,9 @@ interface FlayoutMenuProps {
 export const Flayout = ({setOpen}: FlayoutMenuProps) => {
     const {state, dispatch} = useProductContext();
     const {user} = useAuth();
+    const [isCartErrorModalOpen, setIsCartErrorModalOpen] = useState(false);
+    const [cartErrorMessage, setCartErrorMessage] = useState("");
+    const [cartErrorTitle, setCartErrorTitle] = useState("No se pudo quitar del carrito");
     const navigate = useNavigate();
     const {cartItems} = state;
     const flayoutRef = useRef<HTMLDivElement>(null);
@@ -32,21 +42,59 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
         };
     }, [setOpen]);
 
-    const handleDecrease = (varianteId: string, currentQty: number) => {
+    const handleUpdateQty = async (varianteId: string, nextQty: number) => {
+        if (user?.id) {
+            try {
+                const result = await updateItemQuantityInUserCart(user.id, varianteId, nextQty);
+                if (!result.updated) {
+                    setCartErrorTitle("No se pudo actualizar el carrito");
+                    setCartErrorMessage("No se encontro el item del carrito para actualizar su cantidad.");
+                    setIsCartErrorModalOpen(true);
+                    return;
+                }
+            } catch (error: unknown) {
+                setCartErrorTitle("No se pudo actualizar el carrito");
+                setCartErrorMessage(getUpdateCartItemErrorMessage(error));
+                setIsCartErrorModalOpen(true);
+                return;
+            }
+        }
+
         dispatch({
             type: "UPDATE_CART_QTY",
-            payload: {varianteId, quantity: Math.max(1, currentQty - 1)},
+            payload: {varianteId, quantity: nextQty},
         });
+    };
+
+    const handleDecrease = (varianteId: string, currentQty: number) => {
+        const nextQty = Math.max(1, currentQty - 1);
+        void handleUpdateQty(varianteId, nextQty);
     };
 
     const handleIncrease = (varianteId: string, currentQty: number, stock: number) => {
-        dispatch({
-            type: "UPDATE_CART_QTY",
-            payload: {varianteId, quantity: Math.min(stock || 1, currentQty + 1)},
-        });
+        const nextQty = Math.min(stock || 1, currentQty + 1);
+        void handleUpdateQty(varianteId, nextQty);
     };
 
     const subtotal = cartItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
+
+    const handleRemoveItem = async (varianteId: string) => {
+        if (user?.id) {
+            try {
+                await removeItemFromUserCart(user.id, varianteId);
+            } catch (error: unknown) {
+                setCartErrorTitle("No se pudo quitar del carrito");
+                setCartErrorMessage(getRemoveItemCartErrorMessage(error));
+                setIsCartErrorModalOpen(true);
+                return;
+            }
+        }
+
+        dispatch({
+            type: "REMOVE_FROM_CART",
+            payload: {varianteId},
+        });
+    };
 
     return (
         <div
@@ -111,12 +159,7 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                                     </p>
                                     <button
                                         className="flex justify-end"
-                                        onClick={() => {
-                                            dispatch({
-                                                type: "REMOVE_FROM_CART",
-                                                payload: {varianteId: item.varianteId},
-                                            });
-                                        }}
+                                        onClick={() => void handleRemoveItem(item.varianteId)}
                                     >
                                         <img src="/images/trash.svg" alt="" className="w-5 h-5"/>
                                     </button>
@@ -145,6 +188,15 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                     />
                 </div>
             </div>
+            <Modal
+                isOpen={isCartErrorModalOpen}
+                onClose={() => setIsCartErrorModalOpen(false)}
+                title={cartErrorTitle}
+                description={cartErrorMessage}
+                buttonText="Entendido"
+                iconSrc="/images/warning.svg"
+                iconAlt="Error al quitar producto"
+            />
         </div>
     );
 };

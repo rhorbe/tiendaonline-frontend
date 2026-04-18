@@ -15,19 +15,23 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(productReducer, initialProductState);
   const { user } = useAuth();
   const lastUserIdRef = useRef<string | null>(null);
+  const authenticatedUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     const currentUserId = user?.id ?? null;
     const currentClienteId = user?.cliente_id ?? null;
 
     if (!currentUserId) {
-      if (lastUserIdRef.current) {
+      if (authenticatedUserIdRef.current) {
         dispatch({ type: "CLEAR_CART" });
       }
 
+      authenticatedUserIdRef.current = null;
       lastUserIdRef.current = null;
       return;
     }
+
+    authenticatedUserIdRef.current = currentUserId;
 
     if (lastUserIdRef.current === currentUserId) {
       return;

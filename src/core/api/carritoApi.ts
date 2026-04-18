@@ -110,6 +110,14 @@ const getVariantId = (item: BackendCartItem): string => {
   return item.variante_producto_id ?? item.variante_producto?.id ?? item.variante_producto?._id ?? "";
 };
 
+const getCartId = (cart: BackendCart): string => {
+  return cart.id ?? cart._id ?? "";
+};
+
+const getCartItemId = (item: BackendCartItem): string => {
+  return item.id ?? item._id ?? "";
+};
+
 const mapBackendItemToCartItem = (item: BackendCartItem): CartItem | null => {
   const variantId = getVariantId(item);
   if (!variantId) {
@@ -186,6 +194,50 @@ export const resolveClienteIdByUserId = async (userId: string): Promise<string |
   return context.clienteId;
 };
 
+const findCartItemIdsByUserAndVariant = async (
+  userId: string,
+  varianteId: string,
+): Promise<{ carritoId: string; itemId: string } | null> => {
+  const { data } = await api.get<GetCarritosResponse>("/carrito");
+  const carts = toCartArray(data);
+  const userCart = findCartByUserId(carts, userId);
+
+  if (!userCart) {
+    return null;
+  }
+
+  const matchedItem = (userCart.items ?? []).find((item) => getVariantId(item) === varianteId);
+  if (!matchedItem) {
+    return null;
+  }
+
+  const carritoId = getCartId(userCart);
+  const itemId = getCartItemId(matchedItem);
+
+  if (!carritoId || !itemId) {
+    return null;
+  }
+
+  return { carritoId, itemId };
+};
+
+export const removeItemFromCart = async (carritoId: string, itemId: string): Promise<void> => {
+  await api.delete(`/carrito/${carritoId}/item/${itemId}`);
+};
+
+export const removeItemFromUserCart = async (
+  userId: string,
+  varianteId: string,
+): Promise<{ removed: boolean }> => {
+  const ids = await findCartItemIdsByUserAndVariant(userId, varianteId);
+  if (!ids) {
+    return { removed: false };
+  }
+
+  await removeItemFromCart(ids.carritoId, ids.itemId);
+  return { removed: true };
+};
+
 export const getCartByClient = async (clienteId: string): Promise<CartItem[]> => {
   try {
     const { data } = await api.get<GetCarritoResponse>(`/cliente/${clienteId}/carrito`);
@@ -245,4 +297,21 @@ export const getAddItemCartErrorMessage = (error: unknown): string => {
     "No se pudo agregar el producto al carrito. Intenta nuevamente."
   );
 };
+
+export const getRemoveItemCartErrorMessage = (error: unknown): string => {
+  const offlineMessage = getOfflineErrorFromUnknown(error, "quitar el producto del carrito");
+  if (offlineMessage) {
+    return offlineMessage;
+  }
+
+  const axiosError = error as AxiosError<BackendValidationError>;
+  const backendData = axiosError.response?.data;
+
+  return (
+    backendData?.message ??
+    backendData?.error ??
+    "No se pudo quitar el producto del carrito. Intenta nuevamente."
+  );
+};
+
 
