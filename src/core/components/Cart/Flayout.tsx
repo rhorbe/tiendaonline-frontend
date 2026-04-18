@@ -2,15 +2,10 @@ import {useEffect, useRef} from "react";
 import {useNavigate} from "react-router-dom";
 import Button from "../Button/Button";
 import {ROUTES} from "@/core/enum/common";
+import {formatCurrency} from "@/core/utils/formatCurrency";
 import {useProductContext} from "@/store/useProductContext";
 import {useAuth} from "@/store/useAuth";
 
-const formatCurrency = (price: number) =>
-    price.toLocaleString("es-AR", {
-        style: "currency",
-        currency: "ARS",
-        minimumFractionDigits: 2,
-    });
 
 interface FlayoutMenuProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,7 +17,6 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
     const navigate = useNavigate();
     const {cartItems} = state;
     const flayoutRef = useRef<HTMLDivElement>(null);
-    const userDebug = JSON.stringify(user ?? null, null, 2);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -158,10 +152,6 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                         }}
                     />
                 </div>
-
-                <pre className="text-xs text-app-gray bg-app-light-gray/30 p-2 rounded overflow-auto">
-                    {userDebug}
-                </pre>
             </div>
         </div>
     );

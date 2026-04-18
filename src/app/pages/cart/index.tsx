@@ -1,8 +1,29 @@
 import Process from "@/core/components/Process";
 import { useState } from "react";
+import { useProductContext } from "@/store/useProductContext";
+import { formatCurrency } from "@/core/utils/formatCurrency";
 
 export default function CartPage() {
   const [selectedOption, setSelectedOption] = useState("");
+  const { state, dispatch } = useProductContext();
+  const { cartItems } = state;
+
+  const handleDecrease = (varianteId: string, currentQty: number) => {
+    dispatch({
+      type: "UPDATE_CART_QTY",
+      payload: { varianteId, quantity: Math.max(1, currentQty - 1) },
+    });
+  };
+
+  const handleIncrease = (varianteId: string, currentQty: number, stock: number) => {
+    dispatch({
+      type: "UPDATE_CART_QTY",
+      payload: { varianteId, quantity: Math.min(stock || 1, currentQty + 1) },
+    });
+  };
+
+  const subtotal = cartItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
+
   return (
     <section className="px-8 lg:px-14 py-20">
       <div className="">
@@ -32,62 +53,92 @@ export default function CartPage() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="py-6 px-4 border-app-light-gray border-b flex gap-4 items-center">
-                    <div className="bg-primary w-20 h-24">
-                      <img
-                        src={"/images/product-one.png"}
-                        alt={"Product Img"}
-                        className="object-contain object-center h-auto max-h-full w-full"
-                      />
-                    </div>
-                    <div className="flex-shrink-0 space-y-2">
-                      <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                        Tray Table
-                      </p>
-                      <p className="text-app-gray font-inter text-xs/5 font-normal">
-                        Color: Black
-                      </p>
-                      <button className="flex gap-1 items-center">
-                        <img
-                          src={"/images/close.svg"}
-                          alt={"Product Img"}
-                          className="object-contain object-center h-6 w-6"
-                        />
-                        <p className="text-app-gray font-inter text-sm/[22px] font-semibold">
-                          Quitar
+                {cartItems.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="py-8 px-4 text-center text-app-gray font-inter text-sm/[22px]"
+                    >
+                      Tu carrito esta vacio.
+                    </td>
+                  </tr>
+                ) : (
+                  cartItems.map((item) => (
+                    <tr key={item.varianteId}>
+                      <td className="py-6 px-4 border-app-light-gray border-b flex gap-4 items-center">
+                        <div className="bg-primary w-20 h-24">
+                          <img
+                            src={item.imageUrl}
+                            alt="Producto en carrito"
+                            className="object-contain object-center h-auto max-h-full w-full"
+                          />
+                        </div>
+                        <div className="flex-shrink-0 space-y-2">
+                          <p className="text-app-black font-inter text-sm/[22px] font-semibold">
+                            {item.nombre}
+                          </p>
+                          {item.varianteLabel && (
+                            <p className="text-app-gray font-inter text-xs/5 font-normal">
+                              {item.varianteLabel} ML
+                            </p>
+                          )}
+                          <button
+                            type="button"
+                            className="flex gap-1 items-center"
+                            onClick={() =>
+                              dispatch({
+                                type: "REMOVE_FROM_CART",
+                                payload: { varianteId: item.varianteId },
+                              })
+                            }
+                          >
+                            <img
+                              src={"/images/close.svg"}
+                              alt=""
+                              className="object-contain object-center h-6 w-6"
+                            />
+                            <p className="text-app-gray font-inter text-sm/[22px] font-semibold">
+                              Quitar
+                            </p>
+                          </button>
+                        </div>
+                      </td>
+                      <td className="py-6 px-4 border-app-light-gray border-b">
+                        <div className="flex gap-3 items-center border border-app-gray rounded py-3 px-2 w-fit">
+                          <button
+                            type="button"
+                            onClick={() => handleDecrease(item.varianteId, item.quantity)}
+                            aria-label="Disminuir cantidad"
+                            disabled={item.quantity <= 1}
+                          >
+                            <img src="/images/minus.svg" alt="" className="h-4 w-4" />
+                          </button>
+                          <p className="text-app-black font-inter font-semibold text-sm/[20px]">
+                            {item.quantity}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => handleIncrease(item.varianteId, item.quantity, item.stock)}
+                            aria-label="Aumentar cantidad"
+                            disabled={item.quantity >= (item.stock || 1)}
+                          >
+                            <img src="/images/add.svg" alt="" className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </td>
+                      <td className="py-6 px-4 border-app-light-gray border-b">
+                        <p className="text-app-black font-inter text-lg/[30px] font-normal text-right">
+                          {formatCurrency(item.unitPrice)}
                         </p>
-                      </button>
-                    </div>
-                  </td>
-                  <td className="py-6 px-4 border-app-light-gray border-b">
-                    <div className="flex gap-3 items-center border border-app-gray rounded py-3 px-2 w-fit">
-                      <button>
-                        <img
-                          src="/images/minus.svg"
-                          alt=""
-                          className="h-4 w-4"
-                        />
-                      </button>
-                      <p className="text-app-black font-inter font-semibold text-sm/[20px]">
-                        2
-                      </p>
-                      <button>
-                        <img src="/images/add.svg" alt="" className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                  <td className="py-6 px-4 border-app-light-gray border-b">
-                    <p className="text-app-black font-inter text-lg/[30px] font-normal text-right">
-                      $10.00
-                    </p>
-                  </td>
-                  <td className="py-6 px-4 border-app-light-gray border-b">
-                    <p className="text-app-black font-inter text-lg/[30px] font-semibold text-right">
-                      $20.00
-                    </p>
-                  </td>
-                </tr>
+                      </td>
+                      <td className="py-6 px-4 border-app-light-gray border-b">
+                        <p className="text-app-black font-inter text-lg/[30px] font-semibold text-right">
+                          {formatCurrency(item.unitPrice * item.quantity)}
+                        </p>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -95,54 +146,80 @@ export default function CartPage() {
             <h2 className="pb-6 text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
               Producto
             </h2>
-            <div className="w-full border-b border-app-light-gray mb-6">
-              <div className="flex justify-between py-6 border-b border-app-light-gray">
-                <div className="flex gap-4 items-center">
-                  <div className="bg-primary w-20 h-24">
-                    <img
-                      src={"/images/product-one.png"}
-                      alt={"Product Img"}
-                      className="object-contain object-center h-auto max-h-full w-full"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                      Tray Table
-                    </p>
-                    <p className="text-app-gray font-inter text-xs/[18px] font-normal">
-                      Color: Black
-                    </p>
-                    <div className="flex gap-3 items-center border border-app-gray rounded py-3 px-2 w-fit">
-                      <button>
+            {cartItems.length === 0 ? (
+              <p className="py-6 text-app-gray font-inter text-sm/[22px]">Tu carrito esta vacio.</p>
+            ) : (
+              <div className="w-full border-b border-app-light-gray mb-6">
+                {cartItems.map((item) => (
+                  <div
+                    key={item.varianteId}
+                    className="flex justify-between py-6 border-b border-app-light-gray"
+                  >
+                    <div className="flex gap-4 items-center">
+                      <div className="bg-primary w-20 h-24">
                         <img
-                          src="/images/minus.svg"
-                          alt=""
-                          className="h-4 w-4"
+                          src={item.imageUrl}
+                          alt="Producto en carrito"
+                          className="object-contain object-center h-auto max-h-full w-full"
                         />
-                      </button>
-                      <p className="text-app-black font-inter font-semibold text-sm/[20px]">
-                        2
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-app-black font-inter text-sm/[22px] font-semibold">
+                          {item.nombre}
+                        </p>
+                        {item.varianteLabel && (
+                          <p className="text-app-gray font-inter text-xs/[18px] font-normal">
+                            {item.varianteLabel} ML
+                          </p>
+                        )}
+                        <div className="flex gap-3 items-center border border-app-gray rounded py-3 px-2 w-fit">
+                          <button
+                            type="button"
+                            onClick={() => handleDecrease(item.varianteId, item.quantity)}
+                            aria-label="Disminuir cantidad"
+                            disabled={item.quantity <= 1}
+                          >
+                            <img src="/images/minus.svg" alt="" className="h-4 w-4" />
+                          </button>
+                          <p className="text-app-black font-inter font-semibold text-sm/[20px]">
+                            {item.quantity}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => handleIncrease(item.varianteId, item.quantity, item.stock)}
+                            aria-label="Aumentar cantidad"
+                            disabled={item.quantity >= (item.stock || 1)}
+                          >
+                            <img src="/images/add.svg" alt="" className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right flex flex-col items-end gap-2">
+                      <p className="text-app-black font-inter text-lg/[30px] font-semibold">
+                        {formatCurrency(item.unitPrice * item.quantity)}
                       </p>
-                      <button>
-                        <img src="/images/add.svg" alt="" className="h-4 w-4" />
+                      <button
+                        type="button"
+                        className="flex gap-1 items-center"
+                        onClick={() =>
+                          dispatch({
+                            type: "REMOVE_FROM_CART",
+                            payload: { varianteId: item.varianteId },
+                          })
+                        }
+                      >
+                        <img
+                          src={"/images/close.svg"}
+                          alt=""
+                          className="object-contain object-center h-6 w-6"
+                        />
                       </button>
                     </div>
                   </div>
-                </div>
-                <div className="text-right flex flex-col items-end gap-2">
-                  <p className="text-app-black font-inter text-lg/[30px] font-semibold">
-                    $20.00
-                  </p>
-                  <button className="flex gap-1 items-center">
-                    <img
-                      src={"/images/close.svg"}
-                      alt={"Product Img"}
-                      className="object-contain object-center h-6 w-6"
-                    />
-                  </button>
-                </div>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </div>
         <div className="p-6 rounded-md border border-app-gray bg-white space-y-3 mb-4">
@@ -210,7 +287,7 @@ export default function CartPage() {
               Subtotal
             </p>
             <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
-              $1234.00
+              {formatCurrency(subtotal)}
             </p>
           </div>
           <div className="flex justify-between items-center pb-3">
@@ -218,7 +295,7 @@ export default function CartPage() {
               Total
             </p>
             <p className="text-app-black text-right font-inter text-xl/8 font-semibold">
-              $1345.00
+              {formatCurrency(subtotal)}
             </p>
           </div>
         </div>
