@@ -127,14 +127,6 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                 </div>
             </div>
             <div>
-                <div className="flex justify-between items-center border-b border-app-light-gray py-3">
-                    <p className="text-app-black font-inter text-base/[26px]">
-                        Subtotal
-                    </p>
-                    <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
-                        {formatCurrency(subtotal)}
-                    </p>
-                </div>
                 <div className="flex justify-between items-center py-3">
                     <p className="text-app-black font-medium font-inter text-[20px]/[28px]">
                         Total

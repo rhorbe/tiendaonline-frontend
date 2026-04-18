@@ -32,7 +32,7 @@ export default function CartPage() {
                 </h1>
                 <Process activeStep={1}/>
             </div>
-            <div className="grid md:grid-cols-2 gap-16 py-20">
+            <div className="grid md:grid-cols-[3fr_2fr] gap-16 py-20">
                 <div>
                     <div className="overflow-x-auto hidden md:block">
                         <table className="min-w-full border-collapse border-b">
@@ -257,7 +257,7 @@ export default function CartPage() {
                                 className="appearance-none w-5 h-5 border border-app-black rounded-full checked:bg-app-black checked:border-app-black text-app-black"
                             />
                             <p className="text-app-black font-inter text-base/[26px]">
-                                Retirar en tienda
+                                Retira en tienda
                             </p>
                         </div>
                         <p className="text-right font-inter text-base/[26px]">$0.00</p>
