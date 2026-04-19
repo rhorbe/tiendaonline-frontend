@@ -3,7 +3,7 @@ export default function Orders() {
         <div className="w-full space-y-10 py-10 md:py-0 md:px-[72px]">
             <div className="space-y-5">
                 <p className="text-app-black font-poppins text-xl/7 font-semibold">
-                    Orders History
+                    Historial de pedidos
                 </p>
             </div>
             <div className="overflow-x-auto hidden md:block">
@@ -11,16 +11,16 @@ export default function Orders() {
                     <thead>
                         <tr>
                             <th className="pb-6 text-left text-app-gray font-inter text-base/[26px] border-b border-app-light-gray font-normal">
-                                Number ID
+                                N.° de pedido
                             </th>
                             <th className="pb-6 text-left text-app-gray font-inter text-base/[26px] border-b border-app-light-gray font-normal">
-                                Dates
+                                Fecha
                             </th>
                             <th className="pb-6 text-left text-app-gray font-inter text-base/[26px] border-b border-app-light-gray font-normal">
-                                Status
+                                Estado
                             </th>
                             <th className="pb-6 text-left text-app-gray font-inter text-base/[26px] border-b border-app-light-gray font-normal">
-                                Price
+                                Precio
                             </th>
                         </tr>
                     </thead>
@@ -30,10 +30,10 @@ export default function Orders() {
                                 #3456_768
                             </td>
                             <td className="py-6 border-b border-app-light-gray text-app-black font-inter text-sm/[22px]">
-                                October 17, 2023
+                                17 de octubre de 2023
                             </td>
                             <td className="py-6 border-b border-app-light-gray text-app-black font-inter text-sm/[22px]">
-                                Delivered
+                                Entregado
                             </td>
                             <td className="py-6 border-b border-app-light-gray text-app-black font-inter text-sm/[22px]">
                                 $1234.00
@@ -47,19 +47,19 @@ export default function Orders() {
                 <table className="w-full">
                     <tbody className="border-b border-app-light-gray">
                         <tr className="">
-                            <th className="py-4 text-left text-app-gray font-inter text-sm">Number ID:</th>
+                            <th className="py-4 text-left text-app-gray font-inter text-sm">N.° de pedido:</th>
                             <td className="py-4 text-left text-app-black font-inter text-sm">#3456_768</td>
                         </tr>
                         <tr className="">
-                            <th className="py-4 text-left text-app-gray font-inter text-sm">Dates:</th>
-                            <td className="py-4 text-left text-app-black font-inter text-sm">October 17, 2023</td>
+                            <th className="py-4 text-left text-app-gray font-inter text-sm">Fecha:</th>
+                            <td className="py-4 text-left text-app-black font-inter text-sm">17 de octubre de 2023</td>
                         </tr>
                         <tr className="">
-                            <th className="py-4 text-left text-app-gray font-inter text-sm">Status:</th>
-                            <td className="py-4 text-left text-app-black font-inter text-sm">Delivered</td>
+                            <th className="py-4 text-left text-app-gray font-inter text-sm">Estado:</th>
+                            <td className="py-4 text-left text-app-black font-inter text-sm">Entregado</td>
                         </tr>
                         <tr className="">
-                            <th className="py-4 text-left text-app-gray font-inter text-sm">Price:</th>
+                            <th className="py-4 text-left text-app-gray font-inter text-sm">Precio:</th>
                             <td className="py-4 text-left text-app-black font-inter text-sm">$1234.00</td>
                         </tr>
                     </tbody>

@@ -69,7 +69,7 @@ const Login: FC = () => {
         } catch (err: unknown) {
             const error = err as ErrorResponse;
             const status = error.response?.status;
-            const offlineMessage = getOfflineErrorFromUnknown(err, "iniciar sesion");
+            const offlineMessage = getOfflineErrorFromUnknown(err, "iniciar sesión");
             const errorMessage =
                 offlineMessage ??
                 (status === 401

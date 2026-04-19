@@ -57,7 +57,7 @@ export default function CartPage() {
                         payload: removedItem,
                     });
                     setCartErrorTitle("No se pudo quitar del carrito");
-                    setCartErrorMessage("No se encontro el item del carrito para quitarlo.");
+                    setCartErrorMessage("No se encontró el item del carrito para quitarlo.");
                     setIsCartErrorModalOpen(true);
                 }
             } catch (error: unknown) {
@@ -112,7 +112,7 @@ export default function CartPage() {
                         payload: {varianteId, quantity: previousQty},
                     });
                     setCartErrorTitle("No se pudo actualizar el carrito");
-                    setCartErrorMessage("No se encontro el item del carrito para actualizar su cantidad.");
+                    setCartErrorMessage("No se encontró el item del carrito para actualizar su cantidad.");
                     setIsCartErrorModalOpen(true);
                     return;
                 }
@@ -178,7 +178,7 @@ export default function CartPage() {
                                         colSpan={4}
                                         className="py-8 px-4 text-center text-app-gray font-inter text-sm/[22px]"
                                     >
-                                        Tu carrito esta vacío.
+                                        Tu carrito está vacío.
                                     </td>
                                 </tr>
                             ) : (
@@ -263,7 +263,7 @@ export default function CartPage() {
                             Producto
                         </h2>
                         {cartItems.length === 0 ? (
-                            <p className="py-6 text-app-gray font-inter text-sm/[22px]">Tu carrito esta vacio.</p>
+                            <p className="py-6 text-app-gray font-inter text-sm/[22px]">Tu carrito está vacío.</p>
                         ) : (
                             <div className="w-full border-b border-app-light-gray mb-6">
                                 {cartItems.map((item) => (

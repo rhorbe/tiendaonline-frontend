@@ -63,7 +63,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
               </div>
               <img
                 src={imgSrc}
-                alt={"Product Img"}
+                alt={"Imagen del producto"}
                 className="object-contain object-center h-auto max-h-full w-full"
               />
             </div>
@@ -78,7 +78,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                 width: "32px",
               }}
               src={"/images/arrow-right-carousel.svg"}
-              alt="arrow right"
+              alt="flecha derecha"
             />
           </div>
         </div>
@@ -90,7 +90,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                 width: "32px",
               }}
               src={"/images/arrow-left-carousel.svg"}
-              alt="arrow left"
+              alt="flecha izquierda"
             />
           </div>
         </div>
@@ -109,12 +109,12 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
             className={`h-[167px] w-full max-w-full cursor-pointer focus:outline-none ${
               idx === activeIndex ? "border-2 border-blue-500" : ""
             }`} // Highlight active
-            aria-label={`Show image ${idx + 1}`}
+            aria-label={`Mostrar imagen ${idx + 1}`}
             tabIndex={0}
           >
             <img
               src={imgSrc}
-              alt={`Product Thumbnail ${idx + 1}`}
+              alt={`Miniatura del producto ${idx + 1}`}
               className="object-cover object-center h-full w-full"
             />
           </button>

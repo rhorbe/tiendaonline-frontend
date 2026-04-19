@@ -79,7 +79,7 @@ export const fetchVapidPublicKey = async (forceRefresh = false): Promise<string>
   const publicKey = extractVapidPublicKey(response.data);
 
   if (!publicKey) {
-    throw new Error('La API no devolvió una clave VAPID publica válida.');
+    throw new Error('La API no devolvió una clave VAPID pública válida.');
   }
 
   if (!isBase64Url(publicKey)) {
@@ -95,7 +95,7 @@ export const guardarSuscripcionEnBackend = async (subscription: PushSubscription
   const payload = serializePushSubscription(subscription);
   console.log('Payload serializado de la suscripción push:', payload);
   if (!payload.endpoint || !payload.keys?.auth || !payload.keys?.p256dh) {
-    throw new Error('La suscripción push no es valida para enviarla al backend.');
+    throw new Error('La suscripción push no es válida para enviarla al backend.');
   }
   console.log('Enviando suscripción push al backend para guardarla...', payload);
   await api.post(PUSH_SUBSCRIBE_ENDPOINT, payload);
@@ -107,7 +107,7 @@ export const eliminarSuscripcionEnBackend = async (subscription: PushSubscriptio
   const endpoint = payload.endpoint?.trim();
 
   if (!endpoint) {
-    throw new Error('No se encontro el endpoint de la suscripción push para eliminarla.');
+    throw new Error('No se encontró el endpoint de la suscripción push para eliminarla.');
   }
 
   await api.delete(PUSH_UNSUBSCRIBE_ENDPOINT, {

@@ -15,7 +15,7 @@ export const setupInterceptors = (api: AxiosInstance): void => {
     (res: AxiosResponse) => res,
     (err) => {
       if (isOfflineRequestError(err)) {
-        err.message = getOfflineBlockingMessage('completar esta accion');
+        err.message = getOfflineBlockingMessage('completar esta acción');
       }
 
       if (err.response?.status === 401) {

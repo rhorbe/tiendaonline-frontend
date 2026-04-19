@@ -14,21 +14,21 @@ const obtenerMensajeErrorPush = (error: unknown): string => {
         }
 
         if (status === 401 || status === 403) {
-            return 'Debes iniciar sesion para activar notificaciones.';
+            return 'Debes iniciar sesión para activar notificaciones.';
         }
 
         if (status) {
-            return `El servidor rechazo la solicitud de notificaciones (HTTP ${status}).`;
+            return `El servidor rechazó la solicitud de notificaciones (HTTP ${status}).`;
         }
 
-        return 'No hubo respuesta del servidor. Revisa tu conexion e intenta de nuevo.';
+        return 'No hubo respuesta del servidor. Revisa tu conexión e intenta de nuevo.';
     }
 
     if (error instanceof Error && error.message.trim()) {
         return error.message;
     }
 
-    return 'No se pudo activar la notificacion.';
+    return 'No se pudo activar la notificación.';
 };
 
 export default function AccountDetails() {
@@ -62,7 +62,7 @@ export default function AccountDetails() {
             setDesactivandoPush(true);
             const { desuscribirseDePush } = await import('@/app/push/unsubscribeBrowserFromPush');
             const desuscrito = await desuscribirseDePush();
-            alert(desuscrito ? 'Notificaciones desactivadas' : 'No habia una suscripcion push activa.');
+            alert(desuscrito ? 'Notificaciones desactivadas' : 'No había una suscripción push activa.');
         } catch (error) {
             console.error(error);
             alert(obtenerMensajeErrorPush(error));
@@ -80,26 +80,26 @@ export default function AccountDetails() {
                 <div className="space-y-3 w-full">
                     <label htmlFor="firstname"
                            className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nombre</label>
-                    <input placeholder="First name" type="text" name="firstname" id="firstname"
+                    <input placeholder="Nombre" type="text" name="firstname" id="firstname"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="lastname" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Apellido</label>
-                    <input placeholder="Last name" type="text" name="lastname" id="firstname"
+                    <input placeholder="Apellido" type="text" name="lastname" id="firstname"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
                 <div className="space-y-3 w-full">
-                    <label htmlFor="displayName" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Display
-                        Name</label>
-                    <input placeholder="Display Name" type="text" name="Display Name" id="Display Name"
+                    <label htmlFor="displayName" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nombre
+                        para mostrar</label>
+                    <input placeholder="Nombre para mostrar" type="text" name="Display Name" id="Display Name"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                     <p className="text-app-gray font-inter text-xs/5 italic">
-                        This will be how your name will be displayed in the account section and in reviews
+                        Este será el nombre que se mostrará en la sección de cuenta y en las reseñas.
                     </p>
                 </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="email" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Correo Electrónico</label>
-                    <input placeholder="Email Address" type="email" name="email" id="email"
+                    <input placeholder="Correo electrónico" type="email" name="email" id="email"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
             </div>
@@ -109,23 +109,23 @@ export default function AccountDetails() {
                 </p>
                 <div className="space-y-3 w-full">
                     <label htmlFor="oldPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Contraseña actual</label>
-                    <input placeholder="Old password" type="text" name="oldPassword" id="oldPassword"
+                    <input placeholder="Contraseña actual" type="text" name="oldPassword" id="oldPassword"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
                 <div className="space-y-3 w-full">
-                    <label htmlFor="newPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nueva Contraseña</label>
-                    <input placeholder="new password" type="text" name="newpassword" id="newPassword"
+                    <label htmlFor="newPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nueva contraseña</label>
+                    <input placeholder="Nueva contraseña" type="text" name="newpassword" id="newPassword"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="repeatNewPassword"
                            className="text-app-gray font-inter text-sm/3 font-bold uppercase">Repetir nueva contraseña</label>
-                    <input placeholder="Repeat New Password" type="text" name="repeatNewPassword" id="repeatNewPassword"
+                    <input placeholder="Repetir nueva contraseña" type="text" name="repeatNewPassword" id="repeatNewPassword"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="email" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Correo electrónico</label>
-                    <input placeholder="Email Address" type="email" name="email" id="email"
+                    <input placeholder="Correo electrónico" type="email" name="email" id="email"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
             </div>

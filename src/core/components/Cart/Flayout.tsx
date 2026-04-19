@@ -84,7 +84,7 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                         payload: {varianteId, quantity: previousQty},
                     });
                     setCartErrorTitle("No se pudo actualizar el carrito");
-                    setCartErrorMessage("No se encontro el item del carrito para actualizar su cantidad.");
+                    setCartErrorMessage("No se encontró el item del carrito para actualizar su cantidad.");
                     setIsCartErrorModalOpen(true);
                     return;
                 }
@@ -137,7 +137,7 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                         payload: removedItem,
                     });
                     setCartErrorTitle("No se pudo quitar del carrito");
-                    setCartErrorMessage("No se encontro el item del carrito para quitarlo.");
+                    setCartErrorMessage("No se encontró el item del carrito para quitarlo.");
                     setIsCartErrorModalOpen(true);
                 }
             } catch (error: unknown) {
@@ -176,7 +176,7 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                 <div className="flex-1 min-h-0 flex flex-col gap-3 overflow-y-auto pr-1">
                     {cartItems.length === 0 ? (
                         <p className="py-6 text-app-gray font-inter text-sm/[22px]">
-                            Tu carrito esta vacío.
+                            Tu carrito está vacío.
                         </p>
                     ) : (
                         cartItems.map((item) => (

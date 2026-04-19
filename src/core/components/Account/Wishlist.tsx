@@ -5,7 +5,7 @@ export default function Wishlist() {
         <div className="w-full space-y-10 py-10 md:py-0 md:px-[72px]">
             <div className="space-y-5">
                 <p className="text-app-black font-poppins text-xl/7 font-semibold">
-                    Your Wishlist
+                    Tu lista de favoritos
                 </p>
             </div>
             <div className="overflow-x-auto hidden md:block">
@@ -13,13 +13,13 @@ export default function Wishlist() {
                     <thead>
                         <tr className="">
                             <th className="pb-6 pl-14 pr-4 text-left text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
-                                Product
+                                Producto
                             </th>
                             <th className="pb-6 px-4 text-left text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
-                                Price
+                                Precio
                             </th>
                             <th className="pb-6 px-4 text-left text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
-                                Action
+                                Acción
                             </th>
                         </tr>
                     </thead>
@@ -29,23 +29,23 @@ export default function Wishlist() {
                                 <button className="flex gap-1 items-center">
                                     <img
                                         src={'/images/close.svg'}
-                                        alt={'Product Img'}
+                                        alt={'Imagen del producto'}
                                         className='object-contain object-center h-6 w-6'
                                     />
                                 </button>
                                 <div className="bg-primary w-20 h-24">
                                     <img
                                         src={'/images/product-one.png'}
-                                        alt={'Product Img'}
+                                        alt={'Imagen del producto'}
                                         className='object-contain object-center h-auto max-h-full w-full'
                                     />
                                 </div>
                                 <div className="flex-shrink-0 space-y-2">
                                     <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                                        Tray Table
+                                        Mesa auxiliar
                                     </p>
                                     <p className="text-app-gray font-inter text-xs/5 font-normal">
-                                        Color: Black
+                                        Color: negro
                                     </p>
                                 </div>
                             </td>
@@ -66,7 +66,7 @@ export default function Wishlist() {
                     <thead>
                         <tr className="">
                             <th className="pb-6 pl-14 pr-4 text-left text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
-                                Product
+                                Producto
                             </th>
                         </tr>
                     </thead>
@@ -77,23 +77,23 @@ export default function Wishlist() {
                                     <button className="flex gap-1 items-center">
                                         <img
                                             src={'/images/close.svg'}
-                                            alt={'Product Img'}
+                                            alt={'Imagen del producto'}
                                             className='object-contain object-center h-6 w-6'
                                         />
                                     </button>
                                     <div className="bg-primary w-20 h-24">
                                         <img
                                             src={'/images/product-one.png'}
-                                            alt={'Product Img'}
+                                            alt={'Imagen del producto'}
                                             className='object-contain object-center h-auto max-h-full w-full'
                                         />
                                     </div>
                                     <div className="flex-shrink-0 space-y-2">
                                         <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                                            Tray Table
+                                            Mesa auxiliar
                                         </p>
                                         <p className="text-app-gray font-inter text-xs/5 font-normal">
-                                            Color: Black
+                                            Color: negro
                                         </p>
                                         <p className="text-app-black font-inter text-lg/[30px] font-normal text-left">
                                             $10.00

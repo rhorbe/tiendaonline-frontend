@@ -580,7 +580,7 @@ export default function ShopPage() {
             {requiresConnectionToAddCart && isOffline && (
                 <div className="mb-6">
                     <p className="text-center text-sm/[22px] font-inter font-semibold text-taup-gray">
-                        Sin conexion: para continuar y guardar en tu carrito debes reconectarte.
+                        Sin conexión: para continuar y guardar en tu carrito debes reconectarte.
                     </p>
                 </div>
             )}
