@@ -1,18 +1,18 @@
-import Process from "@/core/components/Process";
 import {useState} from "react";
-import {useProductContext} from "@/store/useProductContext";
-import {formatCurrency} from "@/core/utils/formatCurrency";
 import {useNavigate} from "react-router-dom";
-import Button from "@/core/components/Button/Button";
-import {ROUTES} from "@/core/enum/common";
-import {useAuth} from "@/store/useAuth";
-import Modal from "@/core/components/Modal";
 import {
     getRemoveItemCartErrorMessage,
     getUpdateCartItemErrorMessage,
     removeItemFromUserCart,
     updateItemQuantityInUserCart,
 } from "@/core/api/cartItemRemoveApi";
+import Button from "@/core/components/Button/Button";
+import Modal from "@/core/components/Modal";
+import Process from "@/core/components/Process";
+import {ROUTES} from "@/core/enum/common";
+import {formatCurrency} from "@/core/utils/formatCurrency";
+import {useAuth} from "@/store/useAuth";
+import {useProductContext} from "@/store/useProductContext";
 
 export default function CartPage() {
     const [selectedOption, setSelectedOption] = useState("standard-shipping");
@@ -21,19 +21,58 @@ export default function CartPage() {
     const [isCartErrorModalOpen, setIsCartErrorModalOpen] = useState(false);
     const [cartErrorMessage, setCartErrorMessage] = useState("");
     const [cartErrorTitle, setCartErrorTitle] = useState("No se pudo quitar del carrito");
+    const [pendingVariantIds, setPendingVariantIds] = useState<string[]>([]);
     const {cartItems} = state;
     const navigate = useNavigate();
 
+    const markVariantAsPending = (varianteId: string) => {
+        setPendingVariantIds((prev) => (prev.includes(varianteId) ? prev : [...prev, varianteId]));
+    };
+
+    const unmarkVariantAsPending = (varianteId: string) => {
+        setPendingVariantIds((prev) => prev.filter((id) => id !== varianteId));
+    };
+
+    const isVariantPending = (varianteId: string) => pendingVariantIds.includes(varianteId);
+
     const handleRemoveItem = async (varianteId: string) => {
+        const removedItem = cartItems.find((item) => item.varianteId === varianteId);
+        if (!removedItem) {
+            return;
+        }
+
         if (user?.id) {
+            dispatch({
+                type: "REMOVE_FROM_CART",
+                payload: {varianteId},
+            });
+
+            markVariantAsPending(varianteId);
+
             try {
-                await removeItemFromUserCart(user.id, varianteId);
+                const result = await removeItemFromUserCart(user.id, varianteId);
+                if (!result.removed) {
+                    dispatch({
+                        type: "ADD_TO_CART",
+                        payload: removedItem,
+                    });
+                    setCartErrorTitle("No se pudo quitar del carrito");
+                    setCartErrorMessage("No se encontro el item del carrito para quitarlo.");
+                    setIsCartErrorModalOpen(true);
+                }
             } catch (error: unknown) {
+                dispatch({
+                    type: "ADD_TO_CART",
+                    payload: removedItem,
+                });
                 setCartErrorTitle("No se pudo quitar del carrito");
                 setCartErrorMessage(getRemoveItemCartErrorMessage(error));
                 setIsCartErrorModalOpen(true);
-                return;
+            } finally {
+                unmarkVariantAsPending(varianteId);
             }
+
+            return;
         }
 
         dispatch({
@@ -43,27 +82,53 @@ export default function CartPage() {
     };
 
     const handleUpdateQty = async (varianteId: string, nextQty: number) => {
-        if (user?.id) {
-            try {
-                const result = await updateItemQuantityInUserCart(user.id, varianteId, nextQty);
-                if (!result.updated) {
-                    setCartErrorTitle("No se pudo actualizar el carrito");
-                    setCartErrorMessage("No se encontro el item del carrito para actualizar su cantidad.");
-                    setIsCartErrorModalOpen(true);
-                    return;
-                }
-            } catch (error: unknown) {
-                setCartErrorTitle("No se pudo actualizar el carrito");
-                setCartErrorMessage(getUpdateCartItemErrorMessage(error));
-                setIsCartErrorModalOpen(true);
-                return;
-            }
+        const previousItem = cartItems.find((item) => item.varianteId === varianteId);
+        if (!previousItem) {
+            return;
+        }
+
+        const previousQty = previousItem.quantity;
+        if (previousQty === nextQty) {
+            return;
         }
 
         dispatch({
             type: "UPDATE_CART_QTY",
             payload: {varianteId, quantity: nextQty},
         });
+
+        if (!user?.id) {
+            return;
+        }
+
+        markVariantAsPending(varianteId);
+
+        if (user?.id) {
+            try {
+                const result = await updateItemQuantityInUserCart(user.id, varianteId, nextQty);
+                if (!result.updated) {
+                    dispatch({
+                        type: "UPDATE_CART_QTY",
+                        payload: {varianteId, quantity: previousQty},
+                    });
+                    setCartErrorTitle("No se pudo actualizar el carrito");
+                    setCartErrorMessage("No se encontro el item del carrito para actualizar su cantidad.");
+                    setIsCartErrorModalOpen(true);
+                    return;
+                }
+            } catch (error: unknown) {
+                dispatch({
+                    type: "UPDATE_CART_QTY",
+                    payload: {varianteId, quantity: previousQty},
+                });
+                setCartErrorTitle("No se pudo actualizar el carrito");
+                setCartErrorMessage(getUpdateCartItemErrorMessage(error));
+                setIsCartErrorModalOpen(true);
+                return;
+            } finally {
+                unmarkVariantAsPending(varianteId);
+            }
+        }
     };
 
     const handleDecrease = (varianteId: string, currentQty: number) => {
@@ -140,6 +205,7 @@ export default function CartPage() {
                                                     type="button"
                                                     className="flex gap-1 items-center"
                                                     onClick={() => void handleRemoveItem(item.varianteId)}
+                                                    disabled={isVariantPending(item.varianteId)}
                                                 >
                                                     <img
                                                         src={"/images/close.svg"}
@@ -159,7 +225,7 @@ export default function CartPage() {
                                                     type="button"
                                                     onClick={() => handleDecrease(item.varianteId, item.quantity)}
                                                     aria-label="Disminuir cantidad"
-                                                    disabled={item.quantity <= 1}
+                                                    disabled={item.quantity <= 1 || isVariantPending(item.varianteId)}
                                                 >
                                                     <img src="/images/minus.svg" alt="" className="h-4 w-4"/>
                                                 </button>
@@ -170,7 +236,7 @@ export default function CartPage() {
                                                     type="button"
                                                     onClick={() => handleIncrease(item.varianteId, item.quantity, item.stock)}
                                                     aria-label="Aumentar cantidad"
-                                                    disabled={item.quantity >= (item.stock || 1)}
+                                                    disabled={item.quantity >= (item.stock || 1) || isVariantPending(item.varianteId)}
                                                 >
                                                     <img src="/images/add.svg" alt="" className="h-4 w-4"/>
                                                 </button>
@@ -228,7 +294,7 @@ export default function CartPage() {
                                                         type="button"
                                                         onClick={() => handleDecrease(item.varianteId, item.quantity)}
                                                         aria-label="Disminuir cantidad"
-                                                        disabled={item.quantity <= 1}
+                                                        disabled={item.quantity <= 1 || isVariantPending(item.varianteId)}
                                                     >
                                                         <img src="/images/minus.svg" alt="" className="h-4 w-4"/>
                                                     </button>
@@ -239,7 +305,7 @@ export default function CartPage() {
                                                         type="button"
                                                         onClick={() => handleIncrease(item.varianteId, item.quantity, item.stock)}
                                                         aria-label="Aumentar cantidad"
-                                                        disabled={item.quantity >= (item.stock || 1)}
+                                                        disabled={item.quantity >= (item.stock || 1) || isVariantPending(item.varianteId)}
                                                     >
                                                         <img src="/images/add.svg" alt="" className="h-4 w-4"/>
                                                     </button>
@@ -254,6 +320,7 @@ export default function CartPage() {
                                                 type="button"
                                                 className="flex gap-1 items-center"
                                                 onClick={() => void handleRemoveItem(item.varianteId)}
+                                                disabled={isVariantPending(item.varianteId)}
                                             >
                                                 <img
                                                     src={"/images/close.svg"}

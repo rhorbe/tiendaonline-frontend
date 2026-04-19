@@ -26,6 +26,7 @@ const formatCurrency = (price: number) =>
 export default function ProductPage() {
     const {id} = useParams();
     const {state, dispatch} = useProductContext();
+    const {cartItems} = state;
     const productoEnContexto = state.productos.find((p) => p.id === id);
     const [productoRemoto, setProductoRemoto] = useState<Producto | null>(null);
     const [cargandoProducto, setCargandoProducto] = useState(false);
@@ -238,6 +239,25 @@ export default function ProductPage() {
             return;
         }
 
+        const previousItem = cartItems.find((item) => item.varianteId === selectedVariante.id);
+        const previousQty = previousItem?.quantity ?? 0;
+        const optimisticPayload = {
+            varianteId: selectedVariante.id,
+            productId: producto.id,
+            nombre: producto.nombre ?? "",
+            marca: producto.marca ?? "",
+            imageUrl: producto.image_url ?? "/images/cart-product.png",
+            varianteLabel: selectedVariante.tamano ?? getVariantLabel(selectedVariante.tamanio),
+            unitPrice: normalizePrice(selectedVariante.precio),
+            quantity,
+            stock: selectedVariante.stock,
+        };
+
+        dispatch({
+            type: "ADD_TO_CART",
+            payload: optimisticPayload,
+        });
+
         if (user?.id) {
             setIsAddingToCart(true);
 
@@ -245,6 +265,17 @@ export default function ProductPage() {
                 const clienteId = user.cliente_id ?? (await resolveClienteIdByUserId(user.id));
 
                 if (!clienteId) {
+                    if (previousQty === 0) {
+                        dispatch({
+                            type: "REMOVE_FROM_CART",
+                            payload: {varianteId: selectedVariante.id},
+                        });
+                    } else {
+                        dispatch({
+                            type: "UPDATE_CART_QTY",
+                            payload: {varianteId: selectedVariante.id, quantity: previousQty},
+                        });
+                    }
                     setCartErrorMessage("No se pudo identificar el cliente para guardar el carrito.");
                     setIsCartErrorModalOpen(true);
                     return;
@@ -256,28 +287,26 @@ export default function ProductPage() {
                     cantidad: quantity,
                 });
             } catch (error: unknown) {
+                if (previousQty === 0) {
+                    dispatch({
+                        type: "REMOVE_FROM_CART",
+                        payload: {varianteId: selectedVariante.id},
+                    });
+                } else {
+                    dispatch({
+                        type: "UPDATE_CART_QTY",
+                        payload: {varianteId: selectedVariante.id, quantity: previousQty},
+                    });
+                }
                 setCartErrorMessage(getAddItemCartErrorMessage(error));
                 setIsCartErrorModalOpen(true);
                 return;
             } finally {
                 setIsAddingToCart(false);
             }
-        }
 
-        dispatch({
-            type: "ADD_TO_CART",
-            payload: {
-                varianteId: selectedVariante.id,
-                productId: producto.id,
-                nombre: producto.nombre ?? "",
-                marca: producto.marca ?? "",
-                imageUrl: producto.image_url ?? "/images/cart-product.png",
-                varianteLabel: selectedVariante.tamano ?? getVariantLabel(selectedVariante.tamanio),
-                unitPrice: normalizePrice(selectedVariante.precio),
-                quantity,
-                stock: selectedVariante.stock,
-            },
-        });
+            return;
+        }
     };
 
     return (

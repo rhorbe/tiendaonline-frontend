@@ -482,12 +482,49 @@ export default function ShopPage() {
                                                             return;
                                                         }
 
+                                                        const previousItem = state.cartItems.find(
+                                                            (item) => item.varianteId === selectedVariante.id,
+                                                        );
+                                                        const previousQty = previousItem?.quantity ?? 0;
+                                                        const optimisticPayload = {
+                                                            varianteId: selectedVariante.id,
+                                                            productId: p.id,
+                                                            nombre: p.nombre ?? "",
+                                                            marca: p.marca ?? "",
+                                                            imageUrl: p.image_url ?? "/images/cart-product.png",
+                                                            varianteLabel:
+                                                                selectedVariante.tamano ??
+                                                                getVariantLabel(selectedVariante.tamanio),
+                                                            unitPrice: normalizePrice(selectedVariante.precio),
+                                                            quantity: 1,
+                                                            stock: selectedVariante.stock,
+                                                        };
+
+                                                        dispatch({
+                                                            type: "ADD_TO_CART",
+                                                            payload: optimisticPayload,
+                                                        });
+
                                                         if (user?.id) {
                                                             try {
                                                                 const clienteId =
                                                                     user.cliente_id ?? (await resolveClienteIdByUserId(user.id));
 
                                                                 if (!clienteId) {
+                                                                    if (previousQty === 0) {
+                                                                        dispatch({
+                                                                            type: "REMOVE_FROM_CART",
+                                                                            payload: {varianteId: selectedVariante.id},
+                                                                        });
+                                                                    } else {
+                                                                        dispatch({
+                                                                            type: "UPDATE_CART_QTY",
+                                                                            payload: {
+                                                                                varianteId: selectedVariante.id,
+                                                                                quantity: previousQty,
+                                                                            },
+                                                                        });
+                                                                    }
                                                                     setCartErrorMessage("No se pudo identificar el cliente para guardar el carrito.");
                                                                     setIsCartErrorModalOpen(true);
                                                                     return;
@@ -499,28 +536,27 @@ export default function ShopPage() {
                                                                     cantidad: 1,
                                                                 });
                                                             } catch (error: unknown) {
+                                                                if (previousQty === 0) {
+                                                                    dispatch({
+                                                                        type: "REMOVE_FROM_CART",
+                                                                        payload: {varianteId: selectedVariante.id},
+                                                                    });
+                                                                } else {
+                                                                    dispatch({
+                                                                        type: "UPDATE_CART_QTY",
+                                                                        payload: {
+                                                                            varianteId: selectedVariante.id,
+                                                                            quantity: previousQty,
+                                                                        },
+                                                                    });
+                                                                }
                                                                 setCartErrorMessage(getAddItemCartErrorMessage(error));
                                                                 setIsCartErrorModalOpen(true);
                                                                 return;
                                                             }
-                                                        }
 
-                                                        dispatch({
-                                                            type: "ADD_TO_CART",
-                                                            payload: {
-                                                                varianteId: selectedVariante.id,
-                                                                productId: p.id,
-                                                                nombre: p.nombre ?? "",
-                                                                marca: p.marca ?? "",
-                                                                imageUrl: p.image_url ?? "/images/cart-product.png",
-                                                                varianteLabel:
-                                                                    selectedVariante.tamano ??
-                                                                    getVariantLabel(selectedVariante.tamanio),
-                                                                unitPrice: normalizePrice(selectedVariante.precio),
-                                                                quantity: 1,
-                                                                stock: selectedVariante.stock,
-                                                            },
-                                                        });
+                                                            return;
+                                                        }
                                                     }}
                                                 />
                                             );
