@@ -1,7 +1,7 @@
-import { FC, Suspense, lazy } from "react";
-import { Route, Routes } from "react-router-dom";
+import {FC, Suspense, lazy} from "react";
+import {Route, Routes} from "react-router-dom";
 
-import { ROUTES } from "@/core/enum/common";
+import {ROUTES} from "@/core/enum/common";
 import RequireAuth from "./RequireAuth";
 
 const HomePage = lazy(() => import("../pages/home"));
@@ -19,60 +19,60 @@ const OtpPage = lazy(() => import("../pages/auth/otp"));
 const ErrorPage = lazy(() => import("../pages/error"));
 
 const routeFallback = (
-  <div className="min-h-[40vh] w-full flex items-center justify-center text-app-gray">
-    Cargando...
-  </div>
+    <div className="min-h-[40vh] w-full flex items-center justify-center text-app-gray">
+        Cargando...
+    </div>
 );
 
 const AppRoutes: FC = () => {
-  return (
-    <Suspense fallback={routeFallback}>
-      <Routes>
-        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-        <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
-        <Route path={ROUTES.SHOP} element={<ShopPage />} />
-        <Route path={ROUTES.PRODUCT} element={<ProductPage />} />
-        <Route
-          path={ROUTES.CART}
-          element={
-            <RequireAuth>
-              <CartPage />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path={ROUTES.CHECKOUT}
-          element={
-            <RequireAuth>
-              <CheckOutPage />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path={ROUTES.ORDER}
-          element={
-            <RequireAuth>
-              <OrderCompletePage />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path={ROUTES.PROFILE}
-          element={
-            <RequireAuth>
-              <ProfilePage />
-            </RequireAuth>
-          }
-        />
-        <Route path={ROUTES.CONTACT} element={<ContactPage />} />
-        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
-        <Route path={ROUTES.OTP_PAGE} element={<OtpPage />} />
-        <Route path={ROUTES.ERROR_PAGE} element={<ErrorPage />} />
+    return (
+        <Suspense fallback={routeFallback}>
+            <Routes>
+                <Route path={ROUTES.LOGIN} element={<LoginPage/>}/>
+                <Route path={ROUTES.REGISTER} element={<RegisterPage/>}/>
+                <Route path={ROUTES.SHOP} element={<ShopPage/>}/>
+                <Route path={ROUTES.PRODUCT} element={<ProductPage/>}/>
+                <Route
+                    path={ROUTES.CART}
+                    element={
+                        <RequireAuth>
+                            <CartPage/>
+                        </RequireAuth>
+                    }
+                />
+                <Route
+                    path={ROUTES.CHECKOUT}
+                    element={
+                        <RequireAuth>
+                            <CheckOutPage/>
+                        </RequireAuth>
+                    }
+                />
+                <Route
+                    path={ROUTES.ORDER}
+                    element={
+                        <RequireAuth>
+                            <OrderCompletePage/>
+                        </RequireAuth>
+                    }
+                />
+                <Route
+                    path={ROUTES.PROFILE}
+                    element={
+                        <RequireAuth>
+                            <ProfilePage/>
+                        </RequireAuth>
+                    }
+                />
+                <Route path={ROUTES.CONTACT} element={<ContactPage/>}/>
+                <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage/>}/>
+                <Route path={ROUTES.OTP_PAGE} element={<OtpPage/>}/>
+                <Route path={ROUTES.ERROR_PAGE} element={<ErrorPage/>}/>
 
-        <Route path="*" element={<HomePage />} />
-      </Routes>
-    </Suspense>
-  );
+                <Route path="*" element={<HomePage/>}/>
+            </Routes>
+        </Suspense>
+    );
 };
 
 export default AppRoutes;
