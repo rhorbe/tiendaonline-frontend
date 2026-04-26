@@ -18,6 +18,30 @@ const ForgotPasswordPage = lazy(() => import("../pages/auth/password"));
 const OtpPage = lazy(() => import("../pages/auth/otp"));
 const ErrorPage = lazy(() => import("../pages/error"));
 
+type RouteConfig = {
+    path: string;
+    element: JSX.Element;
+};
+
+const publicRoutes: RouteConfig[] = [
+    {path: ROUTES.HOME, element: <HomePage/>},
+    {path: ROUTES.LOGIN, element: <LoginPage/>},
+    {path: ROUTES.REGISTER, element: <RegisterPage/>},
+    {path: ROUTES.SHOP, element: <ShopPage/>},
+    {path: ROUTES.PRODUCT, element: <ProductPage/>},
+    {path: ROUTES.CONTACT, element: <ContactPage/>},
+    {path: ROUTES.FORGOT_PASSWORD, element: <ForgotPasswordPage/>},
+    {path: ROUTES.OTP_PAGE, element: <OtpPage/>},
+    {path: ROUTES.ERROR_PAGE, element: <ErrorPage/>},
+];
+
+const protectedRoutes: RouteConfig[] = [
+    {path: ROUTES.CART, element: <CartPage/>},
+    {path: ROUTES.CHECKOUT, element: <CheckOutPage/>},
+    {path: ROUTES.ORDER, element: <OrderCompletePage/>},
+    {path: ROUTES.PROFILE, element: <ProfilePage/>},
+];
+
 const routeFallback = (
     <div className="min-h-[40vh] w-full flex items-center justify-center text-app-gray">
         Cargando...
@@ -28,48 +52,17 @@ const AppRoutes: FC = () => {
     return (
         <Suspense fallback={routeFallback}>
             <Routes>
-                <Route path={ROUTES.HOME} element={<HomePage/>}/>
-                <Route path="" element={<HomePage/>}/>
-                <Route path={ROUTES.LOGIN} element={<LoginPage/>}/>
-                <Route path={ROUTES.REGISTER} element={<RegisterPage/>}/>
-                <Route path={ROUTES.SHOP} element={<ShopPage/>}/>
-                <Route path={ROUTES.PRODUCT} element={<ProductPage/>}/>
-                <Route
-                    path={ROUTES.CART}
-                    element={
-                        <RequireAuth>
-                            <CartPage/>
-                        </RequireAuth>
-                    }
-                />
-                <Route
-                    path={ROUTES.CHECKOUT}
-                    element={
-                        <RequireAuth>
-                            <CheckOutPage/>
-                        </RequireAuth>
-                    }
-                />
-                <Route
-                    path={ROUTES.ORDER}
-                    element={
-                        <RequireAuth>
-                            <OrderCompletePage/>
-                        </RequireAuth>
-                    }
-                />
-                <Route
-                    path={ROUTES.PROFILE}
-                    element={
-                        <RequireAuth>
-                            <ProfilePage/>
-                        </RequireAuth>
-                    }
-                />
-                <Route path={ROUTES.CONTACT} element={<ContactPage/>}/>
-                <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage/>}/>
-                <Route path={ROUTES.OTP_PAGE} element={<OtpPage/>}/>
-                <Route path={ROUTES.ERROR_PAGE} element={<ErrorPage/>}/>
+                {publicRoutes.map((route) => (
+                    <Route key={route.path} path={route.path} element={route.element}/>
+                ))}
+
+                {protectedRoutes.map((route) => (
+                    <Route
+                        key={route.path}
+                        path={route.path}
+                        element={<RequireAuth>{route.element}</RequireAuth>}
+                    />
+                ))}
 
                 <Route path="*" element={<Navigate to={ROUTES.ERROR_PAGE} replace/>}/>
             </Routes>
