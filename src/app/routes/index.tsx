@@ -43,7 +43,11 @@ const protectedRoutes: RouteConfig[] = [
 ];
 
 const routeFallback = (
-    <div className="min-h-[40vh] w-full flex items-center justify-center text-app-gray">
+    <div
+        className="min-h-[40vh] w-full flex items-center justify-center text-app-gray"
+        role="status"
+        aria-live="polite"
+    >
         Cargando...
     </div>
 );
