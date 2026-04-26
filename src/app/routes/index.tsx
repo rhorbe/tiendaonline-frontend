@@ -1,5 +1,5 @@
 import {FC, Suspense, lazy} from "react";
-import {Route, Routes} from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 
 import {ROUTES} from "@/core/enum/common";
 import RequireAuth from "./RequireAuth";
@@ -28,6 +28,8 @@ const AppRoutes: FC = () => {
     return (
         <Suspense fallback={routeFallback}>
             <Routes>
+                <Route path={ROUTES.HOME} element={<HomePage/>}/>
+                <Route path="" element={<HomePage/>}/>
                 <Route path={ROUTES.LOGIN} element={<LoginPage/>}/>
                 <Route path={ROUTES.REGISTER} element={<RegisterPage/>}/>
                 <Route path={ROUTES.SHOP} element={<ShopPage/>}/>
@@ -69,7 +71,7 @@ const AppRoutes: FC = () => {
                 <Route path={ROUTES.OTP_PAGE} element={<OtpPage/>}/>
                 <Route path={ROUTES.ERROR_PAGE} element={<ErrorPage/>}/>
 
-                <Route path="*" element={<HomePage/>}/>
+                <Route path="*" element={<Navigate to={ROUTES.ERROR_PAGE} replace/>}/>
             </Routes>
         </Suspense>
     );
