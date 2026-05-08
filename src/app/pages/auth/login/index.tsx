@@ -8,7 +8,7 @@ import {ROUTES} from "@/core/enum/common";
 import {useAuth} from "@/store/useAuth";
 import {LoginResponse} from "@/core/models/User";
 import {ErrorResponse} from "@/core/models/Error";
-import { getOfflineErrorFromUnknown } from "@/core/api/networkError";
+import {getOfflineErrorFromUnknown} from "@/core/api/networkError";
 import "../auth.css";
 
 interface LoginLocationState {
@@ -36,12 +36,20 @@ const Login: FC = () => {
                 email,
                 password,
             });
+            console.log("Login response data:", data);
 
-            const userId = data.user.id ?? data.user._id ?? "";
+            // Validación defensiva: asegurar que data y data.user existen
+            if (!data || !data.user || !data.token) {
+                throw new Error("Respuesta incompleta del servidor: faltan campos requeridos");
+            }
+
+            const userId = data.user.id ?? "";
+
+            if (!userId) {
+                throw new Error("No se encontró ID de usuario en la respuesta");
+            }
 
             localStorage.setItem("token", data.token);
-
-            console.log("Login successful:", data);
 
             login({
                 id: userId,
@@ -55,7 +63,7 @@ const Login: FC = () => {
 
             // No bloquea el login si el usuario rechaza permisos o falla Push API.
             void import("@/app/push")
-                .then(({ suscribirseAPush }) => suscribirseAPush())
+                .then(({suscribirseAPush}) => suscribirseAPush())
                 .catch((pushError) => {
                     console.warn("No se pudo completar la suscripción push tras login", pushError);
                 });
@@ -66,6 +74,7 @@ const Login: FC = () => {
             }
 
             navigate(ROUTES.SHOP);
+
         } catch (err: unknown) {
             const error = err as ErrorResponse;
             const status = error.response?.status;
