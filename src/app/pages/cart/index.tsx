@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useRef} from "react";
 import {useNavigate} from "react-router-dom";
 import {
     getRemoveItemCartErrorMessage,
@@ -24,6 +24,7 @@ export default function CartPage() {
     const [pendingVariantIds, setPendingVariantIds] = useState<string[]>([]);
     const {cartItems} = state;
     const navigate = useNavigate();
+    const quantityRequestSeqRef = useRef<Record<string, number>>({});
 
     const markVariantAsPending = (varianteId: string) => {
         setPendingVariantIds((prev) => (prev.includes(varianteId) ? prev : [...prev, varianteId]));
@@ -92,6 +93,9 @@ export default function CartPage() {
             return;
         }
 
+        const requestId = (quantityRequestSeqRef.current[varianteId] ?? 0) + 1;
+        quantityRequestSeqRef.current[varianteId] = requestId;
+
         dispatch({
             type: "UPDATE_CART_QTY",
             payload: {varianteId, quantity: nextQty},
@@ -101,11 +105,13 @@ export default function CartPage() {
             return;
         }
 
-        markVariantAsPending(varianteId);
-
         if (user?.id) {
             try {
                 const result = await updateItemQuantityInUserCart(user.id, varianteId, nextQty);
+                if (quantityRequestSeqRef.current[varianteId] !== requestId) {
+                    return;
+                }
+
                 if (!result.updated) {
                     dispatch({
                         type: "UPDATE_CART_QTY",
@@ -117,6 +123,10 @@ export default function CartPage() {
                     return;
                 }
             } catch (error: unknown) {
+                if (quantityRequestSeqRef.current[varianteId] !== requestId) {
+                    return;
+                }
+
                 dispatch({
                     type: "UPDATE_CART_QTY",
                     payload: {varianteId, quantity: previousQty},
@@ -126,7 +136,9 @@ export default function CartPage() {
                 setIsCartErrorModalOpen(true);
                 return;
             } finally {
-                unmarkVariantAsPending(varianteId);
+                if (quantityRequestSeqRef.current[varianteId] === requestId) {
+                    delete quantityRequestSeqRef.current[varianteId];
+                }
             }
         }
     };
@@ -226,7 +238,7 @@ export default function CartPage() {
                                                     type="button"
                                                     onClick={() => handleDecrease(item.varianteId, item.quantity)}
                                                     aria-label="Disminuir cantidad"
-                                                    disabled={item.quantity <= 1 || isVariantPending(item.varianteId)}
+                                                    disabled={item.quantity <= 1}
                                                 >
                                                     <img src="/images/minus.svg" alt="" className="h-4 w-4"/>
                                                 </button>
@@ -237,7 +249,7 @@ export default function CartPage() {
                                                     type="button"
                                                     onClick={() => handleIncrease(item.varianteId, item.quantity, item.stock)}
                                                     aria-label="Aumentar cantidad"
-                                                    disabled={item.quantity >= (item.stock || 1) || isVariantPending(item.varianteId)}
+                                                    disabled={item.quantity >= (item.stock || 1)}
                                                 >
                                                     <img src="/images/add.svg" alt="" className="h-4 w-4"/>
                                                 </button>
@@ -292,7 +304,7 @@ export default function CartPage() {
                                                         type="button"
                                                         onClick={() => handleDecrease(item.varianteId, item.quantity)}
                                                         aria-label="Disminuir cantidad"
-                                                        disabled={item.quantity <= 1 || isVariantPending(item.varianteId)}
+                                                        disabled={item.quantity <= 1}
                                                     >
                                                         <img src="/images/minus.svg" alt="" className="h-4 w-4"/>
                                                     </button>
@@ -303,7 +315,7 @@ export default function CartPage() {
                                                         type="button"
                                                         onClick={() => handleIncrease(item.varianteId, item.quantity, item.stock)}
                                                         aria-label="Aumentar cantidad"
-                                                        disabled={item.quantity >= (item.stock || 1) || isVariantPending(item.varianteId)}
+                                                        disabled={item.quantity >= (item.stock || 1)}
                                                     >
                                                         <img src="/images/add.svg" alt="" className="h-4 w-4"/>
                                                     </button>
