@@ -1,9 +1,14 @@
 import Button from "@/core/components/Button/Button";
 import Process from "@/core/components/Process";
 import { useState } from "react";
+import { useProductContext } from "@/store/useProductContext";
+import { formatCurrency } from "@/core/utils/formatCurrency";
 
 export default function CheckOutPage() {
     const [selectedOption, setSelectedOption] = useState('');
+    const { state } = useProductContext();
+    const { cartItems } = state;
+    const subtotal = cartItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
     return (
         <section className="px-8 lg:px-14 py-20">
             <div className="">
@@ -135,46 +140,44 @@ export default function CheckOutPage() {
                             Resumen de la compra
                         </h2>
                         <div className="space-y-6">
-                            {
-                                Array.from({ length: 2 }, (_, idx) => (
-                                    <div key={idx} className="w-full border-b border-app-light-gray">
-                                        <div className="flex justify-between py-6 border-b border-app-light-gray">
+                            {/* Mostrar items del carrito (no editables) */}
+                            {cartItems.length === 0 ? (
+                                <p className="py-6 text-app-gray font-inter text-sm/[22px]">Tu carrito está vacío.</p>
+                            ) : (
+                                <div className="w-full border-b border-app-light-gray">
+                                    {cartItems.map((item) => (
+                                        <div key={item.varianteId} className="flex justify-between py-6 border-b border-app-light-gray">
                                             <div className="flex gap-4 items-center">
                                                 <div className="bg-primary w-20 h-24">
                                                     <img
-                                                        src={'/images/product-one.png'}
-                                                        alt={'Imagen del producto'}
-                                                        className='object-contain object-center h-auto max-h-full w-full'
+                                                        src={item.imageUrl}
+                                                        alt={"Imagen del producto"}
+                                                        className="object-contain object-center h-auto max-h-full w-full"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
                                                     <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                                                        Mesa auxiliar
+                                                        {item.nombre}
                                                     </p>
-                                                    <p className="text-app-gray font-inter text-xs/[18px] font-normal">
-                                                        Color: Negro
+                                                    {item.varianteLabel && (
+                                                        <p className="text-app-gray font-inter text-xs/[18px] font-normal">
+                                                            {item.varianteLabel} ML
+                                                        </p>
+                                                    )}
+                                                    <p className="text-app-black font-inter font-semibold text-sm/[20px]">
+                                                        Cantidad: {item.quantity}
                                                     </p>
-                                                    <div className="flex gap-3 items-center border border-app-gray rounded py-3 px-2 w-fit">
-                                                        <button>
-                                                            <img src="/images/minus.svg" alt="" className="h-4 w-4" />
-                                                        </button>
-                                                        <p className="text-app-black font-inter font-semibold text-sm/[20px]">2</p>
-                                                        <button>
-                                                            <img src="/images/add.svg" alt="" className="h-4 w-4" />
-                                                        </button>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="text-right flex flex-col items-end gap-2">
                                                 <p className="text-app-black font-inter text-lg/[30px] font-semibold">
-                                                    $20.00
+                                                    {formatCurrency(item.unitPrice * item.quantity)}
                                                 </p>
                                             </div>
                                         </div>
-                                    </div>
-                                ))
-                            }
-
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         <div className="flex gap-4 items-center py-3 justify-between border-b border-app-light-gray">
                             <p className="text-app-black font-inter text-base/[26px] font-normal">
@@ -189,7 +192,7 @@ export default function CheckOutPage() {
                                 Subtotal
                             </p>
                             <p className="text-app-black font-inter text-base/[26px] font-semibold text-right">
-                                $99.00
+                                {formatCurrency(subtotal)}
                             </p>
                         </div>
                         <div className="flex gap-4 items-center py-3 justify-between">
@@ -197,7 +200,7 @@ export default function CheckOutPage() {
                                 Total
                             </p>
                             <p className="text-app-black font-inter text-xl/[26px] font-medium text-right">
-                                $99.00
+                                {formatCurrency(subtotal)}
                             </p>
                         </div>
                  </div>
