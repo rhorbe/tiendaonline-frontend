@@ -17,8 +17,8 @@ export default function CheckOutPage() {
                 </h1>
                 <Process activeStep={2} completedStep={1} />
             </div>
-            <div className="pt-20 grid md:grid-cols-3 gap-14">
-                <div className="md:col-span-2 space-y-6">
+            <div className="pt-20 grid md:grid-cols-[3fr_2fr] gap-16 items-start">
+                <div className="space-y-6">
                     <div className="rounded-md border border-app-black py-10 px-6 space-y-5">
                         <p className="text-app-black font-poppins text-xl/7 font-medium">
                             Dirección de envío
@@ -134,11 +134,11 @@ export default function CheckOutPage() {
                         </div>
                     </div>
                 </div>
-                <div className="md:col-span-1">
-                    <div className="rounded-md border border-app-gray px-4 py-6">
-                        <h2 className="pb-4 text-app-black font-inter text-[28px]/[34px] border-app-gray font-semibold">
+                <div>
+                    <div className="p-6 rounded-md border border-app-gray bg-white space-y-3 mb-4">
+                        <p className="text-app-black font-poppins text-xl/7 font-medium mb-4">
                             Resumen de la compra
-                        </h2>
+                        </p>
                         <div className="space-y-6">
                             {/* Mostrar items del carrito (no editables) */}
                             {cartItems.length === 0 ? (
@@ -179,36 +179,32 @@ export default function CheckOutPage() {
                                 </div>
                             )}
                         </div>
-                        <div className="flex gap-4 items-center py-3 justify-between border-b border-app-light-gray">
-                            <p className="text-app-black font-inter text-base/[26px] font-normal">
-                                Envío
-                            </p>
-                            <p className="text-app-black font-inter text-base/[26px] font-semibold text-right">
-                                Gratis
-                            </p>
-                        </div>
-                        <div className="flex gap-4 items-center py-3 justify-between border-b border-app-light-gray">
-                            <p className="text-app-black font-inter text-base/[26px] font-normal">
+                        <div className="flex justify-between items-center border-b border-app-light-gray py-3">
+                            <p className="text-app-black font-inter text-base/[26px] font-normal ">
                                 Subtotal
                             </p>
-                            <p className="text-app-black font-inter text-base/[26px] font-semibold text-right">
+                            <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
                                 {formatCurrency(subtotal)}
                             </p>
                         </div>
-                        <div className="flex gap-4 items-center py-3 justify-between">
-                            <p className="text-app-black font-inter text-xl/[26px] font-medium">
+
+                        <p className="text-app-black font-inter text-base/[26px] font-normal py-3">Forma de envío</p>
+
+                        <div className="border-b border-app-light-gray py-3" />
+
+                        <div className="flex justify-between items-center pb-3">
+                            <p className="text-app-black font-inter text-xl/8 font-semibold ">
                                 Total
                             </p>
-                            <p className="text-app-black font-inter text-xl/[26px] font-medium text-right">
+                            <p className="text-app-black text-right font-inter text-xl/8 font-semibold">
                                 {formatCurrency(subtotal)}
                             </p>
                         </div>
-                 </div>
-                </div>
-            </div>
-            <div className="grid md:grid-cols-3 gap-14 mt-6">
-                <div className="md:col-span-2">
-                    <Button text="Realizar pedido" type="submit" />
+
+                        <div className="pt-2">
+                            <Button text="Realizar pedido" type="submit" disabled={cartItems.length === 0} />
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

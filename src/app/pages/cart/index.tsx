@@ -151,22 +151,23 @@ export default function CartPage() {
                 </h1>
                 <Process activeStep={1}/>
             </div>
-            <div className="grid md:grid-cols-[3fr_2fr] gap-16 py-20">
-                <div>
+            <div className="grid md:grid-cols-[3fr_2fr] gap-16 py-20 items-start">
+                <div className="p-6 rounded-md border border-app-black bg-white space-y-3 mb-4">
+                    <p className="text-app-black font-poppins text-xl/7 font-medium mb-4">Productos seleccionados</p>
                     <div className="overflow-x-auto hidden md:block">
                         <table className="min-w-full border-collapse border-b">
                             <thead>
                             <tr className="">
-                                <th className="pb-6 px-4 text-center text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
+                                <th className="py-3 px-4 text-center text-app-black font-inter text-base/[26px] font-normal border-app-light-gray border-b">
                                     Producto
                                 </th>
-                                <th className="pb-6 px-4 text-center text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
+                                <th className="py-3 px-4 text-center text-app-black font-inter text-base/[26px] font-normal border-app-light-gray border-b">
                                     Cantidad
                                 </th>
-                                <th className="pb-6 px-4 text-center text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
+                                <th className="py-3 px-4 text-center text-app-black font-inter text-base/[26px] font-normal border-app-light-gray border-b">
                                     Precio
                                 </th>
-                                <th className="pb-6 px-4 text-center text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
+                                <th className="py-3 px-4 text-center text-app-black font-inter text-base/[26px] font-normal border-app-light-gray border-b">
                                     Subtotal
                                 </th>
                             </tr>
@@ -259,9 +260,6 @@ export default function CartPage() {
                         </table>
                     </div>
                     <div className="md:hidden">
-                        <h2 className="pb-6 text-app-black font-inter text-base/[26px] border-app-gray font-semibold border-b">
-                            Producto
-                        </h2>
                         {cartItems.length === 0 ? (
                             <p className="py-6 text-app-gray font-inter text-sm/[22px]">Tu carrito está vacío.</p>
                         ) : (
@@ -342,7 +340,7 @@ export default function CartPage() {
 
                     <div className="flex justify-between items-center border-b border-app-light-gray py-3">
                         <p className="text-app-black font-inter text-base/[26px] font-normal ">
-                            Subtotal
+                            Subtotal de la compra
                         </p>
                         <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
                             {formatCurrency(subtotal)}
