@@ -20,8 +20,7 @@ export interface PerfilResponse {
   name: string;
   last_name: string | null;
   email: string;
-  telefono: string | null;
-  phone?: string | null;
+  telefono?: string | null;
   cliente_id: string;
   direcciones: PerfilDireccion[];
   direccion_principal: PerfilDireccion | null;
