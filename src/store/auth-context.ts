@@ -4,6 +4,7 @@ import { User } from "@/core/models/User";
 export interface AuthContextType {
   user: User | null;
   login: (userData: User) => void;
+  updateUser: (userData: Partial<User>) => void;
   logout: () => Promise<void>;
 }
 

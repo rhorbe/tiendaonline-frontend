@@ -5,22 +5,26 @@ import Orders from "@/core/components/Account/Orders";
 import { fetchPerfil } from "@/core/api/perfilApi";
 import { PerfilResponse } from "@/core/models/Perfil";
 import { useAuth } from "@/store/useAuth";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function ProfilePage() {
-    const { user } = useAuth();
+    const { user, updateUser } = useAuth();
     const [activeIndex, setActiveIndex] = useState(0);
     const [perfil, setPerfil] = useState<PerfilResponse | null>(null);
     const [loadingPerfil, setLoadingPerfil] = useState(true);
     const [perfilError, setPerfilError] = useState<string | null>(null);
     const [refreshKey, setRefreshKey] = useState(0);
+    const isPostUpdateRefresh = useRef(false);
 
     useEffect(() => {
         let isMounted = true;
 
         const loadPerfil = async () => {
             try {
-                setLoadingPerfil(true);
+                // Solo mostrar loading si no es un refresh silencioso post-actualización
+                if (!isPostUpdateRefresh.current) {
+                    setLoadingPerfil(true);
+                }
                 const data = await fetchPerfil();
 
                 if (!isMounted) {
@@ -28,16 +32,25 @@ export default function ProfilePage() {
                 }
 
                 setPerfil(data);
+                updateUser({
+                    name: data.name,
+                    cliente_id: data.cliente_id,
+                });
                 setPerfilError(null);
+                isPostUpdateRefresh.current = false;
             } catch (error) {
                 if (!isMounted) {
                     return;
                 }
 
                 setPerfilError(error instanceof Error ? error.message : "No se pudo cargar el perfil.");
+                isPostUpdateRefresh.current = false;
             } finally {
                 if (isMounted) {
-                    setLoadingPerfil(false);
+                    // Solo ocultar loading si fue mostrado
+                    if (!isPostUpdateRefresh.current) {
+                        setLoadingPerfil(false);
+                    }
                 }
             }
         };
@@ -47,7 +60,7 @@ export default function ProfilePage() {
         return () => {
             isMounted = false;
         };
-    }, [refreshKey]);
+    }, [refreshKey, updateUser]);
 
     const handlePerfidUpdate = () => {
         setRefreshKey(prev => prev + 1);
@@ -55,12 +68,22 @@ export default function ProfilePage() {
 
     const handlePerfilChange = (perfilActualizado?: PerfilResponse) => {
         if (perfilActualizado) {
+            // Actualizar inmediatamente la pantalla con los datos guardados
             setPerfil(perfilActualizado);
-            return;
-        }
+            updateUser({
+                name: perfilActualizado.name,
+                cliente_id: perfilActualizado.cliente_id,
+            });
 
-        // Si no recibimos el perfil actualizado, forzamos recarga
-        setRefreshKey(prev => prev + 1);
+            // Hacer refresh silencioso en background después de 1 segundo
+            isPostUpdateRefresh.current = true;
+            setTimeout(() => {
+                setRefreshKey(prev => prev + 1);
+            }, 1000);
+        } else {
+            // Si no tenemos datos, hacer refresh inmediato
+            setRefreshKey(prev => prev + 1);
+        }
     };
 
     const perfilVisible: PerfilResponse | null = perfil ?? (user ? {
@@ -145,15 +168,15 @@ export default function ProfilePage() {
                 </div>
                 {
                     activeIndex == 0 &&
-                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} showDatos showPassword={false} showNotificaciones={false} />
+                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} showDatos={true} showPassword={false} showNotificaciones={false} />
                 }
                 {
                     activeIndex == 1 &&
-                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} showDatos={false} showPassword showNotificaciones={false} />
+                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} showDatos={false} showPassword={true} showNotificaciones={false} />
                 }
                 {
                     activeIndex == 2 &&
-                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} showDatos={false} showPassword={false} showNotificaciones />
+                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} showDatos={false} showPassword={false} showNotificaciones={true} />
                 }
                 {
                     activeIndex == 3 &&

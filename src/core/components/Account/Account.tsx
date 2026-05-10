@@ -65,6 +65,8 @@ type AccountDetailsProps = {
 export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, showDatos = true, showPassword = true, showNotificaciones = true}: AccountDetailsProps) {
     const [activandoPush, setActivandoPush] = useState(false);
     const [desactivandoPush, setDesactivandoPush] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
+    const [checkingSubscription, setCheckingSubscription] = useState(true);
     const [guardandoDatos, setGuardandoDatos] = useState(false);
     const [nombre, setNombre] = useState(perfil?.name ?? '');
     const [apellido, setApellido] = useState(perfil?.last_name ?? '');
@@ -79,6 +81,35 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
         setApellido(perfil?.last_name ?? '');
     }, [perfil]);
 
+    // Comprobar si hay suscripción push activa
+    useEffect(() => {
+        let mounted = true;
+
+        const check = async () => {
+            try {
+                setCheckingSubscription(true);
+
+                if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                    if (mounted) setIsSubscribed(false);
+                    return;
+                }
+
+                const registration = await navigator.serviceWorker.ready;
+                const subscription = await registration.pushManager.getSubscription();
+                if (mounted) setIsSubscribed(Boolean(subscription));
+            } catch (err) {
+                console.error('Error comprobando suscripción push', err);
+                if (mounted) setIsSubscribed(false);
+            } finally {
+                if (mounted) setCheckingSubscription(false);
+            }
+        };
+
+        void check();
+
+        return () => { mounted = false };
+    }, []);
+
     const handleActivarNotificaciones = async () => {
         if (activandoPush) {
             return;
@@ -87,7 +118,11 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
         try {
             setActivandoPush(true);
             const {suscribirseAPush} = await import('@/app/push/subscribeBrowserToPush');
-            await suscribirseAPush();
+            const subscription = await suscribirseAPush();
+            // si devuelve una suscripción la consideramos activada
+            if (subscription) {
+                setIsSubscribed(true);
+            }
             setMensaje({tipo: 'exito', texto: 'Notificaciones activadas'});
         } catch (error) {
             console.error(error);
@@ -107,8 +142,10 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
             const {desuscribirseDePush} = await import('@/app/push/unsubscribeBrowserFromPush');
             const desuscrito = await desuscribirseDePush();
             if (desuscrito) {
+                setIsSubscribed(false);
                 setMensaje({tipo: 'exito', texto: 'Notificaciones desactivadas'});
             } else {
+                setIsSubscribed(false);
                 setMensaje({tipo: 'exito', texto: 'No había una suscripción push activa.'});
             }
         } catch (error) {
@@ -140,7 +177,14 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
 
                 // Actualizar inmediatamente la vista con la respuesta del backend si está disponible
                 if (actualizado) {
-                    onPerfilChange?.(actualizado);
+                    const perfilActualizado = {
+                        ...(perfil ?? actualizado),
+                        ...actualizado,
+                    };
+
+                    setNombre(perfilActualizado.name);
+                    setApellido(perfilActualizado.last_name ?? '');
+                    onPerfilChange?.(perfilActualizado);
                 } else {
                     onPerfidUpdate?.();
                 }
@@ -307,19 +351,40 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
             )}
 
             {showNotificaciones && (
-                <div className="flex flex-col sm:flex-row gap-3 sm:items-center pt-5">
-                    <Button
-                        text={activandoPush ? 'Activando...' : 'Activar notificaciones'}
-                        className="max-w-fit"
-                        onClick={handleActivarNotificaciones}
-                        disabled={activandoPush || desactivandoPush || guardandoDatos}
-                    />
-                    <Button
-                        text={desactivandoPush ? 'Desactivando...' : 'Desactivar notificaciones'}
-                        className="max-w-fit"
-                        onClick={handleDesactivarNotificaciones}
-                        disabled={activandoPush || desactivandoPush || guardandoDatos}
-                    />
+                <div className="space-y-5">
+                    <p className="text-app-black font-poppins text-xl/7 font-semibold">Notificaciones</p>
+
+                    <div className="flex items-center gap-4">
+                        <div className="text-app-gray font-inter text-sm">Recibir notificaciones del sitio</div>
+
+                        {/* Estado y toggle */}
+                        <div>
+                            {checkingSubscription ? (
+                                <div className="text-app-gray">Comprobando estado...</div>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={async () => {
+                                        if (isSubscribed) {
+                                            await handleDesactivarNotificaciones();
+                                            setIsSubscribed(false);
+                                        } else {
+                                            try {
+                                                await handleActivarNotificaciones();
+                                                setIsSubscribed(true);
+                                            } catch {
+                                                // handleActivarNotificaciones ya pone mensaje
+                                            }
+                                        }
+                                    }}
+                                    className={`inline-flex items-center px-4 py-2 rounded-full font-inter font-semibold transition-colors ${isSubscribed ? 'bg-green-600 text-white' : 'bg-app-gray text-black'}`}
+                                    disabled={activandoPush || desactivandoPush || guardandoDatos}
+                                >
+                                    {activandoPush || desactivandoPush ? 'Procesando...' : (isSubscribed ? 'Desactivar notificaciones' : 'Activar notificaciones')}
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
         </form>

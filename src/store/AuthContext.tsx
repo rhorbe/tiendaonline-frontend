@@ -1,5 +1,5 @@
 // AuthContext.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { User } from "@/core/models/User";
 import { AuthContext } from "./auth-context";
 
@@ -52,12 +52,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const login = (userData: User) => {
+  const login = useCallback((userData: User) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
-  };
+  }, []);
 
-  const logout = async () => {
+  const updateUser = useCallback((userData: Partial<User>) => {
+    setUser((currentUser) => {
+      if (!currentUser) {
+        return currentUser;
+      }
+
+      const updatedUser = {
+        ...currentUser,
+        ...userData,
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      return updatedUser;
+    });
+  }, []);
+
+  const logout = useCallback(async () => {
     try {
       const { desuscribirseDePush } = await import("@/app/push");
       await desuscribirseDePush();
@@ -69,10 +85,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-  };
+  }, []);
+
+  const authContextValue = useMemo(
+    () => ({ user, login, updateUser, logout }),
+    [user, login, updateUser, logout],
+  );
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={authContextValue}>
       {children}
     </AuthContext.Provider>
   );
