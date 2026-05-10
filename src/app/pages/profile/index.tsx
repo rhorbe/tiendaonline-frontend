@@ -81,12 +81,6 @@ export default function ProfilePage() {
             <div className="flex flex-col md:flex-row">
                 <div className="py-10 px-4 w-full md:w-fit bg-app-light-gray rounded-lg space-y-10 h-fit">
                     <div className="flex flex-col items-center gap-[6px]">
-                        <div className="w-[82px] h-[82px] relative">
-                            <img src="/images/avatar_placeholder.png" alt="Avatar" className="w-full h-full object-contain object-center" />
-                            <div className="absolute bottom-0 right-0 p-[7px] rounded-full border-[1.5px] border-white bg-app-black">
-                                <img src="/images/camera.svg" alt="Cámara" className="w-4 h-4 object-contain object-center" />
-                            </div>
-                        </div>
                         <p className="text-app-black font-inter text-xl/8 font-semibold">
                             {nombreVisible}
                         </p>
