@@ -53,6 +53,16 @@ export default function ProfilePage() {
         setRefreshKey(prev => prev + 1);
     };
 
+    const handlePerfilChange = (perfilActualizado?: PerfilResponse) => {
+        if (perfilActualizado) {
+            setPerfil(perfilActualizado);
+            return;
+        }
+
+        // Si no recibimos el perfil actualizado, forzamos recarga
+        setRefreshKey(prev => prev + 1);
+    };
+
     const perfilVisible: PerfilResponse | null = perfil ?? (user ? {
         id: user.id,
         name: user.name,
@@ -128,7 +138,7 @@ export default function ProfilePage() {
                 </div>
                 {
                     activeIndex == 0 &&
-                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} />
+                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} />
                 }
                 {
                     activeIndex == 1 &&
@@ -136,7 +146,7 @@ export default function ProfilePage() {
                 }
                 {
                     activeIndex == 2 &&
-                    <Phone perfil={perfilVisible} onPhoneUpdate={handlePerfidUpdate} />
+                    <Phone perfil={perfilVisible} onPhoneUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} />
                 }
                 {
                     activeIndex == 3 &&

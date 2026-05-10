@@ -24,12 +24,14 @@ const obtenerMensajeError = (error: unknown): string => {
     return 'Ocurrió un error inesperado.';
 };
 
+
 type PhoneProps = {
     perfil: PerfilResponse | null;
     onPhoneUpdate?: () => void;
+    onPerfilChange?: (perfil: PerfilResponse) => void;
 };
 
-export default function Phone({ perfil, onPhoneUpdate }: PhoneProps) {
+export default function Phone({ perfil, onPhoneUpdate, onPerfilChange }: PhoneProps) {
     const [telefono, setTelefono] = useState(perfil?.telefono ?? '');
     const [guardando, setGuardando] = useState(false);
     const [mensaje, setMensaje] = useState<{tipo: 'exito' | 'error', texto: string} | null>(null);
@@ -48,12 +50,16 @@ export default function Phone({ perfil, onPhoneUpdate }: PhoneProps) {
             setGuardando(true);
             setMensaje(null);
 
-            await updatePhone({
+            const actualizado = await updatePhone({
                 telefono: telefono,
             });
 
             setMensaje({tipo: 'exito', texto: 'Teléfono actualizado correctamente'});
-            onPhoneUpdate?.();
+            if (actualizado) {
+                onPerfilChange?.(actualizado);
+            } else {
+                onPhoneUpdate?.();
+            }
         } catch (error) {
             console.error(error);
             setMensaje({tipo: 'error', texto: obtenerMensajeError(error)});

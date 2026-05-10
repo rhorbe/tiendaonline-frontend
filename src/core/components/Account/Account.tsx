@@ -56,9 +56,10 @@ const obtenerMensajeError = (error: unknown): string => {
 type AccountDetailsProps = {
     perfil: PerfilResponse | null;
     onPerfidUpdate?: () => void;
+    onPerfilChange?: (perfil: PerfilResponse) => void;
 };
 
-export default function AccountDetails({perfil, onPerfidUpdate}: AccountDetailsProps) {
+export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange}: AccountDetailsProps) {
     const [activandoPush, setActivandoPush] = useState(false);
     const [desactivandoPush, setDesactivandoPush] = useState(false);
     const [guardandoDatos, setGuardandoDatos] = useState(false);
@@ -123,14 +124,23 @@ export default function AccountDetails({perfil, onPerfidUpdate}: AccountDetailsP
             const apellidoCambio = apellido !== (perfil?.last_name ?? '');
 
             if (nombreCambio || apellidoCambio) {
-                await updatePerfil({
+                const actualizado = await updatePerfil({
                     name: nombre,
                     last_name: apellido || undefined,
                 });
+
+                // Actualizar inmediatamente la vista con la respuesta del backend si está disponible
+                if (actualizado) {
+                    onPerfilChange?.(actualizado);
+                } else {
+                    onPerfidUpdate?.();
+                }
+            } else {
+                // Si no hubo cambios en nombre/apellido simplemente forzamos recarga si hace falta
+                onPerfidUpdate?.();
             }
 
             setMensaje({tipo: 'exito', texto: 'Datos actualizados correctamente'});
-            onPerfidUpdate?.();
         } catch (error) {
             console.error(error);
             setMensaje({tipo: 'error', texto: obtenerMensajeError(error)});
