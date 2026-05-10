@@ -59,7 +59,7 @@ export default function ProfilePage() {
     } : null);
 
     const nombreVisible = [perfilVisible?.name, perfilVisible?.last_name].filter(Boolean).join(" ").trim() || "Mi Cuenta";
-    const menuItems = ["Cuenta", "Dirección", "Pedidos", "Favoritos", "Cerrar sesión"];
+    const menuItems = ["Cuenta", "Dirección", "Pedidos"];
 
     return (
         <section className="px-8 lg:px-14 pb-20">

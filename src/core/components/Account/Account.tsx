@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { isAxiosError } from 'axios';
-import type { PerfilResponse } from '@/core/models/Perfil';
+import {useState} from 'react';
+import {isAxiosError} from 'axios';
+import type {PerfilResponse} from '@/core/models/Perfil';
 import Button from "../Button/Button";
 
 const obtenerMensajeErrorPush = (error: unknown): string => {
@@ -36,7 +36,7 @@ type AccountDetailsProps = {
     perfil: PerfilResponse | null;
 };
 
-export default function AccountDetails({ perfil }: AccountDetailsProps) {
+export default function AccountDetails({perfil}: AccountDetailsProps) {
     const [activandoPush, setActivandoPush] = useState(false);
     const [desactivandoPush, setDesactivandoPush] = useState(false);
 
@@ -47,7 +47,7 @@ export default function AccountDetails({ perfil }: AccountDetailsProps) {
 
         try {
             setActivandoPush(true);
-            const { suscribirseAPush } = await import('@/app/push/subscribeBrowserToPush');
+            const {suscribirseAPush} = await import('@/app/push/subscribeBrowserToPush');
             await suscribirseAPush();
             alert('Notificaciones activadas');
         } catch (error) {
@@ -65,7 +65,7 @@ export default function AccountDetails({ perfil }: AccountDetailsProps) {
 
         try {
             setDesactivandoPush(true);
-            const { desuscribirseDePush } = await import('@/app/push/unsubscribeBrowserFromPush');
+            const {desuscribirseDePush} = await import('@/app/push/unsubscribeBrowserFromPush');
             const desuscrito = await desuscribirseDePush();
             alert(desuscrito ? 'Notificaciones desactivadas' : 'No había una suscripción push activa.');
         } catch (error) {
@@ -80,8 +80,22 @@ export default function AccountDetails({ perfil }: AccountDetailsProps) {
         <form className="space-y-10 w-full py-10 md:py-0 md:px-[72px]">
             <div className="space-y-5">
                 <p className="text-app-black font-poppins text-xl/7 font-semibold">
-                    Información de contacto
+                    Datos del usuario
                 </p>
+
+                <div className="space-y-3 w-full">
+                    <label htmlFor="email" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Correo
+                        Electrónico</label>
+                    <input
+                        placeholder="Correo electrónico"
+                        type="email"
+                        name="email"
+                        id="email"
+                        value={perfil?.email ?? ''}
+                        readOnly
+                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                    />
+                </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="firstname"
                            className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nombre</label>
@@ -96,7 +110,8 @@ export default function AccountDetails({ perfil }: AccountDetailsProps) {
                     />
                 </div>
                 <div className="space-y-3 w-full">
-                    <label htmlFor="lastname" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Apellido</label>
+                    <label htmlFor="lastname"
+                           className="text-app-gray font-inter text-sm/3 font-bold uppercase">Apellido</label>
                     <input
                         placeholder="Apellido"
                         type="text"
@@ -107,51 +122,33 @@ export default function AccountDetails({ perfil }: AccountDetailsProps) {
                         className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
                     />
                 </div>
-                <div className="space-y-3 w-full">
-                    <label htmlFor="email" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Correo Electrónico</label>
-                    <input
-                        placeholder="Correo electrónico"
-                        type="email"
-                        name="email"
-                        id="email"
-                        value={perfil?.email ?? ''}
-                        readOnly
-                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
-                    />
-                </div>
+
             </div>
             <div className="space-y-5">
                 <p className="text-app-black font-poppins text-xl/7 font-semibold">
                     Contraseña
                 </p>
                 <div className="space-y-3 w-full">
-                    <label htmlFor="oldPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Contraseña actual</label>
+                    <label htmlFor="oldPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Contraseña
+                        actual</label>
                     <input placeholder="Contraseña actual" type="text" name="oldPassword" id="oldPassword"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
                 <div className="space-y-3 w-full">
-                    <label htmlFor="newPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nueva contraseña</label>
+                    <label htmlFor="newPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nueva
+                        contraseña</label>
                     <input placeholder="Nueva contraseña" type="text" name="newpassword" id="newPassword"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="repeatNewPassword"
-                           className="text-app-gray font-inter text-sm/3 font-bold uppercase">Repetir nueva contraseña</label>
-                    <input placeholder="Repetir nueva contraseña" type="text" name="repeatNewPassword" id="repeatNewPassword"
+                           className="text-app-gray font-inter text-sm/3 font-bold uppercase">Repetir nueva
+                        contraseña</label>
+                    <input placeholder="Repetir nueva contraseña" type="text" name="repeatNewPassword"
+                           id="repeatNewPassword"
                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
-                <div className="space-y-3 w-full">
-                    <label htmlFor="email" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Correo electrónico</label>
-                    <input
-                        placeholder="Correo electrónico"
-                        type="email"
-                        name="passwordEmail"
-                        id="passwordEmail"
-                        value={perfil?.email ?? ''}
-                        readOnly
-                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
-                    />
-                </div>
+
             </div>
             <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
                 <Button
