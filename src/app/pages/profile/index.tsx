@@ -1,7 +1,7 @@
 import AccountDetails from "@/core/components/Account/Account";
 import Address from "@/core/components/Account/Address";
+import Phone from "@/core/components/Account/Phone";
 import Orders from "@/core/components/Account/Orders";
-import Wishlist from "@/core/components/Account/Wishlist";
 import { fetchPerfil } from "@/core/api/perfilApi";
 import { PerfilResponse } from "@/core/models/Perfil";
 import { useAuth } from "@/store/useAuth";
@@ -53,13 +53,14 @@ export default function ProfilePage() {
         name: user.name,
         last_name: null,
         email: user.email,
+        phone: null,
         cliente_id: user.cliente_id ?? "",
         direcciones: [],
         direccion_principal: null,
     } : null);
 
     const nombreVisible = [perfilVisible?.name, perfilVisible?.last_name].filter(Boolean).join(" ").trim() || "Mi Cuenta";
-    const menuItems = ["Cuenta", "Dirección", "Pedidos"];
+    const menuItems = ["Cuenta", "Direcciones", "Teléfono", "Pedidos"];
 
     return (
         <section className="px-8 lg:px-14 pb-20">
@@ -130,11 +131,11 @@ export default function ProfilePage() {
                 }
                 {
                     activeIndex == 2 &&
-                    <Orders />
+                    <Phone perfil={perfilVisible} />
                 }
                 {
                     activeIndex == 3 &&
-                    <Wishlist />
+                    <Orders />
                 }
             </div>
         </section>
