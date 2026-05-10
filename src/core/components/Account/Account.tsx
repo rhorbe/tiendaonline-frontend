@@ -39,6 +39,8 @@ type AccountDetailsProps = {
 export default function AccountDetails({perfil}: AccountDetailsProps) {
     const [activandoPush, setActivandoPush] = useState(false);
     const [desactivandoPush, setDesactivandoPush] = useState(false);
+    const [nombre, setNombre] = useState(perfil?.name ?? '');
+    const [apellido, setApellido] = useState(perfil?.last_name ?? '');
 
     const handleActivarNotificaciones = async () => {
         if (activandoPush) {
@@ -92,8 +94,8 @@ export default function AccountDetails({perfil}: AccountDetailsProps) {
                         name="email"
                         id="email"
                         value={perfil?.email ?? ''}
-                        readOnly
-                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                        disabled
+                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
                     />
                 </div>
                 <div className="space-y-3 w-full">
@@ -104,8 +106,8 @@ export default function AccountDetails({perfil}: AccountDetailsProps) {
                         type="text"
                         name="firstname"
                         id="firstname"
-                        value={perfil?.name ?? ''}
-                        readOnly
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
                         className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
                     />
                 </div>
@@ -117,8 +119,8 @@ export default function AccountDetails({perfil}: AccountDetailsProps) {
                         type="text"
                         name="lastname"
                         id="lastname"
-                        value={perfil?.last_name ?? ''}
-                        readOnly
+                        value={apellido}
+                        onChange={(e) => setApellido(e.target.value)}
                         className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
                     />
                 </div>
