@@ -156,15 +156,15 @@ export default function ProfilePage() {
                     <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} showDatos={false} showPassword={false} showNotificaciones />
                 }
                 {
-                    activeIndex == 1 &&
+                    activeIndex == 3 &&
                     <Address perfil={perfilVisible} onAddressUpdate={handlePerfidUpdate} />
                 }
                 {
-                    activeIndex == 2 &&
+                    activeIndex == 4 &&
                     <Phone perfil={perfilVisible} onPhoneUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} />
                 }
                 {
-                    activeIndex == 3 &&
+                    activeIndex == 5 &&
                     <Orders />
                 }
             </div>
