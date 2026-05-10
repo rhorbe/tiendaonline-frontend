@@ -1,27 +1,11 @@
 import { useState } from "react";
 import AddressForm from "../AddressForm";
-
-type PerfilDireccion = {
-    id: string;
-    etiqueta: string | null;
-    calle: string;
-    numero: string;
-    piso: string | null;
-    departamento: string | null;
-    ciudad: string;
-    provincia: string;
-    codigoPostal: string;
-    pais: string;
-    observaciones: string | null;
-    esPrincipal: boolean;
-};
-
-type PerfilResponse = {
-    direcciones: PerfilDireccion[];
-};
+import { deleteDireccion } from "@/core/api/perfilApi";
+import { PerfilDireccion, PerfilResponse } from "@/core/models/Perfil";
 
 type AddressProps = {
     perfil: PerfilResponse | null;
+    onAddressUpdate?: () => void;
 };
 
 const formatDireccion = (direccion: PerfilDireccion): string => {
@@ -32,26 +16,68 @@ const formatDireccion = (direccion: PerfilDireccion): string => {
         direccion.departamento ? `Dpto. ${direccion.departamento}` : null,
         direccion.ciudad,
         direccion.provincia,
-        direccion.codigoPostal,
+        direccion.codigo_postal || direccion.codigoPostal,
         direccion.pais,
     ].filter((part): part is string => Boolean(part));
 
     return parts.join(", ");
 };
 
-export default function Address({ perfil }: AddressProps) {
+export default function Address({ perfil, onAddressUpdate }: AddressProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingDireccion, setEditingDireccion] = useState<PerfilDireccion | null>(null);
+    const [eliminando, setEliminando] = useState<string | null>(null);
+    const [mensaje, setMensaje] = useState<{tipo: 'exito' | 'error', texto: string} | null>(null);
 
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    const openModal = (direccion?: PerfilDireccion) => {
+        setEditingDireccion(direccion || null);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setEditingDireccion(null);
+    };
+
+    const handleEliminar = async (id: string) => {
+        if (!confirm('¿Estás seguro de que deseas eliminar esta dirección?')) {
+            return;
+        }
+
+        try {
+            setEliminando(id);
+            setMensaje(null);
+            await deleteDireccion(id);
+            setMensaje({tipo: 'exito', texto: 'Dirección eliminada correctamente'});
+            onAddressUpdate?.();
+        } catch (error) {
+            console.error(error);
+            setMensaje({tipo: 'error', texto: 'Error al eliminar la dirección'});
+        } finally {
+            setEliminando(null);
+        }
+    };
+
     const direcciones = [...(perfil?.direcciones ?? [])].sort((a, b) => Number(b.esPrincipal) - Number(a.esPrincipal));
 
     return (
         <div className="w-full py-10 md:py-0 md:px-[72px]">
+            {mensaje && (
+                <div className={`p-4 rounded-md mb-5 ${mensaje.tipo === 'exito' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                    {mensaje.texto}
+                </div>
+            )}
             <div className="space-y-5">
                 <p className="text-app-black font-poppins text-xl/7 font-semibold">
                     Direcciones guardadas
                 </p>
+                <button
+                    type="button"
+                    onClick={() => openModal()}
+                    className="px-4 py-2 bg-app-black text-white rounded-md font-inter text-sm font-semibold hover:bg-opacity-90"
+                >
+                    + Agregar nueva dirección
+                </button>
             </div>
             <div className="grid md:grid-cols-2 mt-5 gap-6">
                 {direcciones.length > 0 ? (
@@ -68,12 +94,29 @@ export default function Address({ perfil }: AddressProps) {
                                         </span>
                                     )}
                                 </div>
-                                <button type="button" onClick={openModal} className="flex gap-1 items-center">
-                                    <img src="/images/edit.svg" alt="Editar" className="w-4 h-4 object-contain object-center" />
-                                    <p className="text-app-gray font-inter text-base/[26px] font-semibold">
-                                        Editar
-                                    </p>
-                                </button>
+                                <div className="flex gap-2 items-center">
+                                    <button
+                                        type="button"
+                                        onClick={() => openModal(direccion)}
+                                        className="flex gap-1 items-center"
+                                    >
+                                        <img src="/images/edit.svg" alt="Editar" className="w-4 h-4 object-contain object-center" />
+                                        <p className="text-app-gray font-inter text-base/[26px] font-semibold">
+                                            Editar
+                                        </p>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleEliminar(direccion.id)}
+                                        disabled={eliminando === direccion.id}
+                                        className="flex gap-1 items-center ml-2"
+                                    >
+                                        <img src="/images/trash.svg" alt="Eliminar" className="w-4 h-4 object-contain object-center" />
+                                        <p className="text-red-500 font-inter text-base/[26px] font-semibold">
+                                            {eliminando === direccion.id ? 'Eliminando...' : 'Eliminar'}
+                                        </p>
+                                    </button>
+                                </div>
                             </div>
                             <div className="text-app font-inter text-sm/[22px] space-y-1">
                                 <p>{formatDireccion(direccion)}</p>
@@ -87,7 +130,15 @@ export default function Address({ perfil }: AddressProps) {
                     </div>
                 )}
             </div>
-            <AddressForm isOpen={isModalOpen} onClose={closeModal} />
+            <AddressForm
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                direccionEdit={editingDireccion}
+                onDireccionSaved={() => {
+                    closeModal();
+                    onAddressUpdate?.();
+                }}
+            />
         </div>
     )
 }

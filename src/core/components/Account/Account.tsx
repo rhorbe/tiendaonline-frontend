@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {isAxiosError} from 'axios';
 import type {PerfilResponse} from '@/core/models/Perfil';
 import Button from "../Button/Button";
+import { updatePerfil, changePassword } from '@/core/api/perfilApi';
 
 const obtenerMensajeErrorPush = (error: unknown): string => {
     if (isAxiosError(error)) {
@@ -32,15 +33,41 @@ const obtenerMensajeErrorPush = (error: unknown): string => {
     return 'No se pudo activar la notificación.';
 };
 
-type AccountDetailsProps = {
-    perfil: PerfilResponse | null;
+const obtenerMensajeError = (error: unknown): string => {
+    if (isAxiosError(error)) {
+        const backendMessage =
+            (error.response?.data as { message?: string } | undefined)?.message?.trim() ||
+            (error.response?.data as { detail?: string } | undefined)?.detail?.trim();
+
+        if (backendMessage) {
+            return backendMessage;
+        }
+
+        return `Error del servidor (HTTP ${error.response?.status}).`;
+    }
+
+    if (error instanceof Error && error.message.trim()) {
+        return error.message;
+    }
+
+    return 'Ocurrió un error inesperado.';
 };
 
-export default function AccountDetails({perfil}: AccountDetailsProps) {
+type AccountDetailsProps = {
+    perfil: PerfilResponse | null;
+    onPerfidUpdate?: () => void;
+};
+
+export default function AccountDetails({perfil, onPerfidUpdate}: AccountDetailsProps) {
     const [activandoPush, setActivandoPush] = useState(false);
     const [desactivandoPush, setDesactivandoPush] = useState(false);
+    const [guardandoDatos, setGuardandoDatos] = useState(false);
     const [nombre, setNombre] = useState(perfil?.name ?? '');
     const [apellido, setApellido] = useState(perfil?.last_name ?? '');
+    const [contrasenaActual, setContrasenaActual] = useState('');
+    const [contrasenaNueva, setContrasenaNueva] = useState('');
+    const [contrasenaRepetida, setContrasenaRepetida] = useState('');
+    const [mensaje, setMensaje] = useState<{tipo: 'exito' | 'error', texto: string} | null>(null);
 
     const handleActivarNotificaciones = async () => {
         if (activandoPush) {
@@ -51,10 +78,10 @@ export default function AccountDetails({perfil}: AccountDetailsProps) {
             setActivandoPush(true);
             const {suscribirseAPush} = await import('@/app/push/subscribeBrowserToPush');
             await suscribirseAPush();
-            alert('Notificaciones activadas');
+            setMensaje({tipo: 'exito', texto: 'Notificaciones activadas'});
         } catch (error) {
             console.error(error);
-            alert(obtenerMensajeErrorPush(error));
+            setMensaje({tipo: 'error', texto: obtenerMensajeErrorPush(error)});
         } finally {
             setActivandoPush(false);
         }
@@ -69,17 +96,94 @@ export default function AccountDetails({perfil}: AccountDetailsProps) {
             setDesactivandoPush(true);
             const {desuscribirseDePush} = await import('@/app/push/unsubscribeBrowserFromPush');
             const desuscrito = await desuscribirseDePush();
-            alert(desuscrito ? 'Notificaciones desactivadas' : 'No había una suscripción push activa.');
+            if (desuscrito) {
+                setMensaje({tipo: 'exito', texto: 'Notificaciones desactivadas'});
+            } else {
+                setMensaje({tipo: 'exito', texto: 'No había una suscripción push activa.'});
+            }
         } catch (error) {
             console.error(error);
-            alert(obtenerMensajeErrorPush(error));
+            setMensaje({tipo: 'error', texto: obtenerMensajeErrorPush(error)});
         } finally {
             setDesactivandoPush(false);
         }
     };
 
+    const handleGuardarDatos = async () => {
+        if (guardandoDatos) {
+            return;
+        }
+
+        try {
+            setGuardandoDatos(true);
+            setMensaje(null);
+
+            // Validar que al menos un campo haya cambiado
+            const nombreCambio = nombre !== (perfil?.name ?? '');
+            const apellidoCambio = apellido !== (perfil?.last_name ?? '');
+
+            if (nombreCambio || apellidoCambio) {
+                await updatePerfil({
+                    name: nombre,
+                    last_name: apellido || undefined,
+                });
+            }
+
+            setMensaje({tipo: 'exito', texto: 'Datos actualizados correctamente'});
+            onPerfidUpdate?.();
+        } catch (error) {
+            console.error(error);
+            setMensaje({tipo: 'error', texto: obtenerMensajeError(error)});
+        } finally {
+            setGuardandoDatos(false);
+        }
+    };
+
+    const handleCambiarContrasena = async () => {
+        if (guardandoDatos || !contrasenaActual || !contrasenaNueva || !contrasenaRepetida) {
+            if (!contrasenaActual || !contrasenaNueva || !contrasenaRepetida) {
+                setMensaje({tipo: 'error', texto: 'Completa todos los campos de contraseña'});
+            }
+            return;
+        }
+
+        if (contrasenaNueva !== contrasenaRepetida) {
+            setMensaje({tipo: 'error', texto: 'Las contraseñas nuevas no coinciden'});
+            return;
+        }
+
+        if (contrasenaNueva.length < 8) {
+            setMensaje({tipo: 'error', texto: 'La contraseña debe tener al menos 8 caracteres'});
+            return;
+        }
+
+        try {
+            setGuardandoDatos(true);
+            await changePassword({
+                current_password: contrasenaActual,
+                new_password: contrasenaNueva,
+                new_password_confirmation: contrasenaRepetida,
+            });
+
+            setMensaje({tipo: 'exito', texto: 'Contraseña actualizada correctamente'});
+            setContrasenaActual('');
+            setContrasenaNueva('');
+            setContrasenaRepetida('');
+        } catch (error) {
+            console.error(error);
+            setMensaje({tipo: 'error', texto: obtenerMensajeError(error)});
+        } finally {
+            setGuardandoDatos(false);
+        }
+    };
+
     return (
-        <form className="space-y-10 w-full py-10 md:py-0 md:px-[72px]">
+        <form className="space-y-10 w-full py-10 md:py-0 md:px-[72px]" onSubmit={(e) => e.preventDefault()}>
+            {mensaje && (
+                <div className={`p-4 rounded-md ${mensaje.tipo === 'exito' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                    {mensaje.texto}
+                </div>
+            )}
             <div className="space-y-5">
                 <p className="text-app-black font-poppins text-xl/7 font-semibold">
                     Datos del usuario
@@ -133,22 +237,39 @@ export default function AccountDetails({perfil}: AccountDetailsProps) {
                 <div className="space-y-3 w-full">
                     <label htmlFor="oldPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Contraseña
                         actual</label>
-                    <input placeholder="Contraseña actual" type="text" name="oldPassword" id="oldPassword"
-                           className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
+                    <input
+                        placeholder="Contraseña actual"
+                        type="password"
+                        name="oldPassword"
+                        id="oldPassword"
+                        value={contrasenaActual}
+                        onChange={(e) => setContrasenaActual(e.target.value)}
+                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="newPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nueva
                         contraseña</label>
-                    <input placeholder="Nueva contraseña" type="text" name="newpassword" id="newPassword"
-                           className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
+                    <input
+                        placeholder="Nueva contraseña"
+                        type="password"
+                        name="newpassword"
+                        id="newPassword"
+                        value={contrasenaNueva}
+                        onChange={(e) => setContrasenaNueva(e.target.value)}
+                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="repeatNewPassword"
                            className="text-app-gray font-inter text-sm/3 font-bold uppercase">Repetir nueva
                         contraseña</label>
-                    <input placeholder="Repetir nueva contraseña" type="text" name="repeatNewPassword"
-                           id="repeatNewPassword"
-                           className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
+                    <input
+                        placeholder="Repetir nueva contraseña"
+                        type="password"
+                        name="repeatNewPassword"
+                        id="repeatNewPassword"
+                        value={contrasenaRepetida}
+                        onChange={(e) => setContrasenaRepetida(e.target.value)}
+                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
                 </div>
 
             </div>
@@ -157,15 +278,26 @@ export default function AccountDetails({perfil}: AccountDetailsProps) {
                     text={activandoPush ? 'Activando...' : 'Activar notificaciones'}
                     className="max-w-fit"
                     onClick={handleActivarNotificaciones}
-                    disabled={activandoPush || desactivandoPush}
+                    disabled={activandoPush || desactivandoPush || guardandoDatos}
                 />
                 <Button
                     text={desactivandoPush ? 'Desactivando...' : 'Desactivar notificaciones'}
                     className="max-w-fit"
                     onClick={handleDesactivarNotificaciones}
-                    disabled={activandoPush || desactivandoPush}
+                    disabled={activandoPush || desactivandoPush || guardandoDatos}
                 />
-                <Button text="Guardar cambios" className="max-w-fit"/>
+                <Button
+                    text={guardandoDatos ? 'Guardando...' : 'Guardar cambios'}
+                    className="max-w-fit"
+                    onClick={handleGuardarDatos}
+                    disabled={guardandoDatos || activandoPush || desactivandoPush}
+                />
+                <Button
+                    text={guardandoDatos ? 'Actualizando...' : 'Cambiar contraseña'}
+                    className="max-w-fit"
+                    onClick={handleCambiarContrasena}
+                    disabled={guardandoDatos || activandoPush || desactivandoPush}
+                />
             </div>
         </form>
     )

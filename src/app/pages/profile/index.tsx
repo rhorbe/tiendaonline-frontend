@@ -13,6 +13,7 @@ export default function ProfilePage() {
     const [perfil, setPerfil] = useState<PerfilResponse | null>(null);
     const [loadingPerfil, setLoadingPerfil] = useState(true);
     const [perfilError, setPerfilError] = useState<string | null>(null);
+    const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
         let isMounted = true;
@@ -46,14 +47,18 @@ export default function ProfilePage() {
         return () => {
             isMounted = false;
         };
-    }, []);
+    }, [refreshKey]);
+
+    const handlePerfidUpdate = () => {
+        setRefreshKey(prev => prev + 1);
+    };
 
     const perfilVisible: PerfilResponse | null = perfil ?? (user ? {
         id: user.id,
         name: user.name,
         last_name: null,
         email: user.email,
-        phone: null,
+        telefono: null,
         cliente_id: user.cliente_id ?? "",
         direcciones: [],
         direccion_principal: null,
@@ -123,15 +128,15 @@ export default function ProfilePage() {
                 </div>
                 {
                     activeIndex == 0 &&
-                    <AccountDetails perfil={perfilVisible} />
+                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} />
                 }
                 {
                     activeIndex == 1 &&
-                    <Address perfil={perfilVisible} />
+                    <Address perfil={perfilVisible} onAddressUpdate={handlePerfidUpdate} />
                 }
                 {
                     activeIndex == 2 &&
-                    <Phone perfil={perfilVisible} />
+                    <Phone perfil={perfilVisible} onPhoneUpdate={handlePerfidUpdate} />
                 }
                 {
                     activeIndex == 3 &&

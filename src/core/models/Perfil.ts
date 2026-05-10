@@ -7,10 +7,12 @@ export interface PerfilDireccion {
   departamento: string | null;
   ciudad: string;
   provincia: string;
-  codigoPostal: string;
+  codigo_postal: string;
+  codigoPostal?: string;
   pais: string;
   observaciones: string | null;
-  esPrincipal: boolean;
+  es_principal: boolean;
+  esPrincipal?: boolean;
 }
 
 export interface PerfilResponse {
@@ -19,6 +21,7 @@ export interface PerfilResponse {
   last_name: string | null;
   email: string;
   telefono: string | null;
+  phone?: string | null;
   cliente_id: string;
   direcciones: PerfilDireccion[];
   direccion_principal: PerfilDireccion | null;
