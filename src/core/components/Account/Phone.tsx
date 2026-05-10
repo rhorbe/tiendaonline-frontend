@@ -81,14 +81,14 @@ export default function Phone({ perfil, onPhoneUpdate, onPerfilChange }: PhonePr
                 </p>
             </div>
             <div className="space-y-3 w-full max-w-md">
-                <label htmlFor="phone" className="text-app-gray font-inter text-sm/3 font-bold uppercase">
+                <label htmlFor="telefono" className="text-app-gray font-inter text-sm/3 font-bold uppercase">
                     Número de teléfono
                 </label>
                 <input
                     placeholder="Número de teléfono"
                     type="tel"
-                    name="phone"
-                    id="phone"
+                    name="telefono"
+                    id="telefono"
                     value={telefono}
                     onChange={(e) => setTelefono(e.target.value)}
                     className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
