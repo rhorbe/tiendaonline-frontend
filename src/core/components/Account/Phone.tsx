@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { isAxiosError } from 'axios';
 import type { PerfilResponse } from '@/core/models/Perfil';
 import Button from "../Button/Button";
@@ -33,6 +33,9 @@ type PhoneProps = {
 
 export default function Phone({ perfil, onPhoneUpdate, onPerfilChange }: PhoneProps) {
     const [telefono, setTelefono] = useState(perfil?.telefono ?? '');
+    useEffect(() => {
+        setTelefono(perfil?.telefono ?? '');
+    }, [perfil]);
     const [guardando, setGuardando] = useState(false);
     const [mensaje, setMensaje] = useState<{tipo: 'exito' | 'error', texto: string} | null>(null);
 

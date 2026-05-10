@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {isAxiosError} from 'axios';
 import type {PerfilResponse} from '@/core/models/Perfil';
 import Button from "../Button/Button";
@@ -57,9 +57,12 @@ type AccountDetailsProps = {
     perfil: PerfilResponse | null;
     onPerfidUpdate?: () => void;
     onPerfilChange?: (perfil: PerfilResponse) => void;
+    showDatos?: boolean;
+    showPassword?: boolean;
+    showNotificaciones?: boolean;
 };
 
-export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange}: AccountDetailsProps) {
+export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, showDatos = true, showPassword = true, showNotificaciones = true}: AccountDetailsProps) {
     const [activandoPush, setActivandoPush] = useState(false);
     const [desactivandoPush, setDesactivandoPush] = useState(false);
     const [guardandoDatos, setGuardandoDatos] = useState(false);
@@ -69,6 +72,12 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange}:
     const [contrasenaNueva, setContrasenaNueva] = useState('');
     const [contrasenaRepetida, setContrasenaRepetida] = useState('');
     const [mensaje, setMensaje] = useState<{tipo: 'exito' | 'error', texto: string} | null>(null);
+
+    // Sincronizar campos cuando cambia el perfil prop
+    useEffect(() => {
+        setNombre(perfil?.name ?? '');
+        setApellido(perfil?.last_name ?? '');
+    }, [perfil]);
 
     const handleActivarNotificaciones = async () => {
         if (activandoPush) {
@@ -194,121 +203,125 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange}:
                     {mensaje.texto}
                 </div>
             )}
-            <div className="space-y-5">
-                <p className="text-app-black font-poppins text-xl/7 font-semibold">
-                    Datos del usuario
-                </p>
+            {showDatos && (
+                <div className="space-y-5">
+                    <p className="text-app-black font-poppins text-xl/7 font-semibold">Datos del usuario</p>
 
-                <div className="space-y-3 w-full">
-                    <label htmlFor="email" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Correo
-                        Electrónico</label>
-                    <input
-                        placeholder="Correo electrónico"
-                        type="email"
-                        name="email"
-                        id="email"
-                        value={perfil?.email ?? ''}
-                        disabled
-                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
+                    <div className="space-y-3 w-full">
+                        <label htmlFor="email" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Correo Electrónico</label>
+                        <input
+                            placeholder="Correo electrónico"
+                            type="email"
+                            name="email"
+                            id="email"
+                            value={perfil?.email ?? ''}
+                            disabled
+                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
+                        />
+                    </div>
+                    <div className="space-y-3 w-full">
+                        <label htmlFor="firstname" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nombre</label>
+                        <input
+                            placeholder="Nombre"
+                            type="text"
+                            name="firstname"
+                            id="firstname"
+                            value={nombre}
+                            onChange={(e) => setNombre(e.target.value)}
+                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                        />
+                    </div>
+                    <div className="space-y-3 w-full">
+                        <label htmlFor="lastname" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Apellido</label>
+                        <input
+                            placeholder="Apellido"
+                            type="text"
+                            name="lastname"
+                            id="lastname"
+                            value={apellido}
+                            onChange={(e) => setApellido(e.target.value)}
+                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                        />
+                    </div>
+
+                    <div className="flex gap-3 items-center pt-5">
+                        <Button
+                            text={guardandoDatos ? 'Guardando...' : 'Guardar cambios'}
+                            className="max-w-fit"
+                            onClick={handleGuardarDatos}
+                            disabled={guardandoDatos || activandoPush || desactivandoPush}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {showPassword && (
+                <div className="space-y-5">
+                    <p className="text-app-black font-poppins text-xl/7 font-semibold">Contraseña</p>
+                    <div className="space-y-3 w-full">
+                        <label htmlFor="oldPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Contraseña actual</label>
+                        <input
+                            placeholder="Contraseña actual"
+                            type="password"
+                            name="oldPassword"
+                            id="oldPassword"
+                            value={contrasenaActual}
+                            onChange={(e) => setContrasenaActual(e.target.value)}
+                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                        />
+                    </div>
+                    <div className="space-y-3 w-full">
+                        <label htmlFor="newPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nueva contraseña</label>
+                        <input
+                            placeholder="Nueva contraseña"
+                            type="password"
+                            name="newpassword"
+                            id="newPassword"
+                            value={contrasenaNueva}
+                            onChange={(e) => setContrasenaNueva(e.target.value)}
+                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                        />
+                    </div>
+                    <div className="space-y-3 w-full">
+                        <label htmlFor="repeatNewPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Repetir nueva contraseña</label>
+                        <input
+                            placeholder="Repetir nueva contraseña"
+                            type="password"
+                            name="repeatNewPassword"
+                            id="repeatNewPassword"
+                            value={contrasenaRepetida}
+                            onChange={(e) => setContrasenaRepetida(e.target.value)}
+                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                        />
+                    </div>
+
+                    <div className="flex gap-3 items-center pt-5">
+                        <Button
+                            text={guardandoDatos ? 'Actualizando...' : 'Cambiar contraseña'}
+                            className="max-w-fit"
+                            onClick={handleCambiarContrasena}
+                            disabled={guardandoDatos || activandoPush || desactivandoPush}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {showNotificaciones && (
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center pt-5">
+                    <Button
+                        text={activandoPush ? 'Activando...' : 'Activar notificaciones'}
+                        className="max-w-fit"
+                        onClick={handleActivarNotificaciones}
+                        disabled={activandoPush || desactivandoPush || guardandoDatos}
+                    />
+                    <Button
+                        text={desactivandoPush ? 'Desactivando...' : 'Desactivar notificaciones'}
+                        className="max-w-fit"
+                        onClick={handleDesactivarNotificaciones}
+                        disabled={activandoPush || desactivandoPush || guardandoDatos}
                     />
                 </div>
-                <div className="space-y-3 w-full">
-                    <label htmlFor="firstname"
-                           className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nombre</label>
-                    <input
-                        placeholder="Nombre"
-                        type="text"
-                        name="firstname"
-                        id="firstname"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
-                    />
-                </div>
-                <div className="space-y-3 w-full">
-                    <label htmlFor="lastname"
-                           className="text-app-gray font-inter text-sm/3 font-bold uppercase">Apellido</label>
-                    <input
-                        placeholder="Apellido"
-                        type="text"
-                        name="lastname"
-                        id="lastname"
-                        value={apellido}
-                        onChange={(e) => setApellido(e.target.value)}
-                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
-                    />
-                </div>
-
-            </div>
-            <div className="space-y-5">
-                <p className="text-app-black font-poppins text-xl/7 font-semibold">
-                    Contraseña
-                </p>
-                <div className="space-y-3 w-full">
-                    <label htmlFor="oldPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Contraseña
-                        actual</label>
-                    <input
-                        placeholder="Contraseña actual"
-                        type="password"
-                        name="oldPassword"
-                        id="oldPassword"
-                        value={contrasenaActual}
-                        onChange={(e) => setContrasenaActual(e.target.value)}
-                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
-                </div>
-                <div className="space-y-3 w-full">
-                    <label htmlFor="newPassword" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nueva
-                        contraseña</label>
-                    <input
-                        placeholder="Nueva contraseña"
-                        type="password"
-                        name="newpassword"
-                        id="newPassword"
-                        value={contrasenaNueva}
-                        onChange={(e) => setContrasenaNueva(e.target.value)}
-                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
-                </div>
-                <div className="space-y-3 w-full">
-                    <label htmlFor="repeatNewPassword"
-                           className="text-app-gray font-inter text-sm/3 font-bold uppercase">Repetir nueva
-                        contraseña</label>
-                    <input
-                        placeholder="Repetir nueva contraseña"
-                        type="password"
-                        name="repeatNewPassword"
-                        id="repeatNewPassword"
-                        value={contrasenaRepetida}
-                        onChange={(e) => setContrasenaRepetida(e.target.value)}
-                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
-                </div>
-
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-                <Button
-                    text={activandoPush ? 'Activando...' : 'Activar notificaciones'}
-                    className="max-w-fit"
-                    onClick={handleActivarNotificaciones}
-                    disabled={activandoPush || desactivandoPush || guardandoDatos}
-                />
-                <Button
-                    text={desactivandoPush ? 'Desactivando...' : 'Desactivar notificaciones'}
-                    className="max-w-fit"
-                    onClick={handleDesactivarNotificaciones}
-                    disabled={activandoPush || desactivandoPush || guardandoDatos}
-                />
-                <Button
-                    text={guardandoDatos ? 'Guardando...' : 'Guardar cambios'}
-                    className="max-w-fit"
-                    onClick={handleGuardarDatos}
-                    disabled={guardandoDatos || activandoPush || desactivandoPush}
-                />
-                <Button
-                    text={guardandoDatos ? 'Actualizando...' : 'Cambiar contraseña'}
-                    className="max-w-fit"
-                    onClick={handleCambiarContrasena}
-                    disabled={guardandoDatos || activandoPush || desactivandoPush}
-                />
-            </div>
+            )}
         </form>
     )
 }

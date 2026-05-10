@@ -75,7 +75,14 @@ export default function ProfilePage() {
     } : null);
 
     const nombreVisible = [perfilVisible?.name, perfilVisible?.last_name].filter(Boolean).join(" ").trim() || "Mi Cuenta";
-    const menuItems = ["Cuenta", "Direcciones", "Teléfono", "Pedidos"];
+    const menuItems = [
+        "Datos del usuario",
+        "Contraseña",
+        "Notificaciones",
+        "Direcciones",
+        "Teléfono",
+        "Pedidos",
+    ];
 
     return (
         <section className="px-8 lg:px-14 pb-20">
@@ -138,7 +145,15 @@ export default function ProfilePage() {
                 </div>
                 {
                     activeIndex == 0 &&
-                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} />
+                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} showDatos showPassword={false} showNotificaciones={false} />
+                }
+                {
+                    activeIndex == 1 &&
+                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} showDatos={false} showPassword showNotificaciones={false} />
+                }
+                {
+                    activeIndex == 2 &&
+                    <AccountDetails perfil={perfilVisible} onPerfidUpdate={handlePerfidUpdate} onPerfilChange={handlePerfilChange} showDatos={false} showPassword={false} showNotificaciones />
                 }
                 {
                     activeIndex == 1 &&
