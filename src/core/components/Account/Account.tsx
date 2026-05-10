@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { isAxiosError } from 'axios';
+import type { PerfilResponse } from '@/core/models/Perfil';
 import Button from "../Button/Button";
 
 const obtenerMensajeErrorPush = (error: unknown): string => {
@@ -31,7 +32,11 @@ const obtenerMensajeErrorPush = (error: unknown): string => {
     return 'No se pudo activar la notificación.';
 };
 
-export default function AccountDetails() {
+type AccountDetailsProps = {
+    perfil: PerfilResponse | null;
+};
+
+export default function AccountDetails({ perfil }: AccountDetailsProps) {
     const [activandoPush, setActivandoPush] = useState(false);
     const [desactivandoPush, setDesactivandoPush] = useState(false);
 
@@ -80,27 +85,39 @@ export default function AccountDetails() {
                 <div className="space-y-3 w-full">
                     <label htmlFor="firstname"
                            className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nombre</label>
-                    <input placeholder="Nombre" type="text" name="firstname" id="firstname"
-                           className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
+                    <input
+                        placeholder="Nombre"
+                        type="text"
+                        name="firstname"
+                        id="firstname"
+                        value={perfil?.name ?? ''}
+                        readOnly
+                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                    />
                 </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="lastname" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Apellido</label>
-                    <input placeholder="Apellido" type="text" name="lastname" id="firstname"
-                           className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
-                </div>
-                <div className="space-y-3 w-full">
-                    <label htmlFor="displayName" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nombre
-                        para mostrar</label>
-                    <input placeholder="Nombre para mostrar" type="text" name="Display Name" id="Display Name"
-                           className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
-                    <p className="text-app-gray font-inter text-xs/5 italic">
-                        Este será el nombre que se mostrará en la sección de cuenta y en las reseñas.
-                    </p>
+                    <input
+                        placeholder="Apellido"
+                        type="text"
+                        name="lastname"
+                        id="lastname"
+                        value={perfil?.last_name ?? ''}
+                        readOnly
+                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                    />
                 </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="email" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Correo Electrónico</label>
-                    <input placeholder="Correo electrónico" type="email" name="email" id="email"
-                           className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
+                    <input
+                        placeholder="Correo electrónico"
+                        type="email"
+                        name="email"
+                        id="email"
+                        value={perfil?.email ?? ''}
+                        readOnly
+                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                    />
                 </div>
             </div>
             <div className="space-y-5">
@@ -125,8 +142,15 @@ export default function AccountDetails() {
                 </div>
                 <div className="space-y-3 w-full">
                     <label htmlFor="email" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Correo electrónico</label>
-                    <input placeholder="Correo electrónico" type="email" name="email" id="email"
-                           className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"/>
+                    <input
+                        placeholder="Correo electrónico"
+                        type="email"
+                        name="passwordEmail"
+                        id="passwordEmail"
+                        value={perfil?.email ?? ''}
+                        readOnly
+                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                    />
                 </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
