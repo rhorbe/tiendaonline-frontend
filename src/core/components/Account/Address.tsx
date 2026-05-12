@@ -55,14 +55,14 @@ export default function Address({ perfil, onAddressUpdate }: AddressProps) {
             )}
             <div className="space-y-5">
                 <p className="text-app-black font-poppins text-xl/7 font-semibold">
-                    Direcciones guardadas
+                    Direcciones
                 </p>
                 <button
                     type="button"
                     onClick={() => openModal()}
                     className="px-4 py-2 bg-app-black text-white rounded-md font-inter text-sm font-semibold hover:bg-opacity-90"
                 >
-                    + Agregar nueva dirección
+                    Agregar nueva dirección
                 </button>
             </div>
             <div className="grid md:grid-cols-2 mt-5 gap-6">
