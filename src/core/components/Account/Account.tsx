@@ -110,9 +110,9 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
         return () => { mounted = false };
     }, []);
 
-    const handleActivarNotificaciones = async () => {
+    const handleActivarNotificaciones = async (): Promise<boolean> => {
         if (activandoPush) {
-            return;
+            return false;
         }
 
         try {
@@ -124,17 +124,19 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
                 setIsSubscribed(true);
             }
             setMensaje({tipo: 'exito', texto: 'Notificaciones activadas'});
+            return true;
         } catch (error) {
             console.error(error);
             setMensaje({tipo: 'error', texto: obtenerMensajeErrorPush(error)});
+            return false;
         } finally {
             setActivandoPush(false);
         }
     };
 
-    const handleDesactivarNotificaciones = async () => {
+    const handleDesactivarNotificaciones = async (): Promise<boolean> => {
         if (desactivandoPush) {
-            return;
+            return false;
         }
 
         try {
@@ -148,11 +150,31 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
                 setIsSubscribed(false);
                 setMensaje({tipo: 'exito', texto: 'No había una suscripción push activa.'});
             }
+            return true;
         } catch (error) {
             console.error(error);
             setMensaje({tipo: 'error', texto: obtenerMensajeErrorPush(error)});
+            return false;
         } finally {
             setDesactivandoPush(false);
+        }
+    };
+
+    const handleToggleNotificaciones = async (enabled: boolean) => {
+        if (checkingSubscription || activandoPush || desactivandoPush) {
+            return;
+        }
+
+        const estadoAnterior = isSubscribed;
+
+        setIsSubscribed(enabled);
+
+        const success = enabled
+            ? await handleActivarNotificaciones()
+            : await handleDesactivarNotificaciones();
+
+        if (!success) {
+            setIsSubscribed(estadoAnterior);
         }
     };
 
@@ -354,36 +376,29 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
                 <div className="space-y-5">
                     <p className="text-app-black font-poppins text-xl/7 font-semibold">Notificaciones</p>
 
-                    <div className="flex items-center gap-4">
-                        <div className="text-app-gray font-inter text-sm">Recibir notificaciones del sitio</div>
-
-                        {/* Estado y toggle */}
+                    <div className="flex items-center justify-between gap-4 rounded-lg border border-muted-gray px-4 py-3">
                         <div>
-                            {checkingSubscription ? (
-                                <div className="text-app-gray">Comprobando estado...</div>
-                            ) : (
-                                <button
-                                    type="button"
-                                    onClick={async () => {
-                                        if (isSubscribed) {
-                                            await handleDesactivarNotificaciones();
-                                            setIsSubscribed(false);
-                                        } else {
-                                            try {
-                                                await handleActivarNotificaciones();
-                                                setIsSubscribed(true);
-                                            } catch {
-                                                // handleActivarNotificaciones ya pone mensaje
-                                            }
-                                        }
-                                    }}
-                                    className={`inline-flex items-center px-4 py-2 rounded-full font-inter font-semibold transition-colors ${isSubscribed ? 'bg-green-600 text-white' : 'bg-app-gray text-black'}`}
-                                    disabled={activandoPush || desactivandoPush || guardandoDatos}
-                                >
-                                    {activandoPush || desactivandoPush ? 'Procesando...' : (isSubscribed ? 'Desactivar notificaciones' : 'Activar notificaciones')}
-                                </button>
-                            )}
+                            <div className="text-app-black font-inter text-sm font-semibold">Recibir notificaciones del sitio</div>
+                            <div className="text-app-gray font-inter text-xs mt-1">
+                                {checkingSubscription
+                                    ? 'Comprobando estado...'
+                                    : isSubscribed
+                                        ? 'Las notificaciones están activadas.'
+                                        : 'Las notificaciones están desactivadas.'}
+                            </div>
                         </div>
+
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={Boolean(isSubscribed)}
+                                onChange={(e) => void handleToggleNotificaciones(e.target.checked)}
+                                disabled={checkingSubscription || activandoPush || desactivandoPush || guardandoDatos}
+                            />
+                            <span className="w-12 h-7 bg-app-gray rounded-full peer peer-focus:ring-2 peer-focus:ring-app-black/30 peer-checked:bg-green-600 transition-colors"></span>
+                            <span className="absolute left-1 top-1 h-5 w-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5"></span>
+                        </label>
                     </div>
                 </div>
             )}
