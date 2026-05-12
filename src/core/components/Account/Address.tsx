@@ -2,25 +2,11 @@ import { useState } from "react";
 import AddressForm from "../AddressForm";
 import { deleteDireccion } from "@/core/api/perfilApi";
 import { PerfilDireccion, PerfilResponse } from "@/core/models/Perfil";
+import { formatearDireccion } from "@/core/utils/formatDireccion";
 
 type AddressProps = {
     perfil: PerfilResponse | null;
     onAddressUpdate?: () => void;
-};
-
-const formatDireccion = (direccion: PerfilDireccion): string => {
-    const parts = [
-        direccion.calle,
-        direccion.numero,
-        direccion.piso ? `Piso ${direccion.piso}` : null,
-        direccion.departamento ? `Dpto. ${direccion.departamento}` : null,
-        direccion.ciudad,
-        direccion.provincia,
-        direccion.codigo_postal || direccion.codigoPostal,
-        direccion.pais,
-    ].filter((part): part is string => Boolean(part));
-
-    return parts.join(", ");
 };
 
 export default function Address({ perfil, onAddressUpdate }: AddressProps) {
@@ -119,7 +105,7 @@ export default function Address({ perfil, onAddressUpdate }: AddressProps) {
                                 </div>
                             </div>
                             <div className="text-app font-inter text-sm/[22px] space-y-1">
-                                <p>{formatDireccion(direccion)}</p>
+                                <p>{formatearDireccion(direccion)}</p>
                                 {direccion.observaciones && <p>{direccion.observaciones}</p>}
                             </div>
                         </div>
