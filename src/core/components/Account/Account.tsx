@@ -284,6 +284,9 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
                             disabled
                             className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
                         />
+                        <div className="text-app-gray font-inter text-xs mt-1">
+                            La dirección de correo no puede ser modificada.
+                        </div>
                     </div>
                     <div className="space-y-3 w-full">
                         <label htmlFor="firstname" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nombre</label>
