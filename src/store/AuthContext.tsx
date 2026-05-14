@@ -2,6 +2,8 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { User } from "@/core/models/User";
 import { AuthContext } from "./auth-context";
+import { setUnauthorizedHandler } from "@/core/api/interceptors";
+import { isTokenExpired } from "@/core/utils/jwt";
 
 type StoredUser = Partial<User> & { _id?: string };
 
@@ -31,26 +33,38 @@ const normalizeStoredUser = (value: unknown): User | null => {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  const clearSession = useCallback(() => {
+    setUser(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  }, []);
+
   useEffect(() => {
     const stored = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
 
-    if (!stored) return;
+    if (!stored || !token) {
+      if (stored || token) {
+        clearSession();
+      }
+      return;
+    }
 
     try {
       const parsed = JSON.parse(stored);
       const normalizedUser = normalizeStoredUser(parsed);
 
-      if (!normalizedUser) {
-        localStorage.removeItem("user");
+      if (!normalizedUser || isTokenExpired(token, 30)) {
+        clearSession();
         return;
       }
 
       setUser(normalizedUser);
       localStorage.setItem("user", JSON.stringify(normalizedUser));
     } catch {
-      localStorage.removeItem("user");
+      clearSession();
     }
-  }, []);
+  }, [clearSession]);
 
   const login = useCallback((userData: User) => {
     setUser(userData);
@@ -82,10 +96,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.warn("No se pudo desuscribir push al cerrar sesión", error);
     }
 
-    setUser(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-  }, []);
+    clearSession();
+  }, [clearSession]);
+
+  useEffect(() => {
+    setUnauthorizedHandler(clearSession);
+
+    return () => {
+      setUnauthorizedHandler(null);
+    };
+  }, [clearSession]);
 
   const authContextValue = useMemo(
     () => ({ user, login, updateUser, logout }),
