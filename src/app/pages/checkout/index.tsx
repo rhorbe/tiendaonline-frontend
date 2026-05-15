@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useProductContext } from "@/store/useProductContext";
 import { formatCurrency } from "@/core/utils/formatCurrency";
 import { fetchPerfil } from "@/core/api/perfilApi";
+import shippingApi, { type CotizarEnvioResponse } from "@/core/api/shippingApi";
+import { MetodoEnvio } from "@/core/enum/MetodoEnvio";
 import type { PerfilDireccion, PerfilResponse } from "@/core/models/Perfil";
 import AddressForm from "@/core/components/AddressForm";
 import { formatearDireccion } from "@/core/utils/formatDireccion";
@@ -11,14 +13,24 @@ import { formatearDireccion } from "@/core/utils/formatDireccion";
 const esDireccionPrincipal = (direccion: PerfilDireccion): boolean =>
     direccion.esPrincipal ?? direccion.es_principal ?? false;
 
+const metodosEnvio = [
+    { value: MetodoEnvio.RETIRO_LOCAL, label: "Retiro en local" },
+    { value: MetodoEnvio.ENVIO_ESTANDAR, label: "Envío estándar" },
+    { value: MetodoEnvio.ENVIO_EXPRESS, label: "Envío express" },
+] as const;
+
 
 export default function CheckOutPage() {
     const [selectedOption, setSelectedOption] = useState('');
+    const [selectedShippingMethod, setSelectedShippingMethod] = useState<MetodoEnvio>(MetodoEnvio.RETIRO_LOCAL);
     const [perfil, setPerfil] = useState<PerfilResponse | null>(null);
     const [perfilLoading, setPerfilLoading] = useState(true);
     const [perfilError, setPerfilError] = useState<string | null>(null);
     const [selectedDireccionId, setSelectedDireccionId] = useState<string>("");
     const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
+    const [shippingQuote, setShippingQuote] = useState<CotizarEnvioResponse | null>(null);
+    const [shippingQuoteLoading, setShippingQuoteLoading] = useState(false);
+    const [shippingQuoteError, setShippingQuoteError] = useState<string | null>(null);
     const { state } = useProductContext();
     const { cartItems } = state;
     const subtotal = cartItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
@@ -59,7 +71,51 @@ export default function CheckOutPage() {
         setSelectedDireccionId(principal.id);
     }, [direccionesOrdenadas, selectedDireccionId]);
 
+    useEffect(() => {
+        if (cartItems.length === 0) {
+            setShippingQuote(null);
+            setShippingQuoteLoading(false);
+            setShippingQuoteError(null);
+            return;
+        }
+
+        let cancelled = false;
+
+        const calcularCotizacion = async () => {
+            try {
+                setShippingQuoteLoading(true);
+                setShippingQuoteError(null);
+
+                const response = await shippingApi.cotizarEnvio({
+                    metodo_envio: selectedShippingMethod,
+                    direccion_id: selectedDireccionId || undefined,
+                });
+
+                if (!cancelled) {
+                    setShippingQuote(response);
+                }
+            } catch (error) {
+                if (!cancelled) {
+                    setShippingQuote(null);
+                    setShippingQuoteError(error instanceof Error ? error.message : "No se pudo cotizar el envío.");
+                }
+            } finally {
+                if (!cancelled) {
+                    setShippingQuoteLoading(false);
+                }
+            }
+        };
+
+        void calcularCotizacion();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [cartItems, selectedDireccionId, selectedShippingMethod]);
+
     const direccionSeleccionada = direccionesOrdenadas.find((direccion) => direccion.id === selectedDireccionId) ?? null;
+    const costoEnvio = shippingQuote?.costo_envio ?? 0;
+    const totalCompra = shippingQuote?.total ?? subtotal + costoEnvio;
 
     return (
         <section className="px-8 lg:px-14 py-20">
@@ -256,7 +312,70 @@ export default function CheckOutPage() {
                             </p>
                         </div>
 
-                        <p className="text-app-black font-inter text-base/[26px] font-normal py-3">Forma de envío</p>
+                        <div className="space-y-3 py-3">
+                            <label htmlFor="shippingMethod" className="text-app-black font-inter text-base/[26px] font-normal block">
+                                Forma de envío
+                            </label>
+                            <select
+                                id="shippingMethod"
+                                value={selectedShippingMethod}
+                                onChange={(e) => setSelectedShippingMethod(e.target.value as MetodoEnvio)}
+                                className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                            >
+                                {metodosEnvio.map((metodo) => (
+                                    <option key={metodo.value} value={metodo.value}>
+                                        {metodo.label}
+                                    </option>
+                                ))}
+                            </select>
+                            {selectedShippingMethod !== MetodoEnvio.RETIRO_LOCAL && !direccionSeleccionada && (
+                                <p className="text-app-gray font-inter text-xs/[18px]">
+                                    Seleccioná una dirección para envíos a domicilio.
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="flex justify-between items-center border-b border-app-light-gray py-3">
+                            <p className="text-app-black font-inter text-base/[26px] font-normal ">
+                                Costo de envío
+                            </p>
+                            <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
+                                {shippingQuoteLoading
+                                    ? "Cotizando..."
+                                    : shippingQuoteError
+                                        ? "Sin cotización"
+                                        : formatCurrency(costoEnvio)}
+                            </p>
+                        </div>
+
+                        {shippingQuoteError && (
+                            <p className="text-red-500 font-inter text-sm/[22px]">
+                                {shippingQuoteError}
+                            </p>
+                        )}
+
+                        {shippingQuote && (
+                            <div className="rounded-md border border-app-light-gray p-4 space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <p className="text-app-gray font-inter text-sm/[22px]">Subtotal</p>
+                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
+                                        {formatCurrency(shippingQuote.subtotal)}
+                                    </p>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <p className="text-app-gray font-inter text-sm/[22px]">Envío</p>
+                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
+                                        {formatCurrency(shippingQuote.costo_envio)}
+                                    </p>
+                                </div>
+                                <div className="flex justify-between items-center border-t border-app-light-gray pt-2">
+                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">Total cotizado</p>
+                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
+                                        {formatCurrency(shippingQuote.total)}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="border-b border-app-light-gray py-3" />
 
@@ -265,12 +384,16 @@ export default function CheckOutPage() {
                                 Total
                             </p>
                             <p className="text-app-black text-right font-inter text-xl/8 font-semibold">
-                                {formatCurrency(subtotal)}
+                                {shippingQuoteLoading ? "Cotizando..." : formatCurrency(totalCompra)}
                             </p>
                         </div>
 
                         <div className="pt-2">
-                            <Button text="Realizar pedido" type="submit" disabled={cartItems.length === 0} />
+                            <Button
+                                text="Realizar pedido"
+                                type="submit"
+                                disabled={cartItems.length === 0 || shippingQuoteLoading || Boolean(shippingQuoteError)}
+                            />
                         </div>
                     </div>
                 </div>

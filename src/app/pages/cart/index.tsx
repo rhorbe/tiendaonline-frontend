@@ -405,26 +405,6 @@ export default function CartPage() {
                         <p className="text-right font-inter text-base/[26px]">+$10.000</p>
                     </div>
 
-                    <div
-                        className={`py-3 px-4 flex justify-between items-center rounded-[4px] border border-app-black ${
-                            selectedOption === "express-shipping" ? "bg-primary" : "bg-white"
-                        }`}
-                        onClick={() => setSelectedOption("express-shipping")}
-                    >
-                        <div className="flex gap-3 items-center">
-                            <input
-                                type="radio"
-                                name="shipping"
-                                id="express-shipping"
-                                checked={selectedOption === "express-shipping"}
-                                className="appearance-none w-5 h-5 border border-app-black rounded-full checked:bg-app-black checked:border-app-black text-app-black"
-                            />
-                            <p className="text-app-black font-inter text-base/[26px]">
-                                Envío express (menos de 24hs)
-                            </p>
-                        </div>
-                        <p className="text-right font-inter text-base/[26px]">+$25.000</p>
-                    </div>
 
                     <div className="border-b border-app-light-gray py-3"/>
 
