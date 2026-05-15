@@ -103,7 +103,7 @@ export default function CheckOutPage() {
             <div className="pt-20 grid md:grid-cols-[3fr_2fr] gap-16 items-start">
                 <div className="space-y-6">
                     {showShippingAddressBlock && (
-                        <div className="rounded-md border border-app-black py-10 px-6 space-y-5">
+                        <div className="rounded-md border border-app-gray bg-white py-10 px-6 space-y-5">
                             <p className="text-app-black font-poppins text-xl/7 font-medium">
                                 Dirección de envío
                             </p>
@@ -128,7 +128,7 @@ export default function CheckOutPage() {
                                                 <button
                                                     key={direccion.id}
                                                     type="button"
-                                                    className={`w-full py-3 px-4 flex justify-between items-center rounded-[4px] border border-app-black text-left transition-colors cursor-pointer ${
+                                                    className={`w-full py-3 px-4 flex justify-between items-center rounded-md border border-app-gray text-left transition-colors cursor-pointer ${
                                                         isSelected ? "bg-primary" : "bg-white"
                                                     }`}
                                                     onClick={() => setSelectedDireccionId(direccion.id)}
@@ -163,12 +163,7 @@ export default function CheckOutPage() {
                                                             )}
                                                         </div>
                                                     </div>
-                                                    <img
-                                                        src="/images/right-icon.svg"
-                                                        alt=""
-                                                        aria-hidden="true"
-                                                        className="h-6 w-6 object-contain shrink-0"
-                                                    />
+
                                                 </button>
                                             );
                                         })}
@@ -176,7 +171,7 @@ export default function CheckOutPage() {
                                 </div>
                             )}
                             {!perfilLoading && !perfilError && direccionesOrdenadas.length === 0 && (
-                                <div className="rounded-md border border-dashed border-app-gray p-4">
+                                <div className="rounded-md border border-dashed border-app-gray bg-white p-4">
                                     <p className="text-app-gray font-inter text-sm/[22px]">
                                         No tenés direcciones cargadas. Agregá una dirección para continuar con la compra.
                                     </p>
@@ -193,7 +188,7 @@ export default function CheckOutPage() {
                             )}
                         </div>
                     )}
-                    <div className="rounded-md border border-app-black py-10 px-6 space-y-5">
+                    <div className="p-6 rounded-md border border-app-gray bg-white space-y-5 mb-4">
                         <p className="text-app-black font-poppins text-xl/7 font-medium">
                             Método de pago
                         </p>

@@ -284,7 +284,7 @@ export default function CartPage() {
                 <Process activeStep={1}/>
             </div>
             <div className="grid md:grid-cols-[3fr_2fr] gap-16 py-20 items-start">
-                <div className="p-6 rounded-md border border-app-black bg-white space-y-3 mb-4">
+                <div className="p-6 rounded-md border border-app-gray bg-white space-y-3 mb-4">
                     <p className="text-app-black font-poppins text-xl/7 font-medium mb-4">Productos seleccionados</p>
                     <div className="overflow-x-auto hidden md:block">
                         <table className="min-w-full border-collapse border-b">
