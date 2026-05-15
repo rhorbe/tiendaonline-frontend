@@ -1,4 +1,4 @@
-import Button from "@/core/components/Button/Button";
+﻿import Button from "@/core/components/Button/Button";
 import Process from "@/core/components/Process";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useProductContext } from "@/store/useProductContext";
@@ -9,20 +9,10 @@ import { MetodoEnvio } from "@/core/enum/MetodoEnvio";
 import type { PerfilDireccion, PerfilResponse } from "@/core/models/Perfil";
 import AddressForm from "@/core/components/AddressForm";
 import { formatearDireccion } from "@/core/utils/formatDireccion";
-
 const esDireccionPrincipal = (direccion: PerfilDireccion): boolean =>
     direccion.esPrincipal ?? direccion.es_principal ?? false;
-
-const metodosEnvio = [
-    { value: MetodoEnvio.RETIRO_LOCAL, label: "Retiro en local" },
-    { value: MetodoEnvio.ENVIO_ESTANDAR, label: "Envío estándar" },
-    { value: MetodoEnvio.ENVIO_EXPRESS, label: "Envío express" },
-] as const;
-
-
 export default function CheckOutPage() {
-    const [selectedOption, setSelectedOption] = useState('');
-    const [selectedShippingMethod, setSelectedShippingMethod] = useState<MetodoEnvio>(MetodoEnvio.RETIRO_LOCAL);
+    const [selectedOption, setSelectedOption] = useState("");
     const [perfil, setPerfil] = useState<PerfilResponse | null>(null);
     const [perfilLoading, setPerfilLoading] = useState(true);
     const [perfilError, setPerfilError] = useState<string | null>(null);
@@ -32,9 +22,8 @@ export default function CheckOutPage() {
     const [shippingQuoteLoading, setShippingQuoteLoading] = useState(false);
     const [shippingQuoteError, setShippingQuoteError] = useState<string | null>(null);
     const { state } = useProductContext();
-    const { cartItems } = state;
+    const { cartItems, selectedShippingMethod } = state;
     const subtotal = cartItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
-
     const cargarPerfil = useCallback(async () => {
         try {
             setPerfilLoading(true);
@@ -47,50 +36,40 @@ export default function CheckOutPage() {
             setPerfilLoading(false);
         }
     }, []);
-
     useEffect(() => {
         void cargarPerfil();
     }, [cargarPerfil]);
-
     const direccionesOrdenadas = useMemo(() => {
         return [...(perfil?.direcciones ?? [])].sort((a, b) => Number(esDireccionPrincipal(b)) - Number(esDireccionPrincipal(a)));
     }, [perfil]);
-
     useEffect(() => {
         if (!direccionesOrdenadas.length) {
             setSelectedDireccionId("");
             return;
         }
-
         const existeSeleccionada = direccionesOrdenadas.some((direccion) => direccion.id === selectedDireccionId);
         if (existeSeleccionada) {
             return;
         }
-
         const principal = direccionesOrdenadas.find(esDireccionPrincipal) ?? direccionesOrdenadas[0];
         setSelectedDireccionId(principal.id);
     }, [direccionesOrdenadas, selectedDireccionId]);
-
     useEffect(() => {
-        if (cartItems.length === 0) {
+        if (cartItems.length === 0 || selectedShippingMethod === MetodoEnvio.RETIRO_LOCAL) {
             setShippingQuote(null);
             setShippingQuoteLoading(false);
             setShippingQuoteError(null);
             return;
         }
-
         let cancelled = false;
-
         const calcularCotizacion = async () => {
             try {
                 setShippingQuoteLoading(true);
                 setShippingQuoteError(null);
-
                 const response = await shippingApi.cotizarEnvio({
                     metodo_envio: selectedShippingMethod,
                     direccion_id: selectedDireccionId || undefined,
                 });
-
                 if (!cancelled) {
                     setShippingQuote(response);
                 }
@@ -105,18 +84,14 @@ export default function CheckOutPage() {
                 }
             }
         };
-
         void calcularCotizacion();
-
         return () => {
             cancelled = true;
         };
     }, [cartItems, selectedDireccionId, selectedShippingMethod]);
-
-    const direccionSeleccionada = direccionesOrdenadas.find((direccion) => direccion.id === selectedDireccionId) ?? null;
+    const showShippingAddressBlock = selectedShippingMethod !== MetodoEnvio.RETIRO_LOCAL;
     const costoEnvio = shippingQuote?.costo_envio ?? 0;
     const totalCompra = shippingQuote?.total ?? subtotal + costoEnvio;
-
     return (
         <section className="px-8 lg:px-14 py-20">
             <div className="">
@@ -127,82 +102,115 @@ export default function CheckOutPage() {
             </div>
             <div className="pt-20 grid md:grid-cols-[3fr_2fr] gap-16 items-start">
                 <div className="space-y-6">
-                    <div className="rounded-md border border-app-black py-10 px-6 space-y-5">
-                        <p className="text-app-black font-poppins text-xl/7 font-medium">
-                            Dirección de envío
-                        </p>
-                        {perfilLoading && (
-                            <p className="text-app-gray font-inter text-sm/[22px]">Cargando direcciones...</p>
-                        )}
-
-                        {!perfilLoading && perfilError && (
-                            <p className="text-red-500 font-inter text-sm/[22px]">{perfilError}</p>
-                        )}
-
-                        {!perfilLoading && !perfilError && direccionesOrdenadas.length > 0 && (
-                            <>
+                    {showShippingAddressBlock && (
+                        <div className="rounded-md border border-app-black py-10 px-6 space-y-5">
+                            <p className="text-app-black font-poppins text-xl/7 font-medium">
+                                Dirección de envío
+                            </p>
+                            {perfilLoading && (
+                                <p className="text-app-gray font-inter text-sm/[22px]">Cargando direcciones...</p>
+                            )}
+                            {!perfilLoading && perfilError && (
+                                <p className="text-red-500 font-inter text-sm/[22px]">{perfilError}</p>
+                            )}
+                            {!perfilLoading && !perfilError && direccionesOrdenadas.length > 0 && (
                                 <div className="space-y-3 w-full">
-                                    <label htmlFor="direccionEnvio" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Seleccionar una dirección</label>
-                                    <select
-                                        id="direccionEnvio"
-                                        value={selectedDireccionId}
-                                        onChange={(e) => setSelectedDireccionId(e.target.value)}
-                                        className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
-                                    >
-                                        {direccionesOrdenadas.map((direccion) => (
-                                            <option key={direccion.id} value={direccion.id}>
-                                                {(direccion.etiqueta || "Dirección") + (esDireccionPrincipal(direccion) ? " (Principal)" : "")}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                    <p className="text-app-gray font-inter text-sm/3 font-bold uppercase">
+                                        Seleccionar una dirección
+                                    </p>
 
-                                {direccionSeleccionada && (
-                                    <div className="rounded-md border border-app-gray p-4 space-y-1">
-                                        <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                                            {direccionSeleccionada.etiqueta || "Dirección seleccionada"}
-                                        </p>
-                                        <p className="text-app-gray font-inter text-sm/[22px]">
-                                            {formatearDireccion(direccionSeleccionada)}
-                                        </p>
-                                        {direccionSeleccionada.observaciones && (
-                                            <p className="text-app-gray font-inter text-xs/[18px]">{direccionSeleccionada.observaciones}</p>
-                                        )}
+                                    <div className="space-y-3">
+                                        {direccionesOrdenadas.map((direccion) => {
+                                            const isSelected = selectedDireccionId === direccion.id;
+                                            const isPrincipal = esDireccionPrincipal(direccion);
+
+                                            return (
+                                                <button
+                                                    key={direccion.id}
+                                                    type="button"
+                                                    className={`w-full py-3 px-4 flex justify-between items-center rounded-[4px] border border-app-black text-left transition-colors cursor-pointer ${
+                                                        isSelected ? "bg-primary" : "bg-white"
+                                                    }`}
+                                                    onClick={() => setSelectedDireccionId(direccion.id)}
+                                                >
+                                                    <div className="flex gap-3 items-start min-w-0">
+                                                        <input
+                                                            type="radio"
+                                                            name="direccionEnvio"
+                                                            id={direccion.id}
+                                                            checked={isSelected}
+                                                            readOnly
+                                                            className="appearance-none w-5 h-5 border border-app-black rounded-full checked:bg-app-black checked:border-app-black text-app-black mt-1 shrink-0"
+                                                        />
+                                                        <div className="min-w-0">
+                                                            <div className="flex items-center gap-2 flex-wrap">
+                                                                <p className="text-app-black font-inter text-base/[26px] font-medium">
+                                                                    {direccion.etiqueta || "Dirección"}
+                                                                </p>
+                                                                {isPrincipal && (
+                                                                    <span className="px-2 py-0.5 rounded-full bg-app-black text-white text-[10px] leading-4 font-semibold uppercase tracking-wide">
+                                                                        Principal
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <p className="text-app-gray font-inter text-xs/[18px]">
+                                                                {formatearDireccion(direccion)}
+                                                            </p>
+                                                            {direccion.observaciones && (
+                                                                <p className="text-app-gray font-inter text-xs/[18px] mt-1">
+                                                                    {direccion.observaciones}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <img
+                                                        src="/images/right-icon.svg"
+                                                        alt=""
+                                                        aria-hidden="true"
+                                                        className="h-6 w-6 object-contain shrink-0"
+                                                    />
+                                                </button>
+                                            );
+                                        })}
                                     </div>
-                                )}
-                            </>
-                        )}
-
-                        {!perfilLoading && !perfilError && direccionesOrdenadas.length === 0 && (
-                            <div className="rounded-md border border-dashed border-app-gray p-4">
-                                <p className="text-app-gray font-inter text-sm/[22px]">
-                                    No tenés direcciones cargadas. Agregá una dirección para continuar con la compra.
-                                </p>
-                            </div>
-                        )}
-
-                        {!perfilLoading && !perfilError && (
-                            <button
-                                type="button"
-                                onClick={() => setIsAddressFormOpen(true)}
-                                className="px-4 py-2 bg-app-black text-white rounded-md font-inter text-sm font-semibold hover:bg-opacity-90"
-                            >
-                                {direccionesOrdenadas.length === 0 ? "Agregar dirección" : "Agregar otra dirección"}
-                            </button>
-                        )}
-
-                    </div>
+                                </div>
+                            )}
+                            {!perfilLoading && !perfilError && direccionesOrdenadas.length === 0 && (
+                                <div className="rounded-md border border-dashed border-app-gray p-4">
+                                    <p className="text-app-gray font-inter text-sm/[22px]">
+                                        No tenés direcciones cargadas. Agregá una dirección para continuar con la compra.
+                                    </p>
+                                </div>
+                            )}
+                            {!perfilLoading && !perfilError && (
+                                <button
+                                    type="button"
+                                    onClick={() => setIsAddressFormOpen(true)}
+                                    className="px-4 py-2 bg-app-black text-white rounded-md font-inter text-sm font-semibold hover:bg-opacity-90"
+                                >
+                                    {direccionesOrdenadas.length === 0 ? "Agregar dirección" : "Agregar otra dirección"}
+                                </button>
+                            )}
+                        </div>
+                    )}
                     <div className="rounded-md border border-app-black py-10 px-6 space-y-5">
                         <p className="text-app-black font-poppins text-xl/7 font-medium">
                             Método de pago
                         </p>
                         <div className="space-y-3 w-full">
-                            <label htmlFor="streetAddress" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Dirección *</label>
-                            <input placeholder="Dirección" type="text" name="streetAddress" id="streetAddress" className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md" />
+                            <label htmlFor="streetAddress" className="text-app-gray font-inter text-sm/3 font-bold uppercase">
+                                Dirección *
+                            </label>
+                            <input
+                                placeholder="Dirección"
+                                type="text"
+                                name="streetAddress"
+                                id="streetAddress"
+                                className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                            />
                         </div>
                         <div
-                            className={`py-3 px-4 flex justify-between items-center rounded-[4px] border border-app-black ${selectedOption === 'card' ? 'bg-primary' : 'bg-white'
-                                }`}
+                            className={`py-3 px-4 flex justify-between items-center rounded-[4px] border border-app-black ${selectedOption === 'card' ? 'bg-primary' : 'bg-white'}`}
                             onClick={() => setSelectedOption('card')}
                         >
                             <div className="flex gap-3 items-center">
@@ -211,7 +219,6 @@ export default function CheckOutPage() {
                                     name="shipping"
                                     id="card"
                                     checked={selectedOption === 'card'}
-
                                     className="appearance-none w-5 h-5 border border-app-black rounded-full checked:bg-app-black checked:border-app-black text-app-black"
                                 />
                                 <p className="text-app-black font-inter text-base/[26px]">
@@ -221,8 +228,7 @@ export default function CheckOutPage() {
                             <img src="/images/finance.svg" alt="finance" className="h-6 w-6 object-contain" />
                         </div>
                         <div
-                            className={`py-3 px-4 flex justify-between items-center rounded-[4px] border border-app-black ${selectedOption === 'paypal' ? 'bg-primary' : 'bg-white'
-                                }`}
+                            className={`py-3 px-4 flex justify-between items-center rounded-[4px] border border-app-black ${selectedOption === 'paypal' ? 'bg-primary' : 'bg-white'}`}
                             onClick={() => setSelectedOption('paypal')}
                         >
                             <div className="flex gap-3 items-center">
@@ -237,23 +243,46 @@ export default function CheckOutPage() {
                                     Mercado Pago
                                 </p>
                             </div>
-                            {/* <img src="/images/finance.svg" alt="finance" className="h-6 w-6 object-contain" /> */}
                         </div>
                         <div className="w-full pt-3">
                             <div className="h-[1px] bg-app-black"></div>
                         </div>
                         <div className="space-y-3 w-full">
-                            <label htmlFor="cardnumber" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Número de tarjeta</label>
-                            <input placeholder="Número de tarjeta" type="text" name="cardnumber" id="cardnumber" className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md" />
+                            <label htmlFor="cardnumber" className="text-app-gray font-inter text-sm/3 font-bold uppercase">
+                                Número de tarjeta
+                            </label>
+                            <input
+                                placeholder="Número de tarjeta"
+                                type="text"
+                                name="cardnumber"
+                                id="cardnumber"
+                                className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                            />
                         </div>
-                        <div className="flex flex-col md:flex-row gap-6 items-center justify-between" >
+                        <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
                             <div className="space-y-3 w-full">
-                                <label htmlFor="expiredate" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Fecha de vencimiento</label>
-                                <input placeholder="Fecha de vencimiento" type="text" name="expiredate" id="expiredate" className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md" />
+                                <label htmlFor="expiredate" className="text-app-gray font-inter text-sm/3 font-bold uppercase">
+                                    Fecha de vencimiento
+                                </label>
+                                <input
+                                    placeholder="Fecha de vencimiento"
+                                    type="text"
+                                    name="expiredate"
+                                    id="expiredate"
+                                    className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                                />
                             </div>
                             <div className="space-y-3 w-full">
-                                <label htmlFor="cvc" className="text-app-gray font-inter text-sm/3 font-bold uppercase">CVC</label>
-                                <input placeholder="CVC" type="text" name="cvc" id="cvc" className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md" />
+                                <label htmlFor="cvc" className="text-app-gray font-inter text-sm/3 font-bold uppercase">
+                                    CVC
+                                </label>
+                                <input
+                                    placeholder="CVC"
+                                    type="text"
+                                    name="cvc"
+                                    id="cvc"
+                                    className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                                />
                             </div>
                         </div>
                     </div>
@@ -264,7 +293,6 @@ export default function CheckOutPage() {
                             Resumen de la compra
                         </p>
                         <div className="space-y-6">
-                            {/* Mostrar items del carrito (no editables) */}
                             {cartItems.length === 0 ? (
                                 <p className="py-6 text-app-gray font-inter text-sm/[22px]">Tu carrito está vacío.</p>
                             ) : (
@@ -275,7 +303,7 @@ export default function CheckOutPage() {
                                                 <div className="bg-primary w-20 h-24">
                                                     <img
                                                         src={item.imageUrl}
-                                                        alt={"Imagen del producto"}
+                                                        alt="Imagen del producto"
                                                         className="object-contain object-center h-auto max-h-full w-full"
                                                     />
                                                 </div>
@@ -304,39 +332,15 @@ export default function CheckOutPage() {
                             )}
                         </div>
                         <div className="flex justify-between items-center border-b border-app-light-gray py-3">
-                            <p className="text-app-black font-inter text-base/[26px] font-normal ">
+                            <p className="text-app-black font-inter text-base/[26px] font-normal">
                                 Subtotal
                             </p>
                             <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
                                 {formatCurrency(subtotal)}
                             </p>
                         </div>
-
-                        <div className="space-y-3 py-3">
-                            <label htmlFor="shippingMethod" className="text-app-black font-inter text-base/[26px] font-normal block">
-                                Forma de envío
-                            </label>
-                            <select
-                                id="shippingMethod"
-                                value={selectedShippingMethod}
-                                onChange={(e) => setSelectedShippingMethod(e.target.value as MetodoEnvio)}
-                                className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
-                            >
-                                {metodosEnvio.map((metodo) => (
-                                    <option key={metodo.value} value={metodo.value}>
-                                        {metodo.label}
-                                    </option>
-                                ))}
-                            </select>
-                            {selectedShippingMethod !== MetodoEnvio.RETIRO_LOCAL && !direccionSeleccionada && (
-                                <p className="text-app-gray font-inter text-xs/[18px]">
-                                    Seleccioná una dirección para envíos a domicilio.
-                                </p>
-                            )}
-                        </div>
-
                         <div className="flex justify-between items-center border-b border-app-light-gray py-3">
-                            <p className="text-app-black font-inter text-base/[26px] font-normal ">
+                            <p className="text-app-black font-inter text-base/[26px] font-normal">
                                 Costo de envío
                             </p>
                             <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
@@ -347,13 +351,11 @@ export default function CheckOutPage() {
                                         : formatCurrency(costoEnvio)}
                             </p>
                         </div>
-
                         {shippingQuoteError && (
                             <p className="text-red-500 font-inter text-sm/[22px]">
                                 {shippingQuoteError}
                             </p>
                         )}
-
                         {shippingQuote && (
                             <div className="rounded-md border border-app-light-gray p-4 space-y-2">
                                 <div className="flex justify-between items-center">
@@ -369,25 +371,24 @@ export default function CheckOutPage() {
                                     </p>
                                 </div>
                                 <div className="flex justify-between items-center border-t border-app-light-gray pt-2">
-                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">Total cotizado</p>
+                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
+                                        Total cotizado
+                                    </p>
                                     <p className="text-app-black font-inter text-sm/[22px] font-semibold">
                                         {formatCurrency(shippingQuote.total)}
                                     </p>
                                 </div>
                             </div>
                         )}
-
                         <div className="border-b border-app-light-gray py-3" />
-
                         <div className="flex justify-between items-center pb-3">
-                            <p className="text-app-black font-inter text-xl/8 font-semibold ">
+                            <p className="text-app-black font-inter text-xl/8 font-semibold">
                                 Total
                             </p>
                             <p className="text-app-black text-right font-inter text-xl/8 font-semibold">
                                 {shippingQuoteLoading ? "Cotizando..." : formatCurrency(totalCompra)}
                             </p>
                         </div>
-
                         <div className="pt-2">
                             <Button
                                 text="Realizar pedido"
@@ -407,5 +408,5 @@ export default function CheckOutPage() {
                 }}
             />
         </section>
-    )
+    );
 }
