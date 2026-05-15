@@ -1,4 +1,5 @@
 import { Producto } from "@/core/models/Producto.ts";
+import { MetodoEnvio } from "@/core/enum/MetodoEnvio";
 import { createContext, type Dispatch } from "react";
 
 type ProductListMeta = {
@@ -40,6 +41,7 @@ export type ProductState = {
   productos: Producto[];
   meta: ProductListMeta | null;
   cartItems: CartItem[];
+  selectedShippingMethod: MetodoEnvio;
 };
 
 export type ProductAction =
@@ -65,6 +67,10 @@ export type ProductAction =
   | {
       type: "SET_CART_ITEMS";
       payload: { cartItems: CartItem[] };
+    }
+  | {
+      type: "SET_SHIPPING_METHOD";
+      payload: { selectedShippingMethod: MetodoEnvio };
     };
 
 export type ProductContextValue = {
@@ -76,6 +82,7 @@ export const initialProductState: ProductState = {
   productos: [],
   meta: null,
   cartItems: [],
+  selectedShippingMethod: MetodoEnvio.RETIRO_LOCAL,
 };
 
 export const ProductContext = createContext<ProductContextValue>({
@@ -155,11 +162,17 @@ export const productReducer = (
       return {
         ...state,
         cartItems: [],
+        selectedShippingMethod: MetodoEnvio.RETIRO_LOCAL,
       };
     case "SET_CART_ITEMS":
       return {
         ...state,
         cartItems: action.payload.cartItems,
+      };
+    case "SET_SHIPPING_METHOD":
+      return {
+        ...state,
+        selectedShippingMethod: action.payload.selectedShippingMethod,
       };
     default:
       return state;
