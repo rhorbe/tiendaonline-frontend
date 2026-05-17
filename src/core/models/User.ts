@@ -1,6 +1,7 @@
 export interface User {
   id: string;
   name: string;
+  last_name?: string | null;
   email: string;
   email_verified_at: string | null;
   cliente_id?: string;
@@ -12,6 +13,7 @@ export interface LoginUserResponse {
   id?: string;
   _id?: string;
   name: string;
+  last_name?: string | null;
   email: string;
   active: boolean;
   cliente_id?: string;

@@ -34,6 +34,7 @@ export default function ProfilePage() {
                 setPerfil(data);
                 updateUser({
                     name: data.name,
+                    last_name: data.last_name,
                     cliente_id: data.cliente_id,
                 });
                 setPerfilError(null);
@@ -72,6 +73,7 @@ export default function ProfilePage() {
             setPerfil(perfilActualizado);
             updateUser({
                 name: perfilActualizado.name,
+                last_name: perfilActualizado.last_name,
                 cliente_id: perfilActualizado.cliente_id,
             });
 

@@ -197,19 +197,17 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
                     last_name: apellido || undefined,
                 });
 
-                // Actualizar inmediatamente la vista con la respuesta del backend si está disponible
-                if (actualizado) {
-                    const perfilActualizado = {
-                        ...(perfil ?? actualizado),
-                        ...actualizado,
-                    };
+                const perfilActualizado = {
+                    ...(perfil ?? actualizado),
+                    ...actualizado,
+                    name: nombre,
+                    last_name: apellido || null,
+                };
 
-                    setNombre(perfilActualizado.name);
-                    setApellido(perfilActualizado.last_name ?? '');
-                    onPerfilChange?.(perfilActualizado);
-                } else {
-                    onPerfidUpdate?.();
-                }
+                // Actualizar inmediatamente la vista usando los valores guardados
+                setNombre(perfilActualizado.name);
+                setApellido(perfilActualizado.last_name ?? '');
+                onPerfilChange?.(perfilActualizado);
             } else {
                 // Si no hubo cambios en nombre/apellido simplemente forzamos recarga si hace falta
                 onPerfidUpdate?.();

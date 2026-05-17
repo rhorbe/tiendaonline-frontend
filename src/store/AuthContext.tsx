@@ -22,6 +22,7 @@ const normalizeStoredUser = (value: unknown): User | null => {
   return {
     id: normalizedId,
     name: candidate.name,
+    last_name: candidate.last_name,
     email: candidate.email,
     email_verified_at: candidate.email_verified_at ?? null,
     cliente_id: candidate.cliente_id,
