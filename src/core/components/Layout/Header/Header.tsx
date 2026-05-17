@@ -22,7 +22,8 @@ const cartButtonCompactClass =
     "flex items-center gap-1 px-2 py-1.5 rounded-full hover:bg-white/10 transition";
 
 type CartButtonProps = {
-    onClick: () => void;
+    onClick?: () => void;
+    to?: string;
     count: number;
     buttonLabel: string;
     buttonTitle: string;
@@ -33,6 +34,7 @@ type CartButtonProps = {
 
 const CartButton: FC<CartButtonProps> = ({
                                              onClick,
+                                             to,
                                              count,
                                              buttonLabel,
                                              buttonTitle,
@@ -40,24 +42,44 @@ const CartButton: FC<CartButtonProps> = ({
                                              className,
                                              compact = false,
                                          }) => (
-    <button
-        type="button"
-        onClick={onClick}
-        className={className ?? (compact ? cartButtonCompactClass : cartButtonClass)}
-        aria-label={buttonLabel}
-        title={buttonTitle}
-    >
-        <img
-            src="/images/shopping bag.svg"
-            alt={imageAlt}
-            className={compact ? "h-5 w-5 invert" : "h-6 w-6 invert"}
-        />
-        <div className={compact ? "bg-white h-4 w-4 rounded-full flex justify-center items-center" : "bg-white h-5 w-5 rounded-full flex justify-center items-center"}>
-            <p className={compact ? "text-app-black text-center font-inter text-[10px] font-bold leading-[10px]" : "text-app-black text-center font-inter text-xs font-bold leading-[10px]"}>
-                {count}
-            </p>
-        </div>
-    </button>
+    to ? (
+        <Link
+            to={to}
+            className={className ?? (compact ? cartButtonCompactClass : cartButtonClass)}
+            aria-label={buttonLabel}
+            title={buttonTitle}
+        >
+            <img
+                src="/images/shopping bag.svg"
+                alt={imageAlt}
+                className={compact ? "h-5 w-5 invert" : "h-6 w-6 invert"}
+            />
+            <div className={compact ? "bg-white h-4 w-4 rounded-full flex justify-center items-center" : "bg-white h-5 w-5 rounded-full flex justify-center items-center"}>
+                <p className={compact ? "text-app-black text-center font-inter text-[10px] font-bold leading-[10px]" : "text-app-black text-center font-inter text-xs font-bold leading-[10px]"}>
+                    {count}
+                </p>
+            </div>
+        </Link>
+    ) : (
+        <button
+            type="button"
+            onClick={onClick}
+            className={className ?? (compact ? cartButtonCompactClass : cartButtonClass)}
+            aria-label={buttonLabel}
+            title={buttonTitle}
+        >
+            <img
+                src="/images/shopping bag.svg"
+                alt={imageAlt}
+                className={compact ? "h-5 w-5 invert" : "h-6 w-6 invert"}
+            />
+            <div className={compact ? "bg-white h-4 w-4 rounded-full flex justify-center items-center" : "bg-white h-5 w-5 rounded-full flex justify-center items-center"}>
+                <p className={compact ? "text-app-black text-center font-inter text-[10px] font-bold leading-[10px]" : "text-app-black text-center font-inter text-xs font-bold leading-[10px]"}>
+                    {count}
+                </p>
+            </div>
+        </button>
+    )
 );
 
 type HeaderUserActionsProps = {
@@ -192,7 +214,7 @@ const Header: FC = () => {
                 </div>
                 <div className="flex items-center gap-4 shrink-0 flex-nowrap">
                     <CartButton
-                        onClick={() => setCartOpen(true)}
+                        to={ROUTES.CART}
                         count={cartItemsCount}
                         buttonLabel="Carrito de compras"
                         buttonTitle="Abrir carrito de compras"
