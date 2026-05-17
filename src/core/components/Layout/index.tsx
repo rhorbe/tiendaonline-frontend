@@ -1,4 +1,4 @@
-import { FC, Fragment, ReactNode } from 'react';
+import { FC, Fragment, ReactNode, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from './Header/Header';
 import Footer from './Footer';
@@ -14,7 +14,13 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
   const noLayoutRoutes = [ROUTES.LOGIN, ROUTES.REGISTER, ROUTES.FORGOT_PASSWORD, ROUTES.OTP_PAGE];
 
-  
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
+  }, [location.pathname]);
+
+
   const isNoLayoutRoute = noLayoutRoutes.includes(location.pathname as ROUTES);
 
   return (

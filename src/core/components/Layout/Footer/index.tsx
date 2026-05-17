@@ -47,7 +47,7 @@ export default function Footer() {
       <div className="py-4 flex flex-col-reverse md:flex-row justify-between items-center 2xl:container mx-auto border-t-[0.5px] border-app-gray gap-8">
         <div className="flex flex-col md:flex-row flex-1 gap-7 items-center">
           <p className="w-full text-center md:text-left text-app-light-gray font-poppins text-sm/[20px]">
-            Copyright © 2025 -{" "}
+            Copyright © 2026 -{" "}
             <a
               href="https://www.unp.edu.ar"
               target="_blank"
