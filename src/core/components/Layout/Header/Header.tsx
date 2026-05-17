@@ -2,7 +2,7 @@ import { FC, Suspense, lazy, useState } from "react";
 import { Link } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
 import { ROUTES } from "@/core/enum/common";
-import UserDropdown from "../../UserDropdown";
+import UserMenu from "../../UserMenu";
 import { useProductContext } from "@/store/useProductContext";
 
 const Flayout = lazy(() =>
@@ -41,7 +41,7 @@ const Header: FC = () => {
               <li key={link.url}>
                 <Link
                   to={link.url}
-                  className="text-white font-inter font-semibold hover:text-app-light-gray transition-colors"
+                  className="inline-flex items-center px-3 py-2 rounded-full text-white font-inter font-semibold hover:bg-white/10 transition"
                 >
                   {link.name}
                 </Link>
@@ -50,10 +50,10 @@ const Header: FC = () => {
           </ul>
         </nav>
         <div className="flex items-center gap-4">
-          <UserDropdown />
+          <UserMenu />
           <button
             onClick={() => setCartOpen(!cartOpen)}
-            className="flex items-center gap-1.5"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-white/10 transition"
           >
             <img
               src="/images/shopping bag.svg"
@@ -84,11 +84,11 @@ const Header: FC = () => {
           </Link>
         </div>
         <div className="flex items-center gap-4">
-          <UserDropdown />
+          <UserMenu />
           <div className="px-[1px] py-0.5">
             <button
               onClick={() => setCartOpen(true)}
-              className="flex items-center gap-1.5"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-white/10 transition"
             >
               <img
                 src="/images/shopping bag.svg"

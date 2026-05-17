@@ -7,6 +7,8 @@ type ModalProps = {
     title?: string;
     description?: string;
     buttonText?: string;
+    secondaryButtonText?: string;
+    secondaryOnClick?: () => void;
     iconSrc?: string;
     iconAlt?: string;
     showIcon?: boolean;
@@ -19,6 +21,8 @@ const Modal: FC<ModalProps> = (
         title = "",
         description = "",
         buttonText = "",
+        secondaryButtonText = "",
+        secondaryOnClick,
         iconSrc = "/images/warning.svg",
         iconAlt = "",
         showIcon = true,
@@ -56,7 +60,20 @@ const Modal: FC<ModalProps> = (
                 <p className="text-app-black font-inter text-base text-center mb-4">
                     {description}
                 </p>
-                <Button text={buttonText} onClick={onClose}/>
+                {secondaryButtonText ? (
+                    <div className="flex items-center gap-3">
+                        <button
+                            type="button"
+                            onClick={secondaryOnClick}
+                            className="text-app-black text-center font-inter text-base font-medium leading-[28px] tracking-[-0.4px] bg-white border border-app-gray rounded-lg w-full px-10 py-[10px] hover:bg-app-light-gray/20 transition-colors"
+                        >
+                            {secondaryButtonText}
+                        </button>
+                        <Button text={buttonText} onClick={onClose}/>
+                    </div>
+                ) : (
+                    <Button text={buttonText} onClick={onClose}/>
+                )}
             </div>
         </div>
     );
