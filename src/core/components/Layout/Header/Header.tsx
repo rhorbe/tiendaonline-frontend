@@ -208,7 +208,13 @@ const Header: FC = () => {
             </div>
 
             {/* Menú móvil */}
-            {open && <MobileMenu setOpen={setOpen}/>}
+            {open && (
+                <MobileMenu
+                    setOpen={setOpen}
+                    onOpenCart={() => setCartOpen(true)}
+                    onRequestLogout={() => setIsLogoutModalOpen(true)}
+                />
+            )}
 
             {/* Carrito */}
             {cartOpen && (

@@ -1,93 +1,136 @@
-import { ROUTES } from "@/core/enum/common";
-import { Link } from "react-router-dom";
+import {ROUTES} from "@/core/enum/common";
+import {useAuth} from "@/store/useAuth";
+import {useProductContext} from "@/store/useProductContext";
+import {Link} from "react-router-dom";
 
 interface MobileMenuProps {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onOpenCart: () => void;
+    onRequestLogout: () => void;
 }
-export default function MobileMenu({ setOpen }: MobileMenuProps) {
-  const navLinks = [
-    { name: "Inicio", url: ROUTES.HOME },
-    { name: "Tienda", url: ROUTES.SHOP },
-    { name: "Contacto", url: ROUTES.CONTACT },
-  ];
 
-  return (
-    <div className="p-6 bg-app-black text-white absolute top-0 left-0 z-50 w-full h-screen flex flex-col justify-between md:hidden">
-      <div>
-        <div className="flex justify-between items-center self-stretch">
-          <img src="/images/logo_essences_blanco.svg" alt="Essence Perfumes" className="h-8 w-auto" />
+export default function MobileMenu({setOpen, onOpenCart, onRequestLogout}: MobileMenuProps) {
+    const {user} = useAuth();
+    const {state} = useProductContext();
 
-          <button onClick={() => setOpen(false)}>
-            <img src="/images/close.svg" alt="Cerrar" className="h-6 w-auto invert" />
-          </button>
-        </div>
-        <input
-          type="text"
-          className="border border-app-gray bg-app-black rounded-lg p-2 text-base w-full mt-4 text-white placeholder:text-app-light-gray"
-          placeholder="Buscar..."
-        />
+    const navLinks = [
+        {name: "Inicio", url: ROUTES.HOME},
+        {name: "Tienda", url: ROUTES.SHOP},
+        {name: "Contacto", url: ROUTES.CONTACT},
+    ];
 
-        <nav>
-          <ul className="">
-            {navLinks.map((link, index) => (
-              <li
-                key={index}
-                className="pt-4 w-full text-white font-inter text-sm font-semibold pb-2 border-b border-app-gray"
-              >
-                <Link to={link.url} className="w-full">
-                  {link.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-      <div>
-        <div className="flex justify-between pb-3 border-b border-app-gray">
-          <Link
-            className="text-lg/[32px] font-inter font-medium tracking-[-0.4px] text-white"
-            to={ROUTES.CART}
-          >
-            Carrito
-          </Link>
-          <div className="flex items-center gap-1.5">
-            <img
-              src="/images/shopping bag.svg"
-              alt="Carrito"
-              className="h-6 w-6 invert"
-            />
-            <div className="bg-white h-5 w-5 rounded-full flex justify-center items-center">
-              <p className="text-app-black text-center font-inter text-xs font-bold leading-[10px]"> {/* Vista mobile */}
-                222
-              </p>
+    const cartItemsCount = state.cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+    const closeMenu = () => setOpen(false);
+
+    const handleOpenCart = () => {
+        closeMenu();
+        onOpenCart();
+    };
+
+    const handleRequestLogout = () => {
+        closeMenu();
+        onRequestLogout();
+    };
+
+    return (
+        <div
+            className="p-6 bg-app-black text-white absolute top-0 left-0 z-50 w-full h-screen flex flex-col justify-between md:hidden">
+            <div>
+                <div className="flex justify-between items-center self-stretch">
+                   <img src="/images/logo_essences_blanco.svg" alt="Essence Perfumes" className="h-10 w-auto"/>
+
+                    <button onClick={() => setOpen(false)}>
+                        <img src="/images/close.svg" alt="Cerrar" className="h-6 w-auto invert"/>
+                    </button>
+                </div>
+
+                <nav className="mt-6">
+                    <ul className="">
+                        {navLinks.map((link, index) => (
+                            <li
+                                key={index}
+                                className="pt-4 w-full text-white font-inter text-sm font-semibold pb-2 border-b border-app-gray"
+                            >
+                                <Link to={link.url} onClick={closeMenu} className="w-full">
+                                    {link.name}
+                                </Link>
+                            </li>
+                        ))}
+
+                        <li
+
+                            className="pt-4 w-full text-white font-inter text-sm font-semibold pb-2 border-b border-app-gray"
+                        >
+                            {user ? (
+                                <Link
+                                    to={ROUTES.PROFILE}
+                                    onClick={closeMenu}
+                                    className="w-full"
+                                >
+                                    <span>Perfil de usuario</span>
+
+                                </Link>
+                            ) : (
+                                <Link
+                                    to={ROUTES.LOGIN}
+                                    onClick={closeMenu}
+                                    className="flex w-full items-center justify-between rounded-lg px-1 py-2 text-lg/[32px] font-inter font-medium tracking-[-0.4px] text-white hover:bg-white/10 transition"
+                                >
+                                    <span>Iniciar sesión</span>
+                                    <img src="/images/user-circle.svg" alt="Iniciar sesión" className="h-5 w-5 invert"/>
+                                </Link>
+                            )}
+                        </li>
+
+                        <li>
+                            <button
+                                type="button"
+                                onClick={handleOpenCart}
+                                className="flex w-full items-center justify-between pt-4 pb-2 border-b border-app-gray text-white font-inter text-sm font-semibold text-left"
+                            >
+                                <span>Carrito</span>
+                                <span className="flex items-center gap-1.5">
+                                    <img
+                                        src="/images/shopping bag.svg"
+                                        alt="Carrito"
+                                        className="h-5 w-5 invert"
+                                    />
+                                    <div
+                                        className="bg-white h-5 min-w-[20px] px-1 rounded-full flex justify-center items-center">
+                                        <p className="text-app-black text-center font-inter text-[10px] font-bold leading-[10px]">
+                                            {cartItemsCount}
+                                        </p>
+                                    </div>
+                                </span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-          </div>
-        </div>
+            <div>
+                <div className="space-y-2 pb-3">
 
-        <div className="flex gap-6">
-          <Link to="https://www.instagram.com/ditunpsjb/">
-            <img
-              src="/images/instagram.svg"
-              alt="Instagram"
-              className="w-6 h-6"
-            />
-          </Link>
-          <Link to="https://www.facebook.com/ditunpsjb">
-            <img
-              src="/images/facebook.svg"
-              alt="Facebook"
-              className="w-6 h-6"
-            />
-          </Link>
-          <Link to="https://www.youtube.com/@comunicaciondigitalunpsjb">
-            <img
-              src="/images/youtube.svg"
-              alt="YouTube"
-              className="w-6 h-6"
-            />
-          </Link>
+                    {user && (
+                        <button
+                            type="button"
+                            onClick={handleRequestLogout}
+                            className="flex w-full items-center justify-between pt-4 pb-2 border-b border-app-gray text-white font-inter text-sm font-semibold text-left"
+                        >
+                            <span>Cerrar sesión</span>
+                            <span className="flex items-center gap-1.5">
+                                <img
+                                    src="/images/arrow-right-from-bracket-solid-full.svg"
+                                    alt="Cerrar sesión"
+                                    className="h-5 w-5 invert"
+                                />
+                            </span>
+                        </button>
+                    )}
+                </div>
+
+
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
