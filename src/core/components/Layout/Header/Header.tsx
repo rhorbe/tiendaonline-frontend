@@ -18,6 +18,9 @@ const navLinks = [
 const cartButtonClass =
     "flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-white/10 transition";
 
+const cartButtonCompactClass =
+    "flex items-center gap-1 px-2 py-1.5 rounded-full hover:bg-white/10 transition";
+
 type CartButtonProps = {
     onClick: () => void;
     count: number;
@@ -25,6 +28,7 @@ type CartButtonProps = {
     buttonTitle: string;
     imageAlt: string;
     className?: string;
+    compact?: boolean;
 };
 
 const CartButton: FC<CartButtonProps> = ({
@@ -33,18 +37,23 @@ const CartButton: FC<CartButtonProps> = ({
                                              buttonLabel,
                                              buttonTitle,
                                              imageAlt,
-                                             className = cartButtonClass,
+                                             className,
+                                             compact = false,
                                          }) => (
     <button
         type="button"
         onClick={onClick}
-        className={className}
+        className={className ?? (compact ? cartButtonCompactClass : cartButtonClass)}
         aria-label={buttonLabel}
         title={buttonTitle}
     >
-        <img src="/images/shopping bag.svg" alt={imageAlt} className="h-6 w-6 invert"/>
-        <div className="bg-white h-5 w-5 rounded-full flex justify-center items-center">
-            <p className="text-app-black text-center font-inter text-xs font-bold leading-[10px]">
+        <img
+            src="/images/shopping bag.svg"
+            alt={imageAlt}
+            className={compact ? "h-5 w-5 invert" : "h-6 w-6 invert"}
+        />
+        <div className={compact ? "bg-white h-4 w-4 rounded-full flex justify-center items-center" : "bg-white h-5 w-5 rounded-full flex justify-center items-center"}>
+            <p className={compact ? "text-app-black text-center font-inter text-[10px] font-bold leading-[10px]" : "text-app-black text-center font-inter text-xs font-bold leading-[10px]"}>
                 {count}
             </p>
         </div>
@@ -54,29 +63,38 @@ const CartButton: FC<CartButtonProps> = ({
 type HeaderUserActionsProps = {
     user: ReturnType<typeof useAuth>["user"];
     onRequestLogout: () => void;
+    compact?: boolean;
 };
 
-const HeaderUserActions: FC<HeaderUserActionsProps> = ({user, onRequestLogout}) => {
+const HeaderUserActions: FC<HeaderUserActionsProps> = ({user, onRequestLogout, compact = false}) => {
+    const containerClassName = compact ? "flex items-center gap-1 text-white" : "flex items-center gap-2 text-white";
+    const profileLinkClassName = compact
+        ? "p-1.5 rounded-full hover:bg-white/10 transition font-inter font-medium text-xs max-w-[92px] truncate"
+        : "p-2 rounded-full hover:bg-white/10 transition font-inter font-medium";
+    const actionButtonClassName = compact
+        ? "inline-flex items-center justify-center p-1.5 rounded-full hover:bg-white/10 transition"
+        : "inline-flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition";
+    const iconClassName = compact ? "w-5 h-5 invert" : "w-6 h-6 invert";
 
     if (!user) {
         return (
             <Link
                 to={ROUTES.LOGIN}
-                className="inline-flex items-center justify-center p-2 rounded-full text-white hover:bg-white/10 transition"
+                className={actionButtonClassName}
                 aria-label="Iniciar sesión"
                 title="Iniciar sesión"
             >
-                <img src="/images/user-circle.svg" alt="Usuario" className="w-6 h-6 invert"/>
+                <img src="/images/user-circle.svg" alt="Usuario" className={iconClassName}/>
             </Link>
         );
     }
 
     return (
         <>
-            <div className="flex items-center gap-2 text-white">
+            <div className={containerClassName}>
                 <Link
                     to={ROUTES.PROFILE}
-                    className="p-2 rounded-full hover:bg-white/10 transition font-inter font-medium"
+                    className={profileLinkClassName}
                     aria-label="Ir al perfil"
                     title="Perfil del usuario"
                 >
@@ -85,14 +103,14 @@ const HeaderUserActions: FC<HeaderUserActionsProps> = ({user, onRequestLogout}) 
                 <button
                     type="button"
                     onClick={onRequestLogout}
-                    className="inline-flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition"
+                    className={actionButtonClassName}
                     aria-label="Cerrar sesión"
                     title="Cerrar sesión"
                 >
                     <img
                         src="/images/arrow-right-from-bracket-solid-full.svg"
                         alt="Cerrar sesión"
-                        className="w-6 h-6 invert"
+                        className={iconClassName}
                     />
                 </button>
             </div>
@@ -179,10 +197,12 @@ const Header: FC = () => {
                         buttonLabel="Carrito de compras"
                         buttonTitle="Abrir carrito de compras"
                         imageAlt="Ícono de carrito"
+                        compact
                     />
                     <HeaderUserActions
                         user={user}
                         onRequestLogout={() => setIsLogoutModalOpen(true)}
+                        compact
                     />
                 </div>
             </div>
