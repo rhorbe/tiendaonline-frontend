@@ -4,6 +4,7 @@ export { default as RegisterPage } from './auth/register';
 export { default as ShopPage } from './shop';
 export { default as ProductPage } from './product';
 export { default as CartPage } from './cart';
+export { default as ShippingPage } from './shipping';
 export { default as CheckOutPage } from './checkout';
 export { default as OrderCompletePage } from './order';
 export { default as ProfilePage } from './product';

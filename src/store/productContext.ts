@@ -42,6 +42,7 @@ export type ProductState = {
   meta: ProductListMeta | null;
   cartItems: CartItem[];
   selectedShippingMethod: MetodoEnvio;
+  selectedShippingAddressId: string;
 };
 
 export type ProductAction =
@@ -71,6 +72,10 @@ export type ProductAction =
   | {
       type: "SET_SHIPPING_METHOD";
       payload: { selectedShippingMethod: MetodoEnvio };
+    }
+  | {
+      type: "SET_SHIPPING_ADDRESS";
+      payload: { selectedShippingAddressId: string };
     };
 
 export type ProductContextValue = {
@@ -83,6 +88,7 @@ export const initialProductState: ProductState = {
   meta: null,
   cartItems: [],
   selectedShippingMethod: MetodoEnvio.RETIRO_LOCAL,
+  selectedShippingAddressId: "",
 };
 
 export const ProductContext = createContext<ProductContextValue>({
@@ -163,6 +169,7 @@ export const productReducer = (
         ...state,
         cartItems: [],
         selectedShippingMethod: MetodoEnvio.RETIRO_LOCAL,
+        selectedShippingAddressId: "",
       };
     case "SET_CART_ITEMS":
       return {
@@ -173,6 +180,11 @@ export const productReducer = (
       return {
         ...state,
         selectedShippingMethod: action.payload.selectedShippingMethod,
+      };
+    case "SET_SHIPPING_ADDRESS":
+      return {
+        ...state,
+        selectedShippingAddressId: action.payload.selectedShippingAddressId,
       };
     default:
       return state;

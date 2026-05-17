@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {
     getRemoveItemCartErrorMessage,
@@ -6,49 +6,13 @@ import {
     removeItemFromUserCart,
     updateItemQuantityInUserCart,
 } from "@/core/api/cartItemRemoveApi";
-import shippingApi, {type CotizarEnvioResponse} from "@/core/api/shippingApi";
 import Button from "@/core/components/Button/Button";
 import Modal from "@/core/components/Modal";
 import Process from "@/core/components/Process";
-import { MetodoEnvio } from "@/core/enum/MetodoEnvio";
 import {ROUTES} from "@/core/enum/common";
 import {formatCurrency} from "@/core/utils/formatCurrency";
 import {useAuth} from "@/store/useAuth";
 import {useProductContext} from "@/store/useProductContext";
-
-type ShippingMethodOption = {
-    value: MetodoEnvio;
-    label: string;
-    detail: string;
-    iconSrc: string;
-    iconAlt: string;
-};
-
-const shippingMethodOptions = [
-    {
-        value: MetodoEnvio.RETIRO_LOCAL,
-        label: "Retira en tienda",
-        detail: "",
-        iconSrc: "/images/store.svg",
-        iconAlt: "Retiro en tienda",
-    },
-    {
-        value: MetodoEnvio.ENVIO_ESTANDAR,
-        label: "Envío estándar",
-        detail: "",
-        iconSrc: "/images/shipping.svg",
-        iconAlt: "Envío estándar",
-    },
-    {
-        value: MetodoEnvio.ENVIO_EXPRESS,
-        label: "Envío express",
-        detail: "",
-        iconSrc: "/images/shipping.svg",
-        iconAlt: "Envío express",
-    },
-] satisfies ShippingMethodOption[];
-
-type ShippingQuoteMap = Partial<Record<MetodoEnvio, CotizarEnvioResponse>>;
 
 
 export default function CartPage() {
@@ -58,67 +22,10 @@ export default function CartPage() {
     const [cartErrorMessage, setCartErrorMessage] = useState("");
     const [cartErrorTitle, setCartErrorTitle] = useState("No se pudo quitar del carrito");
     const [pendingVariantIds, setPendingVariantIds] = useState<string[]>([]);
-    const [shippingQuotes, setShippingQuotes] = useState<ShippingQuoteMap>({});
-    const [shippingQuoteErrors, setShippingQuoteErrors] = useState<Partial<Record<MetodoEnvio, string>>>({});
-    const [shippingQuotesLoading, setShippingQuotesLoading] = useState(false);
-    const {cartItems, selectedShippingMethod} = state;
+    const {cartItems} = state;
     const navigate = useNavigate();
     const quantityRequestSeqRef = useRef<Record<string, number>>({});
     const subtotal = cartItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
-
-    useEffect(() => {
-        if (cartItems.length === 0) {
-            setShippingQuotes({});
-            setShippingQuoteErrors({});
-            setShippingQuotesLoading(false);
-            return;
-        }
-
-        let cancelled = false;
-
-        const cotizarEnvios = async () => {
-            setShippingQuotesLoading(true);
-            setShippingQuoteErrors({});
-
-            const resultados = await Promise.allSettled(
-                shippingMethodOptions.map(async (option) => {
-                    const quote = await shippingApi.cotizarEnvio({metodo_envio: option.value});
-                    return [option.value, quote] as const;
-                }),
-            );
-
-            if (cancelled) {
-                return;
-            }
-
-            const nextQuotes: ShippingQuoteMap = {};
-            const nextErrors: Partial<Record<MetodoEnvio, string>> = {};
-
-            resultados.forEach((result, index) => {
-                const method = shippingMethodOptions[index].value;
-
-                if (result.status === "fulfilled") {
-                    const [methodValue, quote] = result.value;
-                    nextQuotes[methodValue] = quote;
-                    return;
-                }
-
-                nextErrors[method] = result.reason instanceof Error
-                    ? result.reason.message
-                    : "No se pudo cotizar el envío.";
-            });
-
-            setShippingQuotes(nextQuotes);
-            setShippingQuoteErrors(nextErrors);
-            setShippingQuotesLoading(false);
-        };
-
-        void cotizarEnvios();
-
-        return () => {
-            cancelled = true;
-        };
-    }, [cartItems]);
 
     const markVariantAsPending = (varianteId: string) => {
         setPendingVariantIds((prev) => (prev.includes(varianteId) ? prev : [...prev, varianteId]));
@@ -245,34 +152,6 @@ export default function CartPage() {
     const handleIncrease = (varianteId: string, currentQty: number, stock: number) => {
         const nextQty = Math.min(stock || 1, currentQty + 1);
         void handleUpdateQty(varianteId, nextQty);
-    };
-
-    const handleShippingMethodChange = (method: MetodoEnvio) => {
-        dispatch({
-            type: "SET_SHIPPING_METHOD",
-            payload: {selectedShippingMethod: method},
-        });
-    };
-    const selectedShippingQuote = shippingQuotes[selectedShippingMethod] ?? null;
-    const selectedShippingCost = selectedShippingQuote?.costo_envio ?? 0;
-    const selectedShippingOptionError = shippingQuoteErrors[selectedShippingMethod] ?? null;
-    const totalCompra = subtotal + selectedShippingCost;
-
-    const getShippingPriceLabel = (method: MetodoEnvio) => {
-        if (method === MetodoEnvio.RETIRO_LOCAL) {
-            return formatCurrency(0);
-        }
-
-        const quote = shippingQuotes[method];
-        if (quote) {
-            return formatCurrency(quote.costo_envio);
-        }
-
-        if (shippingQuotesLoading) {
-            return "Cotizando...";
-        }
-
-        return shippingQuoteErrors[method] ? "No disponible" : "Cotizar";
     };
 
     return (
@@ -479,86 +358,13 @@ export default function CartPage() {
                         </p>
                     </div>
 
-                    <p className="text-app-black font-inter text-base/[26px] font-normal py-3">
-                        Forma de envío
-                    </p>
 
-                    <div className="space-y-3">
-                        {shippingMethodOptions.map((option) => {
-                            const isSelected = selectedShippingMethod === option.value;
-
-                            return (
-                                <div
-                                    key={option.value}
-                                    role="button"
-                                    tabIndex={0}
-                                    className={`w-full py-3 px-4 flex justify-between items-center rounded-[4px] border border-app-black text-left transition-colors cursor-pointer ${
-                                        isSelected ? "bg-primary" : "bg-white"
-                                    }`}
-                                    onClick={() => handleShippingMethodChange(option.value)}
-                                    onKeyDown={(event) => {
-                                        if (event.key === "Enter" || event.key === " ") {
-                                            event.preventDefault();
-                                            handleShippingMethodChange(option.value);
-                                        }
-                                    }}
-                                >
-                                    <div className="flex gap-3 items-center min-w-0">
-                                        <input
-                                            type="radio"
-                                            name="shippingMethod"
-                                            id={option.value}
-                                            checked={isSelected}
-                                            readOnly
-                                            className="appearance-none w-5 h-5 border border-app-black rounded-full checked:bg-app-black checked:border-app-black text-app-black"
-                                        />
-                                        <div className="min-w-0">
-                                            <p className="text-app-black font-inter text-base/[26px]">
-                                                {option.label}
-                                            </p>
-                                            <p className="text-app-gray font-inter text-xs/[18px]">
-                                                {option.detail}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-3 shrink-0">
-                                        <p className="text-right font-inter text-base/[26px]">
-                                            {getShippingPriceLabel(option.value)}
-                                        </p>
-                                        <img
-                                            src={option.iconSrc}
-                                            alt={option.iconAlt}
-                                            className="h-6 w-6 object-contain"
-                                        />
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    {selectedShippingOptionError && (
-                        <p className="text-red-500 font-inter text-sm/[22px]">
-                            {selectedShippingOptionError}
-                        </p>
-                    )}
-
-
-                    <div className="border-b border-app-light-gray py-3"/>
-
-                    <div className="flex justify-between items-center pb-3">
-                        <p className="text-app-black font-inter text-xl/8 font-semibold ">
-                            Total
-                        </p>
-                        <p className="text-app-black text-right font-inter text-xl/8 font-semibold">
-                            {shippingQuotesLoading && !selectedShippingQuote ? "Cotizando..." : formatCurrency(totalCompra)}
-                        </p>
-                    </div>
 
                     <div className="pt-2">
                         <Button
                             text="Continuar"
-                            onClick={() => navigate(ROUTES.CHECKOUT)}
-                            disabled={cartItems.length === 0 || shippingQuotesLoading || (selectedShippingMethod !== MetodoEnvio.RETIRO_LOCAL && !selectedShippingQuote)}
+                            onClick={() => navigate(ROUTES.SHIPPING)}
+                            disabled={cartItems.length === 0}
                         />
                     </div>
                 </div>

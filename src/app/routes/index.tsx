@@ -10,6 +10,7 @@ const RegisterPage = lazy(() => import("../pages/auth/register"));
 const ShopPage = lazy(() => import("../pages/shop"));
 const ProductPage = lazy(() => import("../pages/product"));
 const CartPage = lazy(() => import("../pages/cart"));
+const ShippingPage = lazy(() => import("../pages/shipping"));
 const CheckOutPage = lazy(() => import("../pages/checkout"));
 const OrderCompletePage = lazy(() => import("../pages/order"));
 const ProfilePage = lazy(() => import("../pages/profile"));
@@ -37,6 +38,7 @@ const publicRoutes: RouteConfig[] = [
 
 const protectedRoutes: RouteConfig[] = [
     {path: ROUTES.CART, element: <CartPage/>},
+    {path: ROUTES.SHIPPING, element: <ShippingPage/>},
     {path: ROUTES.CHECKOUT, element: <CheckOutPage/>},
     {path: ROUTES.ORDER, element: <OrderCompletePage/>},
     {path: ROUTES.PROFILE, element: <ProfilePage/>},

@@ -10,8 +10,9 @@ interface ProcessProps {
 const Process: FC<ProcessProps> = ({activeStep, completedStep}) => {
     const steps = [
         {id: 1, label: "Carrito de compras", link: ROUTES.CART},
-        {id: 2, label: "Detalles del pago", link:"#"},
-        {id: 3, label: "Completar pedido" , link:"#"},
+        {id: 2, label: "Forma de envío", link: ROUTES.SHIPPING},
+        {id: 3, label: "Detalles del pago", link:"#"},
+        {id: 4, label: "Completar pedido" , link:"#"},
     ];
 
     return (
