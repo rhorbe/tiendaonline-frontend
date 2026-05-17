@@ -1,7 +1,4 @@
 import {useEffect, useRef, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import Button from "../Button/Button";
-import {ROUTES} from "@/core/enum/common";
 import {formatCurrency} from "@/core/utils/formatCurrency";
 import {useProductContext} from "@/store/useProductContext";
 import {useAuth} from "@/store/useAuth";
@@ -24,7 +21,6 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
     const [isCartErrorModalOpen, setIsCartErrorModalOpen] = useState(false);
     const [cartErrorMessage, setCartErrorMessage] = useState("");
     const [cartErrorTitle, setCartErrorTitle] = useState("No se pudo quitar del carrito");
-    const navigate = useNavigate();
     const {cartItems} = state;
     const flayoutRef = useRef<HTMLDivElement>(null);
     const [pendingVariantIds, setPendingVariantIds] = useState<string[]>([]);
@@ -254,15 +250,6 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                     <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
                         {formatCurrency(subtotal)}
                     </p>
-                </div>
-                <div className="py-[18px]">
-                    <Button
-                        text="Continuar"
-                        onClick={() => {
-                            setOpen(false);
-                            navigate(user ? ROUTES.CART : ROUTES.LOGIN);
-                        }}
-                    />
                 </div>
             </div>
             <Modal

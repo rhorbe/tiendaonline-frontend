@@ -11,6 +11,20 @@ import AddressForm from "@/core/components/AddressForm";
 import { formatearDireccion } from "@/core/utils/formatDireccion";
 const esDireccionPrincipal = (direccion: PerfilDireccion): boolean =>
     direccion.esPrincipal ?? direccion.es_principal ?? false;
+
+const getShippingMethodLabel = (method: MetodoEnvio): string => {
+    switch (method) {
+        case MetodoEnvio.RETIRO_LOCAL:
+            return "Retira en tienda";
+        case MetodoEnvio.ENVIO_ESTANDAR:
+            return "Envío estándar";
+        case MetodoEnvio.ENVIO_EXPRESS:
+            return "Envío express";
+        default:
+            return "Método de envío";
+    }
+};
+
 export default function CheckOutPage() {
     const [selectedOption, setSelectedOption] = useState("");
     const [perfil, setPerfil] = useState<PerfilResponse | null>(null);
@@ -90,6 +104,7 @@ export default function CheckOutPage() {
         };
     }, [cartItems, selectedDireccionId, selectedShippingMethod]);
     const showShippingAddressBlock = selectedShippingMethod !== MetodoEnvio.RETIRO_LOCAL;
+    const shippingMethodLabel = getShippingMethodLabel(selectedShippingMethod);
     const costoEnvio = shippingQuote?.costo_envio ?? 0;
     const totalCompra = shippingQuote?.total ?? subtotal + costoEnvio;
     return (
@@ -336,7 +351,7 @@ export default function CheckOutPage() {
                         </div>
                         <div className="flex justify-between items-center border-b border-app-light-gray py-3">
                             <p className="text-app-black font-inter text-base/[26px] font-normal">
-                                Costo de envío
+                                {shippingMethodLabel}
                             </p>
                             <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
                                 {shippingQuoteLoading
@@ -351,31 +366,6 @@ export default function CheckOutPage() {
                                 {shippingQuoteError}
                             </p>
                         )}
-                        {shippingQuote && (
-                            <div className="rounded-md border border-app-light-gray p-4 space-y-2">
-                                <div className="flex justify-between items-center">
-                                    <p className="text-app-gray font-inter text-sm/[22px]">Subtotal</p>
-                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                                        {formatCurrency(shippingQuote.subtotal)}
-                                    </p>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <p className="text-app-gray font-inter text-sm/[22px]">Envío</p>
-                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                                        {formatCurrency(shippingQuote.costo_envio)}
-                                    </p>
-                                </div>
-                                <div className="flex justify-between items-center border-t border-app-light-gray pt-2">
-                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                                        Total cotizado
-                                    </p>
-                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                                        {formatCurrency(shippingQuote.total)}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                        <div className="border-b border-app-light-gray py-3" />
                         <div className="flex justify-between items-center pb-3">
                             <p className="text-app-black font-inter text-xl/8 font-semibold">
                                 Total
