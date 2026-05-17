@@ -20,6 +20,8 @@ const Process: FC<ProcessProps> = ({activeStep, completedStep}) => {
             {steps.map((step) => {
                 const isActive = activeStep === step.id;
                 const isCompleted = completedStep && step.id <= completedStep;
+                const isPrevious = step.id === activeStep - 1;
+                const isMobileVisible = isActive || isPrevious;
 
                 return (
                     <div
@@ -32,7 +34,7 @@ const Process: FC<ProcessProps> = ({activeStep, completedStep}) => {
                                     ? "border-b-2 border-app-green"
                                     : ""
                         } 
-                            ${isActive ? "block" : "hidden"} 
+                            ${isMobileVisible ? "block" : "hidden"} 
                             md:flex`}
                     >
                         <p

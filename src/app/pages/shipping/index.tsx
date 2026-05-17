@@ -67,9 +67,9 @@ export default function ShippingPage() {
     const [perfilLoading, setPerfilLoading] = useState(true);
     const [perfilError, setPerfilError] = useState<string | null>(null);
     const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
-    const [shippingQuote, setShippingQuote] = useState<CotizarEnvioResponse | null>(null);
+    const [shippingQuotes, setShippingQuotes] = useState<Partial<Record<MetodoEnvio, CotizarEnvioResponse>>>({});
+    const [shippingQuoteErrors, setShippingQuoteErrors] = useState<Partial<Record<MetodoEnvio, string>>>({});
     const [shippingQuoteLoading, setShippingQuoteLoading] = useState(false);
-    const [shippingQuoteError, setShippingQuoteError] = useState<string | null>(null);
 
     const subtotal = cartItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
 
@@ -112,57 +112,75 @@ export default function ShippingPage() {
     }, [dispatch, direccionesOrdenadas, selectedShippingAddressId]);
 
     useEffect(() => {
-        if (cartItems.length === 0 || selectedShippingMethod === MetodoEnvio.RETIRO_LOCAL) {
-            setShippingQuote(null);
+        if (cartItems.length === 0) {
+            setShippingQuotes({});
+            setShippingQuoteErrors({});
             setShippingQuoteLoading(false);
-            setShippingQuoteError(null);
             return;
         }
 
         if (!selectedShippingAddressId) {
-            setShippingQuote(null);
+            setShippingQuotes({});
+            setShippingQuoteErrors({});
             setShippingQuoteLoading(false);
-            setShippingQuoteError(null);
             return;
         }
 
         let cancelled = false;
 
-        const calcularCotizacion = async () => {
-            try {
-                setShippingQuoteLoading(true);
-                setShippingQuoteError(null);
-                const response = await shippingApi.cotizarEnvio({
-                    metodo_envio: selectedShippingMethod,
-                    direccion_id: selectedShippingAddressId,
-                });
+        const cotizarEnvios = async () => {
+            setShippingQuoteLoading(true);
+            setShippingQuoteErrors({});
 
-                if (!cancelled) {
-                    setShippingQuote(response);
-                }
-            } catch (error) {
-                if (!cancelled) {
-                    setShippingQuote(null);
-                    setShippingQuoteError(error instanceof Error ? error.message : "No se pudo cotizar el envío.");
-                }
-            } finally {
-                if (!cancelled) {
-                    setShippingQuoteLoading(false);
-                }
+            const resultados = await Promise.allSettled(
+                shippingMethodOptions.map(async (option) => {
+                    const quote = await shippingApi.cotizarEnvio({
+                        metodo_envio: option.value,
+                        direccion_id: option.value === MetodoEnvio.RETIRO_LOCAL ? undefined : selectedShippingAddressId,
+                    });
+                    return [option.value, quote] as const;
+                }),
+            );
+
+            if (cancelled) {
+                return;
             }
+
+            const nextQuotes: Partial<Record<MetodoEnvio, CotizarEnvioResponse>> = {};
+            const nextErrors: Partial<Record<MetodoEnvio, string>> = {};
+
+            resultados.forEach((result, index) => {
+                const method = shippingMethodOptions[index].value;
+
+                if (result.status === "fulfilled") {
+                    const [methodValue, quote] = result.value;
+                    nextQuotes[methodValue] = quote;
+                    return;
+                }
+
+                nextErrors[method] = result.reason instanceof Error
+                    ? result.reason.message
+                    : "No se pudo cotizar el envío.";
+            });
+
+            setShippingQuotes(nextQuotes);
+            setShippingQuoteErrors(nextErrors);
+            setShippingQuoteLoading(false);
         };
 
-        void calcularCotizacion();
+        void cotizarEnvios();
 
         return () => {
             cancelled = true;
         };
-    }, [cartItems, selectedShippingAddressId, selectedShippingMethod]);
+    }, [cartItems, selectedShippingAddressId]);
 
     const showShippingAddressBlock = selectedShippingMethod !== MetodoEnvio.RETIRO_LOCAL;
     const shippingMethodLabel = getShippingMethodLabel(selectedShippingMethod);
-    const costoEnvio = shippingQuote?.costo_envio ?? 0;
-    const totalCompra = shippingQuote?.total ?? subtotal + costoEnvio;
+    const selectedShippingQuote = shippingQuotes[selectedShippingMethod] ?? null;
+    const selectedShippingQuoteError = shippingQuoteErrors[selectedShippingMethod] ?? null;
+    const costoEnvio = selectedShippingQuote?.costo_envio ?? 0;
+    const totalCompra = selectedShippingQuote?.total ?? subtotal + costoEnvio;
 
     return (
         <section className="px-8 lg:px-14 py-20">
@@ -220,12 +238,12 @@ export default function ShippingPage() {
                                             <p className="text-right font-inter text-base/[26px]">
                                                 {option.value === MetodoEnvio.RETIRO_LOCAL
                                                     ? formatCurrency(0)
-                                                    : shippingQuoteLoading && selectedShippingMethod === option.value
+                                                    : shippingQuoteLoading
                                                         ? "Cotizando..."
-                                                        : shippingQuoteError && selectedShippingMethod === option.value
+                                                        : shippingQuoteErrors[option.value]
                                                             ? "No disponible"
-                                                            : shippingQuote && selectedShippingMethod === option.value
-                                                                ? formatCurrency(shippingQuote.costo_envio)
+                                                            : shippingQuotes[option.value]
+                                                                ? formatCurrency(shippingQuotes[option.value]!.costo_envio)
                                                                 : "Cotizar"}
                                             </p>
                                             <img
@@ -387,14 +405,14 @@ export default function ShippingPage() {
                                     ? formatCurrency(0)
                                     : shippingQuoteLoading
                                         ? "Cotizando..."
-                                        : shippingQuoteError
+                                        : selectedShippingQuoteError
                                             ? "Sin cotización"
                                             : formatCurrency(costoEnvio)}
                             </p>
                         </div>
-                        {shippingQuoteError && (
+                        {selectedShippingQuoteError && (
                             <p className="text-red-500 font-inter text-sm/[22px]">
-                                {shippingQuoteError}
+                                {selectedShippingQuoteError}
                             </p>
                         )}
                         <div className="flex justify-between items-center pb-3">
@@ -411,7 +429,7 @@ export default function ShippingPage() {
                             <Button
                                 text="Continuar al pago"
                                 onClick={() => navigate(ROUTES.CHECKOUT)}
-                                disabled={cartItems.length === 0 || shippingQuoteLoading || (selectedShippingMethod !== MetodoEnvio.RETIRO_LOCAL && !shippingQuote) || Boolean(shippingQuoteError)}
+                                disabled={cartItems.length === 0 || shippingQuoteLoading || (selectedShippingMethod !== MetodoEnvio.RETIRO_LOCAL && !selectedShippingQuote) || Boolean(selectedShippingQuoteError)}
                             />
                         </div>
                     </div>
