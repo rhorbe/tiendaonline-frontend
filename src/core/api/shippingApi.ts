@@ -16,7 +16,7 @@ const cotizarEnvio = async (
   payload: CotizarEnvioRequest,
 ): Promise<CotizarEnvioResponse> => {
   const { data } = await api.post<CotizarEnvioResponse>(
-    "/checkout/cotizar-envio",
+    "/envio/cotizar",
     payload,
   );
 
