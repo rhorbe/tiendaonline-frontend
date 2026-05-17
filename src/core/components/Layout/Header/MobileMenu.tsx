@@ -5,11 +5,10 @@ import {Link} from "react-router-dom";
 
 interface MobileMenuProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onOpenCart: () => void;
     onRequestLogout: () => void;
 }
 
-export default function MobileMenu({setOpen, onOpenCart, onRequestLogout}: MobileMenuProps) {
+export default function MobileMenu({setOpen, onRequestLogout}: MobileMenuProps) {
     const {user} = useAuth();
     const {state} = useProductContext();
 
@@ -22,11 +21,6 @@ export default function MobileMenu({setOpen, onOpenCart, onRequestLogout}: Mobil
     const cartItemsCount = state.cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
     const closeMenu = () => setOpen(false);
-
-    const handleOpenCart = () => {
-        closeMenu();
-        onOpenCart();
-    };
 
     const handleRequestLogout = () => {
         closeMenu();
@@ -84,9 +78,9 @@ export default function MobileMenu({setOpen, onOpenCart, onRequestLogout}: Mobil
                         </li>
 
                         <li>
-                            <button
-                                type="button"
-                                onClick={handleOpenCart}
+                            <Link
+                                to={ROUTES.CART}
+                                onClick={closeMenu}
                                 className="flex w-full items-center justify-between pt-4 pb-2 border-b border-app-gray text-white font-inter text-sm font-semibold text-left"
                             >
                                 <span>Carrito</span>
@@ -103,7 +97,7 @@ export default function MobileMenu({setOpen, onOpenCart, onRequestLogout}: Mobil
                                         </p>
                                     </div>
                                 </span>
-                            </button>
+                            </Link>
                         </li>
                     </ul>
                 </nav>

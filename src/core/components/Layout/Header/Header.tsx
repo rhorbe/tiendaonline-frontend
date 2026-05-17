@@ -211,7 +211,6 @@ const Header: FC = () => {
             {open && (
                 <MobileMenu
                     setOpen={setOpen}
-                    onOpenCart={() => setCartOpen(true)}
                     onRequestLogout={() => setIsLogoutModalOpen(true)}
                 />
             )}
