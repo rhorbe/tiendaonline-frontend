@@ -61,9 +61,18 @@ export default function ContactPage() {
                 <p className="font-inter text-base/4 font-bold uppercase text-center mb-2">
                   {item.title}
                 </p>
-                <p className="text-app-black font-inter text-base/[26px] font-semibold text-center max-w-[293px] mx-auto">
-                  {item.paragraph}
-                </p>
+                {item.title === "Email" ? (
+                  <a
+                    href={`mailto:${item.paragraph}`}
+                    className="text-app-black font-inter text-base/[26px] font-semibold text-center max-w-[293px] mx-auto block hover:underline"
+                  >
+                    {item.paragraph}
+                  </a>
+                ) : (
+                  <p className="text-app-black font-inter text-base/[26px] font-semibold text-center max-w-[293px] mx-auto">
+                    {item.paragraph}
+                  </p>
+                )}
               </div>
             ))}
           </div>

@@ -379,7 +379,14 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
 
                     <div className="flex items-center justify-between gap-4 rounded-lg border border-muted-gray px-4 py-3">
                         <div>
-                            <div className="text-app-black font-inter text-sm font-semibold">Recibir notificaciones del sitio</div>
+                            <div className="flex items-center gap-2 text-app-black font-inter text-sm font-semibold">
+                                <img
+                                    src="/images/bell-regular.svg"
+                                    alt="Campana de notificaciones"
+                                    className="h-4 w-4 shrink-0"
+                                />
+                                <span>Recibir notificaciones del sitio</span>
+                            </div>
                             <div className="text-app-gray font-inter text-xs mt-1">
                                 {checkingSubscription
                                     ? 'Comprobando estado...'

@@ -50,7 +50,7 @@ const CartButton: FC<CartButtonProps> = ({
             title={buttonTitle}
         >
             <img
-                src="/images/shopping bag.svg"
+                src="/images/bag-shopping-solid-full.svg"
                 alt={imageAlt}
                 className={compact ? "h-5 w-5 invert" : "h-6 w-6 invert"}
             />
@@ -69,7 +69,7 @@ const CartButton: FC<CartButtonProps> = ({
             title={buttonTitle}
         >
             <img
-                src="/images/shopping bag.svg"
+                src="/images/bag-shopping-solid-full.svg"
                 alt={imageAlt}
                 className={compact ? "h-5 w-5 invert" : "h-6 w-6 invert"}
             />

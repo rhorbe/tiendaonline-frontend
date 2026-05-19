@@ -86,7 +86,7 @@ export default function MobileMenu({setOpen, onRequestLogout}: MobileMenuProps) 
                                 <span>Carrito</span>
                                 <span className="flex items-center gap-1.5">
                                     <img
-                                        src="/images/shopping bag.svg"
+                                        src="/images/cart-shopping-solid-full.svg"
                                         alt="Carrito"
                                         className="h-5 w-5 invert"
                                     />
