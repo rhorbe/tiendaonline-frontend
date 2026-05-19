@@ -1,4 +1,7 @@
 import {useEffect, useRef, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import Button from "../Button/Button";
+import {ROUTES} from "@/core/enum/common";
 import {formatCurrency} from "@/core/utils/formatCurrency";
 import {useProductContext} from "@/store/useProductContext";
 import {useAuth} from "@/store/useAuth";
@@ -21,6 +24,7 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
     const [isCartErrorModalOpen, setIsCartErrorModalOpen] = useState(false);
     const [cartErrorMessage, setCartErrorMessage] = useState("");
     const [cartErrorTitle, setCartErrorTitle] = useState("No se pudo quitar del carrito");
+    const navigate = useNavigate();
     const {cartItems} = state;
     const flayoutRef = useRef<HTMLDivElement>(null);
     const [pendingVariantIds, setPendingVariantIds] = useState<string[]>([]);
@@ -207,7 +211,7 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                                                     type="button"
                                                     onClick={() => handleDecrease(item.varianteId, item.quantity)}
                                                     aria-label="Disminuir cantidad"
-                                                        disabled={item.quantity <= 1}
+                                                    disabled={item.quantity <= 1}
                                                 >
                                                     <img src="/images/minus.svg" alt="" className="h-4 w-4"/>
                                                 </button>
@@ -216,7 +220,7 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                                                     type="button"
                                                     onClick={() => handleIncrease(item.varianteId, item.quantity, item.stock)}
                                                     aria-label="Aumentar cantidad"
-                                                        disabled={item.quantity >= (item.stock || 1)}
+                                                    disabled={item.quantity >= (item.stock || 1)}
                                                 >
                                                     <img src="/images/add.svg" alt="" className="h-4 w-4"/>
                                                 </button>
@@ -250,6 +254,15 @@ export const Flayout = ({setOpen}: FlayoutMenuProps) => {
                     <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
                         {formatCurrency(subtotal)}
                     </p>
+                </div>
+                <div className="py-[18px]">
+                    <Button
+                        text="Continuar"
+                        onClick={() => {
+                            setOpen(false);
+                            navigate(user ? ROUTES.CART : ROUTES.LOGIN);
+                        }}
+                    />
                 </div>
             </div>
             <Modal
