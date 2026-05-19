@@ -169,7 +169,7 @@ const Header: FC = () => {
                         />
                     </Link>
                 </div>
-                <nav className="flex-grow text-left pl-12">
+                <nav className="flex-grow text-left pl-14">
                     <ul className="flex justify-start items-center space-x-10">
                         {navLinks.map((link) => (
                             <li key={link.url}>
