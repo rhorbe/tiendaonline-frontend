@@ -167,7 +167,7 @@ const getClienteIdFromCart = (cart: BackendCart): string => {
 
 export const getCartContextByUserId = async (
   userId: string,
-): Promise<{ clienteId: string | null; cartItems: CartItem[] }> => {
+): Promise<{ clienteId: string | null; carritoId: string | null; cartItems: CartItem[] }> => {
   const { data } = await api.get<GetCarritosResponse>("/carrito");
   const carts = toCartArray(data);
   const userCart = findCartByUserId(carts, userId);
@@ -175,6 +175,7 @@ export const getCartContextByUserId = async (
   if (!userCart) {
     return {
       clienteId: null,
+      carritoId: null,
       cartItems: [],
     };
   }
@@ -185,6 +186,7 @@ export const getCartContextByUserId = async (
 
   return {
     clienteId: getClienteIdFromCart(userCart) || null,
+    carritoId: getCartId(userCart) || null,
     cartItems,
   };
 };

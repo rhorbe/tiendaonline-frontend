@@ -346,7 +346,7 @@ export default function CartPage() {
                 </div>
                 <div className="p-6 rounded-md border border-app-gray bg-white space-y-3 mb-4">
                     <p className="text-app-black font-poppins text-xl/7 font-medium mb-4">
-                        Resumen del carrito
+                        Resumen de la compra
                     </p>
 
                     <div className="flex justify-between items-center border-b border-app-light-gray py-3">

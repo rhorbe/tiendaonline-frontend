@@ -1,14 +1,15 @@
 import {useCallback, useEffect, useMemo, useState} from "react";
-import {useNavigate} from "react-router-dom";
 
 import Button from "@/core/components/Button/Button";
 import Process from "@/core/components/Process";
 import shippingApi, {type CotizarEnvioResponse} from "@/core/api/shippingApi";
+import checkoutApi from "@/core/api/checkoutApi";
+import {getCartContextByUserId} from "@/core/api/carritoApi";
 import {fetchPerfil} from "@/core/api/perfilApi";
 import {MetodoEnvio} from "@/core/enum/MetodoEnvio";
-import {ROUTES} from "@/core/enum/common";
 import {formatCurrency} from "@/core/utils/formatCurrency";
 import {useProductContext} from "@/store/useProductContext";
+import {useAuth} from "@/store/useAuth";
 import type {PerfilDireccion, PerfilResponse} from "@/core/models/Perfil";
 import AddressForm from "@/core/components/AddressForm";
 import {formatearDireccion} from "@/core/utils/formatDireccion";
@@ -60,7 +61,7 @@ const shippingMethodOptions = [
 }>;
 
 export default function ShippingPage() {
-    const navigate = useNavigate();
+    const {user} = useAuth();
     const {state, dispatch} = useProductContext();
     const {cartItems, selectedShippingMethod, selectedShippingAddressId} = state;
     const [perfil, setPerfil] = useState<PerfilResponse | null>(null);
@@ -70,6 +71,8 @@ export default function ShippingPage() {
     const [shippingQuotes, setShippingQuotes] = useState<Partial<Record<MetodoEnvio, CotizarEnvioResponse>>>({});
     const [shippingQuoteErrors, setShippingQuoteErrors] = useState<Partial<Record<MetodoEnvio, string>>>({});
     const [shippingQuoteLoading, setShippingQuoteLoading] = useState(false);
+    const [procesandoCompra, setProcesandoCompra] = useState(false);
+    const [procesarCompraError, setProcesarCompraError] = useState<string | null>(null);
 
     const subtotal = cartItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
 
@@ -181,6 +184,59 @@ export default function ShippingPage() {
     const selectedShippingQuoteError = shippingQuoteErrors[selectedShippingMethod] ?? null;
     const costoEnvio = selectedShippingQuote?.costo_envio ?? 0;
     const totalCompra = selectedShippingQuote?.total ?? subtotal + costoEnvio;
+
+    const handleContinueToPayment = async () => {
+        if (cartItems.length === 0 || procesandoCompra) {
+            return;
+        }
+
+        if (!user?.id) {
+            setProcesarCompraError("Debés iniciar sesión para continuar con la compra.");
+            return;
+        }
+
+        try {
+            setProcesandoCompra(true);
+            setProcesarCompraError(null);
+
+            const {carritoId} = await getCartContextByUserId(user.id);
+
+            if (!carritoId) {
+                // TODO capturar
+                throw new Error("No se pudo identificar el carrito actual.");
+            }
+
+            const response = await checkoutApi.procesarCompra({
+                carrito_id: carritoId,
+                metodo_envio: selectedShippingMethod,
+            });
+
+            if (!response.success) {
+                // TODO capturar
+
+                throw new Error("No se pudo iniciar el pago con Mercado Pago.");
+            }
+
+            const checkoutUrl = response.data.checkout_url;
+
+            if (!checkoutUrl) {
+                // TODO capturar
+
+                throw new Error("La pasarela de pago no devolvió una URL válida.");
+            }
+
+            const paymentWindow = window.open(checkoutUrl, "_blank", "noopener,noreferrer");
+
+            if (!paymentWindow) {
+                window.location.assign(checkoutUrl);
+            }
+        } catch (error) {
+            console.error("Error al procesar la compra:", error);
+            setProcesarCompraError(error instanceof Error ? error.message : "No se pudo procesar la compra.");
+        } finally {
+            setProcesandoCompra(false);
+        }
+    };
 
     return (
         <section className="px-8 lg:px-14 py-20">
@@ -349,48 +405,10 @@ export default function ShippingPage() {
                             Resumen de la compra
                         </p>
 
-                        <div className="space-y-6">
-                            {cartItems.length === 0 ? (
-                                <p className="py-6 text-app-gray font-inter text-sm/[22px]">Tu carrito está vacío.</p>
-                            ) : (
-                                <div className="w-full border-b border-app-light-gray">
-                                    {cartItems.map((item) => (
-                                        <div key={item.varianteId} className="flex justify-between py-6 border-b border-app-light-gray">
-                                            <div className="flex gap-4 items-center">
-                                                <div className="bg-primary w-20 h-24">
-                                                    <img
-                                                        src={item.imageUrl}
-                                                        alt="Imagen del producto"
-                                                        className="object-contain object-center h-auto max-h-full w-full"
-                                                    />
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <p className="text-app-black font-inter text-sm/[22px] font-semibold">
-                                                        {item.nombre}
-                                                    </p>
-                                                    {item.varianteLabel && (
-                                                        <p className="text-app-gray font-inter text-xs/[18px] font-normal">
-                                                            {item.varianteLabel} ML
-                                                        </p>
-                                                    )}
-                                                    <p className="text-app-black font-inter font-semibold text-sm/[20px]">
-                                                        Cantidad: {item.quantity}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="text-right flex flex-col items-end gap-2">
-                                                <p className="text-app-black font-inter text-lg/[30px] font-semibold">
-                                                    {formatCurrency(item.unitPrice * item.quantity)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+
                         <div className="flex justify-between items-center border-b border-app-light-gray py-3">
                             <p className="text-app-black font-inter text-base/[26px] font-normal">
-                                Subtotal
+                                Subtotal de la compra
                             </p>
                             <p className="text-app-black text-right font-inter text-base/[26px] font-semibold">
                                 {formatCurrency(subtotal)}
@@ -427,11 +445,16 @@ export default function ShippingPage() {
                         </div>
                         <div className="pt-2">
                             <Button
-                                text="Continuar al pago"
-                                onClick={() => navigate(ROUTES.CHECKOUT)}
-                                disabled={cartItems.length === 0 || shippingQuoteLoading || (selectedShippingMethod !== MetodoEnvio.RETIRO_LOCAL && !selectedShippingQuote) || Boolean(selectedShippingQuoteError)}
+                                text={procesandoCompra ? "Procesando..." : "Continuar al pago"}
+                                onClick={handleContinueToPayment}
+                                disabled={cartItems.length === 0 || procesandoCompra}
                             />
                         </div>
+                        {procesarCompraError && (
+                            <p className="text-red-500 font-inter text-sm/[22px]">
+                                {procesarCompraError}
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>

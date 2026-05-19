@@ -33,6 +33,7 @@ const publicRoutes: RouteConfig[] = [
     {path: ROUTES.CONTACT, element: <ContactPage/>},
     {path: ROUTES.FORGOT_PASSWORD, element: <ForgotPasswordPage/>},
     {path: ROUTES.OTP_PAGE, element: <OtpPage/>},
+    {path: ROUTES.ORDER, element: <OrderCompletePage/>},
     {path: ROUTES.ERROR_PAGE, element: <ErrorPage/>},
 ];
 
@@ -40,7 +41,6 @@ const protectedRoutes: RouteConfig[] = [
     {path: ROUTES.CART, element: <CartPage/>},
     {path: ROUTES.SHIPPING, element: <ShippingPage/>},
     {path: ROUTES.CHECKOUT, element: <CheckOutPage/>},
-    {path: ROUTES.ORDER, element: <OrderCompletePage/>},
     {path: ROUTES.PROFILE, element: <ProfilePage/>},
 ];
 
