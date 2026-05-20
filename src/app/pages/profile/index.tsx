@@ -128,16 +128,6 @@ export default function ProfilePage() {
             </div>
             <div className="flex flex-col md:flex-row">
                 <div className="py-10 px-4 w-full md:w-fit bg-app-light-gray rounded-lg space-y-10 h-fit">
-                    <div className="flex flex-col items-center gap-[6px]">
-                        <p className="text-app-black font-inter text-xl/8 font-semibold">
-                            {nombreVisible}
-                        </p>
-                        {perfilVisible?.email && (
-                            <p className="text-app-gray font-inter text-sm">
-                                {perfilVisible.email}
-                            </p>
-                        )}
-                    </div>
                     <ul className="space-y-2 min-w-[230px] hidden md:block">
                         {menuItems.map((item, index) => (
                             <li
