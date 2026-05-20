@@ -7,10 +7,25 @@ export default function OrderCompletePage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
+    const paymentStatusLabels: Record<string, string> = {
+        approved: "Aprobado",
+        pending: "Pendiente",
+        in_process: "En proceso",
+        rejected: "Rechazado",
+        cancelled: "Cancelado",
+        refunded: "Reembolsado",
+        charged_back: "Contracargo",
+        in_mediation: "En mediación",
+        authorized: "Autorizado",
+    };
+
     // Capturar parámetros de Mercado Pago
     const merchantOrderId = searchParams.get("merchant_order_id");
     const paymentId = searchParams.get("payment_id");
     const status = searchParams.get("status");
+    const translatedStatus = status
+            ? paymentStatusLabels[status.toLowerCase()] ?? status
+            : null;
 
     // Formato de fecha actual
     const currentDate = new Date().toLocaleDateString("es-AR", {
@@ -41,7 +56,7 @@ export default function OrderCompletePage() {
                                     </h2>
                                     {status && (
                                             <p className="text-app-gray text-left md:text-center font-inter text-sm/[22px] mt-2">
-                                                    Estado: <span className="font-semibold capitalize">{status}</span>
+                                                    Estado de pago: <span className="font-semibold">{translatedStatus}</span>
                                             </p>
                                     )}
                             </div>
