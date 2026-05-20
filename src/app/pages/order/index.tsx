@@ -45,20 +45,7 @@ export default function OrderCompletePage() {
                                             </p>
                                     )}
                             </div>
-                            <div className="max-w-[546px] flex gap-2 md:gap-10 md:justify-center items-center">
-                                    <div className="pt-4 pr-4 relative flex-shrink-0">
-                                            <div className="absolute top-0 right-0 bg-app-black px-3 py-1 rounded-full text-white text-center font-inter text-base/6 font-semibold">2</div>
-                                            <div className="bg-primary">
-                                                    <img src="/images/product-one.png" alt="producto" className="w-20 h-24 object-contain object-center" />
-                                            </div>
-                                    </div>
-                                    <div className="pt-4 pr-4 relative flex-shrink-0">
-                                            <div className="absolute top-0 right-0 bg-app-black px-3 py-1 rounded-full text-white text-center font-inter text-base/6 font-semibold">2</div>
-                                            <div className="bg-primary">
-                                                    <img src="/images/product-one.png" alt="producto" className="w-20 h-24 object-contain object-center" />
-                                            </div>
-                                    </div>
-                            </div>
+
                             <div className="md:w-fit mx-auto space-y-5">
                                     <div className="flex flex-col md:flex-row md:px-6">
                                             <p className="text-left text-app-gray font-inter text-sm/[22px] font-semibold w-40">Código de pedido:</p>
