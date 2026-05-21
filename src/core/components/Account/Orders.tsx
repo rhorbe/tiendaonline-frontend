@@ -122,7 +122,7 @@ export default function Orders() {
                                     <th className="pb-6 text-left text-app-gray font-inter text-base/[26px] border-b border-app-light-gray font-normal">
                                         Estado
                                     </th>
-                                    <th className="pb-6 text-left text-app-gray font-inter text-base/[26px] border-b border-app-light-gray font-normal">
+                                    <th className="pb-6 text-right text-app-gray font-inter text-base/[26px] border-b border-app-light-gray font-normal">
                                         Precio
                                     </th>
                                 </tr>
