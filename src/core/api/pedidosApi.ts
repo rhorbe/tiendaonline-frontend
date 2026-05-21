@@ -19,12 +19,9 @@ interface PedidosApiResponse {
 }
 
 export const fetchPedidos = async (clienteId: string): Promise<PedidosResponse> => {
-  console.info(`Obteniendo pedidos para cliente ID: ${clienteId}`);
 
   const response = await api.get<PedidosApiResponse>(`/cliente/${clienteId}/pedidos`);
   const responseData = response.data;
-
-  console.info(response.data);
 
   if (!responseData?.success || !Array.isArray(responseData.data)) {
     throw new Error("No se pudieron obtener los pedidos");
