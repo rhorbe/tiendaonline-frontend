@@ -139,7 +139,7 @@ export default function Orders() {
                                         <td className="py-6 border-b border-app-light-gray text-app-black font-inter text-sm/[22px]">
                                             {pedido.estado ?? "-"}
                                         </td>
-                                        <td className="py-6 border-b border-app-light-gray text-app-black font-inter text-sm/[22px]">
+                                        <td className="py-6 border-b border-app-light-gray text-left text-app-black font-inter text-sm/[22px]">
                                             {formatPrecio(pedido)}
                                         </td>
                                     </tr>
