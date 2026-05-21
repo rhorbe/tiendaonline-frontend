@@ -151,7 +151,6 @@ self.addEventListener('activate', function (event) {
 });
 
 self.addEventListener('push', function (event) {
-    console.log('Evento push recibido');
   var data = {
     title: 'Nueva notificación',
     body: 'Hay una novedad',
@@ -162,7 +161,6 @@ self.addEventListener('push', function (event) {
   if (event.data) {
     try {
       var rawPayload = event.data.text();
-      console.log('Push recibido:', rawPayload || 'No hay datos');
 
       var payload = rawPayload ? JSON.parse(rawPayload) : {};
       var payloadData = payload && typeof payload.data === 'object' && payload.data !== null
@@ -180,10 +178,8 @@ self.addEventListener('push', function (event) {
       };
     } catch (error) {
       // Si el payload no llega en JSON, se mantienen los valores por defecto.
-      console.warn('Push payload inválido', error);
     }
   } else {
-    console.log('Push recibido: No hay datos');
   }
 
   event.waitUntil(

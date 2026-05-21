@@ -36,16 +36,17 @@ const Login: FC = () => {
                 email,
                 password,
             });
-            console.log("Login response data:", data);
 
             // Validación defensiva: asegurar que data y data.user existen
             if (!data || !data.user || !data.token) {
+                //TODO capturar
                 throw new Error("Respuesta incompleta del servidor: faltan campos requeridos");
             }
 
             const userId = data.user.id ?? "";
 
             if (!userId) {
+                //TODO capturar
                 throw new Error("No se encontró ID de usuario en la respuesta");
             }
 

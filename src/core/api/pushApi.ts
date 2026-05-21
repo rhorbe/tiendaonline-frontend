@@ -91,15 +91,11 @@ export const fetchVapidPublicKey = async (forceRefresh = false): Promise<string>
 };
 
 export const guardarSuscripcionEnBackend = async (subscription: PushSubscription): Promise<void> => {
-  console.log('Serializando suscripción push para enviarla al backend...', subscription);
   const payload = serializePushSubscription(subscription);
-  console.log('Payload serializado de la suscripción push:', payload);
   if (!payload.endpoint || !payload.keys?.auth || !payload.keys?.p256dh) {
     throw new Error('La suscripción push no es válida para enviarla al backend.');
   }
-  console.log('Enviando suscripción push al backend para guardarla...', payload);
   await api.post(PUSH_SUBSCRIBE_ENDPOINT, payload);
-  console.log('Suscripción push enviada al backend exitosamente.');
 };
 
 export const eliminarSuscripcionEnBackend = async (subscription: PushSubscription): Promise<void> => {
@@ -119,7 +115,6 @@ export const vapidPublicKeyToUint8Array = (publicKey: string): Uint8Array => {
   const padding = '='.repeat((4 - (publicKey.length % 4)) % 4);
   const base64 = (publicKey + padding).replace(/-/g, '+').replace(/_/g, '/');
   const rawData = window.atob(base64);
-  console.log('Clave VAPID pública convertida a Uint8Array:', rawData);
 
   // Fuerza un buffer ArrayBuffer concreto para cumplir BufferSource en libs DOM nuevas.
   const bytes = Uint8Array.from(rawData, (char) => char.charCodeAt(0));
