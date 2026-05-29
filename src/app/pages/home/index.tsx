@@ -31,7 +31,7 @@ const Home: FC = () => {
     {
       image: "/images/finance.svg",
       title: "Devoluciones",
-      paragraph: "Garantía de 30 días",
+      paragraph: "Hasta 30 días para cambiar de idea",
     },
     {
       image: "/images/lock.svg",

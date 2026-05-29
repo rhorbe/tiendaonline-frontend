@@ -28,7 +28,7 @@ export default function ContactPage() {
     {
       image: "/images/finance.svg",
       title: "Devolución de dinero",
-      paragraph: "Garantía de 30 días",
+      paragraph: "Hasta 30 días para cambiar de idea",
     },
     {
       image: "/images/lock.svg",
