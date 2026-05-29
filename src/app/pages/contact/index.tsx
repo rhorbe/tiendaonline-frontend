@@ -22,8 +22,8 @@ export default function ContactPage() {
   const services = [
     {
       image: "/images/shipping.svg",
-      title: "Envío gratis",
-      paragraph: "Compras superiores a $100.000",
+      title: "Envío a todo el país",
+      paragraph: "Seguridad y comodidad",
     },
     {
       image: "/images/finance.svg",

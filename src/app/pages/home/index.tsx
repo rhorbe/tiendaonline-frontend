@@ -24,9 +24,10 @@ const Home: FC = () => {
   const services = [
     {
       image: "/images/shipping.svg",
-      title: "Envío Gratis",
-      paragraph: "Desde $100.000",
+      title: "Envío a todo el país",
+      paragraph: "Seguridad y comodidad",
     },
+
     {
       image: "/images/finance.svg",
       title: "Devoluciones",
