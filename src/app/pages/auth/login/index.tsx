@@ -58,6 +58,7 @@ const Login: FC = () => {
                 email: data.user.email,
                 email_verified_at: data.user.email_verified_at ?? null,
                 cliente_id: data.user.cliente_id,
+                dni: data.user.dni,
                 active: data.user.active,
             });
 

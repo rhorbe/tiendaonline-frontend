@@ -20,6 +20,13 @@ export const updatePerfil = async (data: {
   return response.data;
 };
 
+export const updateDni = async (data: {
+  dni: string;
+}): Promise<PerfilResponse> => {
+  const response = await api.put<PerfilResponse>("/perfil/dni", data);
+  return response.data;
+};
+
 export const changePassword = async (data: {
   current_password: string;
   new_password: string;

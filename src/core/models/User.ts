@@ -5,6 +5,7 @@ export interface User {
   email: string;
   email_verified_at: string | null;
   cliente_id?: string;
+  dni?: string | null;
   active?: boolean;
   remember_token?: string | null;
 }
@@ -17,6 +18,7 @@ export interface LoginUserResponse {
   email: string;
   active: boolean;
   cliente_id?: string;
+  dni?: string | null;
   email_verified_at?: string | null;
 }
 

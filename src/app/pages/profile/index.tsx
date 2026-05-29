@@ -35,6 +35,7 @@ export default function ProfilePage() {
                 updateUser({
                     name: data.name,
                     last_name: data.last_name,
+                    dni: data.dni,
                     cliente_id: data.cliente_id,
                 });
                 setPerfilError(null);
@@ -74,6 +75,7 @@ export default function ProfilePage() {
             updateUser({
                 name: perfilActualizado.name,
                 last_name: perfilActualizado.last_name,
+                dni: perfilActualizado.dni,
                 cliente_id: perfilActualizado.cliente_id,
             });
 
@@ -93,6 +95,7 @@ export default function ProfilePage() {
         name: user.name,
         last_name: null,
         email: user.email,
+        dni: user.dni,
         telefono: null,
         cliente_id: user.cliente_id ?? "",
         direcciones: [],

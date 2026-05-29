@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import {isAxiosError} from 'axios';
 import type {PerfilResponse} from '@/core/models/Perfil';
 import Button from "../Button/Button";
-import { updatePerfil, changePassword } from '@/core/api/perfilApi';
+import { updatePerfil, updateDni, changePassword } from '@/core/api/perfilApi';
 
 const obtenerMensajeErrorPush = (error: unknown): string => {
     if (isAxiosError(error)) {
@@ -70,6 +70,7 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
     const [guardandoDatos, setGuardandoDatos] = useState(false);
     const [nombre, setNombre] = useState(perfil?.name ?? '');
     const [apellido, setApellido] = useState(perfil?.last_name ?? '');
+    const [dni, setDni] = useState(perfil?.dni ?? '');
     const [contrasenaActual, setContrasenaActual] = useState('');
     const [contrasenaNueva, setContrasenaNueva] = useState('');
     const [contrasenaRepetida, setContrasenaRepetida] = useState('');
@@ -79,6 +80,7 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
     useEffect(() => {
         setNombre(perfil?.name ?? '');
         setApellido(perfil?.last_name ?? '');
+        setDni(perfil?.dni ?? '');
     }, [perfil]);
 
     // Comprobar si hay suscripción push activa
@@ -190,6 +192,14 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
             // Validar que al menos un campo haya cambiado
             const nombreCambio = nombre !== (perfil?.name ?? '');
             const apellidoCambio = apellido !== (perfil?.last_name ?? '');
+            const dniCambio = dni !== (perfil?.dni ?? '');
+
+            if (dniCambio && !dni.trim()) {
+                setMensaje({tipo: 'error', texto: 'El DNI no puede estar vacío'});
+                return;
+            }
+
+            let perfilActualizado: PerfilResponse | null = perfil;
 
             if (nombreCambio || apellidoCambio) {
                 const actualizado = await updatePerfil({
@@ -197,19 +207,34 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
                     last_name: apellido || undefined,
                 });
 
-                const perfilActualizado = {
+                perfilActualizado = {
                     ...(perfil ?? actualizado),
                     ...actualizado,
                     name: nombre,
                     last_name: apellido || null,
                 };
+            }
 
+            if (dniCambio) {
+                const actualizado = await updateDni({
+                    dni: dni.trim(),
+                });
+
+                perfilActualizado = {
+                    ...(perfilActualizado ?? actualizado),
+                    ...actualizado,
+                    dni: dni.trim(),
+                };
+            }
+
+            if (perfilActualizado && (nombreCambio || apellidoCambio || dniCambio)) {
                 // Actualizar inmediatamente la vista usando los valores guardados
                 setNombre(perfilActualizado.name);
                 setApellido(perfilActualizado.last_name ?? '');
+                setDni(perfilActualizado.dni ?? '');
                 onPerfilChange?.(perfilActualizado);
             } else {
-                // Si no hubo cambios en nombre/apellido simplemente forzamos recarga si hace falta
+                // Si no hubo cambios, simplemente forzamos recarga si hace falta
                 onPerfidUpdate?.();
             }
 
@@ -285,6 +310,18 @@ export default function AccountDetails({perfil, onPerfidUpdate, onPerfilChange, 
                         <div className="text-app-gray font-inter text-xs mt-1">
                             La dirección de correo no puede ser modificada.
                         </div>
+                    </div>
+                    <div className="space-y-3 w-full">
+                        <label htmlFor="dni" className="text-app-gray font-inter text-sm/3 font-bold uppercase">DNI</label>
+                        <input
+                            placeholder="DNI"
+                            type="text"
+                            name="dni"
+                            id="dni"
+                            value={dni}
+                            onChange={(e) => setDni(e.target.value)}
+                            className="border border-muted-gray outline-none ring-0 focus:ring-0 w-full rounded-md"
+                        />
                     </div>
                     <div className="space-y-3 w-full">
                         <label htmlFor="firstname" className="text-app-gray font-inter text-sm/3 font-bold uppercase">Nombre</label>
