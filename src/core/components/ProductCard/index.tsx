@@ -9,7 +9,6 @@ interface ProductCardProps {
     brand?: string;
     name?: string;
     price?: number | string;
-    oldPrice?: string;
     variantes?: VarianteProducto[];
     onAddToCart?: (variante?: VarianteProducto) => void;
     onToggleWishlist?: () => void;
@@ -25,7 +24,6 @@ const ProductCard: React.FC<ProductCardProps> = (
         rating = 0,
         brand = "",
         name,
-        oldPrice,
         variantes = [],
         onAddToCart,
         onToggleWishlist,
@@ -63,7 +61,6 @@ const ProductCard: React.FC<ProductCardProps> = (
 
     const displayedPrice = selectedVariante?.precio;
     const priceAsCurrency = formatPriceToARS(displayedPrice);
-    const oldPriceFormatted = formatPriceToARS(oldPrice);
 
     return (
         <div
@@ -151,11 +148,6 @@ const ProductCard: React.FC<ProductCardProps> = (
                     </div>
                 )}
                 <div className="flex gap-3.5 items-center mb-3">
-                    {oldPrice && (
-                        <p className="text-app-gray font-inter text-sm/[22px] font-semibold line-through">
-                            {oldPriceFormatted}
-                        </p>
-                    )}
                     <p className="text-app-black font-inter text-lg/[28px] font-semibold">
                         {priceAsCurrency}
                     </p>
