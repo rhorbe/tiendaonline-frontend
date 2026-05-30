@@ -3,8 +3,8 @@ import {VarianteProducto} from "@/core/models/VarianteProducto.ts";
 
 interface ProductCardProps {
     imageUrl?: string;
-    label?: string;
-    descuento?: string;
+    nuevo?: string;
+    oferta?: string;
     rating?: number;
     brand?: string;
     name?: string;
@@ -19,8 +19,8 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = (
     {
         imageUrl,
-        label,
-        descuento = "-50%",
+        nuevo,
+        oferta,
         rating = 0,
         brand = "",
         name,
@@ -82,17 +82,21 @@ const ProductCard: React.FC<ProductCardProps> = (
                 className="bg-primary h-[308px] md:h-[349px] py-4 px-3 md:p-4 flex flex-col justify-between"
             >
                 <div className="flex justify-between items-center">
-                    <div>
-                        <div className="px-3 py-1 bg-white rounded">
-                            <p className="text-app-black font-inter text-base font-bold uppercase">
-                                {label}
-                            </p>
-                        </div>
-                        <div className="px-3 py-1 bg-app-green rounded mt-2">
-                            <p className="text-white font-inter text-base font-bold uppercase">
-                                {descuento}
-                            </p>
-                        </div>
+                    <div className="flex flex-col gap-2">
+                        {nuevo && (
+                            <div className="px-3 py-1 bg-app-black rounded">
+                                <p className="text-white font-inter text-base font-bold uppercase">
+                                    {nuevo}
+                                </p>
+                            </div>
+                        )}
+                        {oferta && (
+                            <div className="px-3 py-1 bg-app-green rounded">
+                                <p className="text-white font-inter text-base font-bold uppercase">
+                                    {oferta}
+                                </p>
+                            </div>
+                        )}
                     </div>
                     {/* TODO sacar botón o agregar funcionalidad */}
                     <button onClick={(e) => {
