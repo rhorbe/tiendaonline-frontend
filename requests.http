@@ -125,6 +125,10 @@ Accept: application/json
 GET {{baseUrl}}/producto
 Accept: application/json
 
+### GET productos destacados
+GET {{baseUrl}}/producto?destacado=true
+Accept: application/json
+
 ### POST producto
 POST {{baseUrl}}/producto
 Accept: application/json

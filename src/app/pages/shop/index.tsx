@@ -85,7 +85,7 @@ export default function ShopPage() {
         (overrides?: ProductFilters): ProductFilters => ({
             categoriaId: selectedCategoryId ?? undefined,
             marcaId: selectedBrandId ?? undefined,
-            destacado: selectedFeatured || undefined,
+            ...(selectedFeatured ? {destacado: true} : {}),
             ...overrides,
         }),
         [selectedBrandId, selectedCategoryId, selectedFeatured],
@@ -253,12 +253,17 @@ export default function ShopPage() {
                                     checked={selectedFeatured}
                                     onChange={(e) => {
                                         const checked = e.target.checked;
+                                        const nextFilters: ProductFilters = {
+                                            categoriaId: selectedCategoryId ?? undefined,
+                                            marcaId: selectedBrandId ?? undefined,
+                                        };
+
+                                        if (checked) {
+                                            nextFilters.destacado = true;
+                                        }
+
                                         setSelectedFeatured(checked);
-                                        loadProducts(
-                                            getCurrentFilters({
-                                                destacado: checked || undefined,
-                                            }),
-                                        );
+                                        loadProducts(nextFilters);
                                     }}
                                 />
                                 <span
