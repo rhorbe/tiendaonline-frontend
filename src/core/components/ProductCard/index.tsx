@@ -19,8 +19,8 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = (
     {
         imageUrl,
-        nuevo,
-        oferta,
+        nuevo = "",
+        oferta = "",
         rating = 0,
         brand = "",
         name,
