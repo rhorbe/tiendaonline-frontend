@@ -157,9 +157,8 @@ export default function ShopPage() {
     useEffect(() => {
         loadCategorias();
         loadMarcas();
-       /* loadTamanios();*/
+        /* loadTamanios();*/
     }, [loadCategorias, loadMarcas, /*loadTamanios*/]);
-
 
 
     return (
@@ -243,7 +242,6 @@ export default function ShopPage() {
                                 <div className={`font-inter w-fit text-sm/[22px] font-semibold ${
                                     selectedFeatured ? "text-app-black" : "text-app-gray"
                                 }`}>
-
                                     <span>Destacados</span>
                                 </div>
                             </div>
@@ -263,8 +261,10 @@ export default function ShopPage() {
                                         );
                                     }}
                                 />
-                                <span className="w-12 h-5 bg-app-gray rounded-full peer peer-focus:ring-2 peer-focus:ring-app-black/30 peer-checked:bg-[#2A6F97] transition-colors"></span>
-                                <span className="absolute left-1 top-1 h-3 w-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5"></span>
+                                <span
+                                    className="w-12 h-5 bg-app-gray rounded-full peer peer-focus:ring-2 peer-focus:ring-app-black/30 peer-checked:bg-[#2A6F97] transition-colors"></span>
+                                <span
+                                    className="absolute left-1 top-1 h-3 w-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5"></span>
                             </label>
                         </div>
                     </div>
