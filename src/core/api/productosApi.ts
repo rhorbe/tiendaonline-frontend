@@ -4,6 +4,7 @@ import { Producto, ProductsMeta, ProductsResponse } from "../models/Producto.ts"
 export interface ProductFilters {
   categoriaId?: string;
   marcaId?: string;
+  destacado?: boolean;
 }
 
 export interface FetchProductsResult {
@@ -27,6 +28,7 @@ export const fetchProducts = async (
   const params = {
     ...(filters?.categoriaId ? { categoria_id: filters.categoriaId } : {}),
     ...(filters?.marcaId ? { marca_id: filters.marcaId } : {}),
+    ...(filters?.destacado ? { destacado: true } : {}),
   };
 
   const response = await api.get<ProductsResponse>("/producto", {

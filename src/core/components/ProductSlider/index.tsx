@@ -56,7 +56,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                 {descuento && (
                   <div className="px-4 py-2 bg-app-green rounded mt-2">
                     <p className="text-white font-inter text-base font-bold uppercase">
-                      {descuento}
+                      Oferta
                     </p>
                   </div>
                 )}

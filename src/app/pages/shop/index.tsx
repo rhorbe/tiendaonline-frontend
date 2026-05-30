@@ -47,6 +47,7 @@ export default function ShopPage() {
     const [productsError, setProductsError] = useState<string | null>(null);
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
     const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null);
+    const [selectedFeatured, setSelectedFeatured] = useState(false);
 
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [loadingCategories, setLoadingCategorias] = useState(true);
@@ -55,10 +56,6 @@ export default function ShopPage() {
     const [marcas, setMarcas] = useState<Marca[]>([]);
     const [loadingBrands, setLoadingMarcas] = useState(true);
     const [brandError, setMarcaError] = useState<string | null>(null);
-
-  /*  const [tamanios, setTamanios] = useState<Tamanio[]>([]);
-    const [loadingTamanios, setLoadingTamanios] = useState(true);
-    const [tamanioError, setTamanioError] = useState<string | null>(null);*/
 
     const loadProducts = useCallback((filters?: ProductFilters) => {
         setLoading(true);
@@ -84,37 +81,42 @@ export default function ShopPage() {
             .finally(() => setLoading(false));
     }, [dispatch]);
 
+    const getCurrentFilters = useCallback(
+        (overrides?: ProductFilters): ProductFilters => ({
+            categoriaId: selectedCategoryId ?? undefined,
+            marcaId: selectedBrandId ?? undefined,
+            destacado: selectedFeatured || undefined,
+            ...overrides,
+        }),
+        [selectedBrandId, selectedCategoryId, selectedFeatured],
+    );
+
     useEffect(() => {
         loadProducts();
     }, [loadProducts]);
 
     const handleCategoryClick = (categoriaId: string) => {
         setSelectedCategoryId(categoriaId);
-        loadProducts({
-            categoriaId,
-            marcaId: selectedBrandId ?? undefined,
-        });
+        loadProducts(getCurrentFilters({categoriaId}));
     };
 
     const handleBrandClick = (marcaId: string) => {
         setSelectedBrandId(marcaId);
-        loadProducts({
-            categoriaId: selectedCategoryId ?? undefined,
-            marcaId,
-        });
+        loadProducts(getCurrentFilters({marcaId}));
     };
 
     const handleClearAllFilters = () => {
-        if (!selectedCategoryId && !selectedBrandId) {
+        if (!selectedCategoryId && !selectedBrandId && !selectedFeatured) {
             return;
         }
 
         setSelectedCategoryId(null);
         setSelectedBrandId(null);
+        setSelectedFeatured(false);
         loadProducts();
     };
 
-    const hasActiveFilters = Boolean(selectedCategoryId || selectedBrandId);
+    const hasActiveFilters = Boolean(selectedCategoryId || selectedBrandId || selectedFeatured);
     const hasMoreProducts = (state.meta?.total ?? 0) > (state.meta?.to ?? 0);
     const emptyAfterFilters = hasActiveFilters && state.productos.length === 0;
     const isOffline = isOfflineByNavigator();
@@ -152,50 +154,13 @@ export default function ShopPage() {
             .finally(() => setLoadingMarcas(false));
     }, []);
 
- /*   const loadTamanios = useCallback(() => {
-        setLoadingTamanios(true);
-        setTamanioError(null);
-
-        fetchTamanio()
-            .then((data) => setTamanios(data))
-            .catch((err) => {
-                console.error("Error recuperando los tamaños:", err);
-                setTamanios([]);
-                setTamanioError("No se pudieron cargar los tamaños.");
-            })
-            .finally(() => setLoadingTamanios(false));
-    }, []);*/
-
     useEffect(() => {
         loadCategorias();
         loadMarcas();
        /* loadTamanios();*/
     }, [loadCategorias, loadMarcas, /*loadTamanios*/]);
 
-   /* const sortedTamanios = useMemo(() => {
-        const getNumericValue = (value: string) => {
-            const normalized = value.replace(/,/g, ".");
-            const match = normalized.match(/\d+(?:\.\d+)?/);
-            return match ? Number(match[0]) : Number.NaN;
-        };
 
-        return tamanios
-            .map((item, index) => ({item, index, numeric: getNumericValue(item.name)}))
-            .sort((a, b) => {
-                const aIsNumber = Number.isFinite(a.numeric);
-                const bIsNumber = Number.isFinite(b.numeric);
-
-                if (aIsNumber && bIsNumber && a.numeric !== b.numeric) {
-                    return a.numeric - b.numeric;
-                }
-
-                if (aIsNumber && !bIsNumber) return -1;
-                if (!aIsNumber && bIsNumber) return 1;
-
-                return a.index - b.index;
-            })
-            .map(({item}) => item);
-    }, [tamanios]);*/
 
     return (
         <section className="px-8 lg:px-14">
@@ -271,6 +236,37 @@ export default function ShopPage() {
                         >
                             Limpiar filtros
                         </button>
+                    </div>
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between gap-4 rounded-lg py-3">
+                            <div>
+                                <div className={`font-inter w-fit text-sm/[22px] font-semibold ${
+                                    selectedFeatured ? "text-app-black" : "text-app-gray"
+                                }`}>
+
+                                    <span>Destacados</span>
+                                </div>
+                            </div>
+
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={selectedFeatured}
+                                    onChange={(e) => {
+                                        const checked = e.target.checked;
+                                        setSelectedFeatured(checked);
+                                        loadProducts(
+                                            getCurrentFilters({
+                                                destacado: checked || undefined,
+                                            }),
+                                        );
+                                    }}
+                                />
+                                <span className="w-12 h-5 bg-app-gray rounded-full peer peer-focus:ring-2 peer-focus:ring-app-black/30 peer-checked:bg-[#2A6F97] transition-colors"></span>
+                                <span className="absolute left-1 top-1 h-3 w-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5"></span>
+                            </label>
+                        </div>
                     </div>
                     <div className="space-y-2">
                         <h1 className="text-app-black font-inter text-base/[26px] font-semibold">
@@ -353,69 +349,6 @@ export default function ShopPage() {
                             </div>
                         )}
                     </div>
-
-{/*                    <div className="space-y-2">
-                        <h1 className="text-app-black font-inter text-base/[26px] font-semibold">
-                            TAMAÑOS
-                        </h1>
-                        {loadingTamanios ? (
-                            <div className="flex justify-center items-center h-40">
-                                <p className="font-inter w-fit text-sm/[22px] font-semibold  text-taup-gray">
-                                    Cargando...
-                                </p>
-                            </div>
-                        ) : tamanioError ? (
-                            <div className="flex flex-col gap-3 items-start">
-                                <p className="font-inter text-sm/[22px] font-semibold text-taup-gray">
-                                    {tamanioError}
-                                </p>
-                            </div>
-                        ) : (
-                            <div
-                                className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
-                                {sortedTamanios.length > 0 ? (
-                                    sortedTamanios.map((s) => (
-                                        <button
-                                            key={s.id}
-                                            className="font-inter w-fit text-sm/[22px] font-semibold text-app-gray"
-                                        >
-                                            {s.name}
-                                        </button>
-                                    ))
-                                ) : (
-                                    <p className="font-inter w-fit text-sm/[22px] font-semibold text-taup-gray">
-                                        Sin tamaños disponibles.
-                                    </p>
-                                )}
-                            </div>
-                        )}
-                    </div>*/}
-                   {/* <div>
-                        <h1 className="text-app-black font-inter text-base/[26px] font-semibold mb-4">
-                            PRECIO
-                        </h1>
-                        <div className="flex flex-col gap-2">
-                            {[
-                                "Todos los precios",
-                                "$0,00 - 99,99",
-                                "$100,00 - 199,99",
-                                "$200,00 - 299,99",
-                                "$300,00 - 399,99",
-                                "$400,00+",
-                            ].map((item, idx) => (
-                                <div key={idx} className="flex justify-between items-center">
-                                    <p className="text-app-gray font-inter text-sm/[22px] font-semibold">
-                                        {item}
-                                    </p>
-                                    <input
-                                        id="accept"
-                                        type="checkbox"
-                                        className="w-6 h-6 text-gray-500 border-2 rounded focus:ring-0 checked:bg-app-black checked:border-[#6C7275] cursor-pointer"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>*/}
                 </div>
                 <div className="md:col-span-3 lg:col-span-1">
                     {loading ? (
@@ -431,10 +364,7 @@ export default function ShopPage() {
                             </p>
                             <button
                                 type="button"
-                                onClick={() => loadProducts({
-                                    categoriaId: selectedCategoryId ?? undefined,
-                                    marcaId: selectedBrandId ?? undefined,
-                                })}
+                                onClick={() => loadProducts(getCurrentFilters())}
                                 className="py-1.5 px-5 rounded-[80px] border border-app-black text-center font-inter text-sm/[22px] font-semibold text-app-black tracking-[-0.2px] transition-colors hover:bg-app-black hover:text-white"
                             >
                                 Reintentar

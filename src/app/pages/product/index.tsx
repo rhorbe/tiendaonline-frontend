@@ -214,9 +214,9 @@ export default function ProductPage() {
     const basePrice = selectedVariante?.precio ?? 0;
     const totalPrice = formatCurrency(normalizePrice(basePrice) * quantity);
     const rating = Math.max(0, producto.valoracion ?? 0);
-    const descuento =
-        producto.descuento !== undefined && producto.descuento !== null
-            ? String(producto.descuento)
+    const oferta =
+        producto.oferta !== undefined && producto.oferta !== null
+            ? String(producto.oferta)
             : undefined;
     const requiresConnectionToAddCart = Boolean(user?.id);
     const isOffline = isOfflineByNavigator();
@@ -332,7 +332,7 @@ export default function ProductPage() {
                         <ProductSlider
                             productImageUrls={[producto.image_url ?? ""]}
                             etiqueta={producto.label}
-                            descuento={descuento}
+                            descuento={oferta}
                         />
                     </div>
                     <div className="space-y-6">
