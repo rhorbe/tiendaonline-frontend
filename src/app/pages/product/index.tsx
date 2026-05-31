@@ -385,9 +385,6 @@ export default function ProductPage() {
                                     {descripcionExpandida ? "Ver menos" : "Ver más"}
                                 </button>
                             )}
-                            <p className="text-app-black font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
-                                {totalPrice}
-                            </p>
 
                             {productVariants.length > 0 && (
                                 <div className="space-y-3">
@@ -418,6 +415,10 @@ export default function ProductPage() {
                                             );
                                         })}
                                     </div>
+
+                                    <p className="mt-6 text-app-gray font-poppins text-[22px]/[28px] font-semibold tracking-[-0.6px]">
+                                        {formatCurrency(normalizePrice(basePrice))}
+                                    </p>
                                     <div className="flex items-center gap-4">
                                         <p className="text-app-gray font-inter text-sm/[22px] font-normal">
                                             Disponibles
@@ -426,6 +427,7 @@ export default function ProductPage() {
                                             {selectedVariante?.stock ?? 0}
                                         </p>
                                     </div>
+
                                 </div>
                             )}
 
@@ -436,6 +438,10 @@ export default function ProductPage() {
                             )}
                         </div>
 
+
+                        <p className="text-app-black font-poppins text-[28px]/[34px] font-semibold tracking-[-0.6px]">
+                            {totalPrice}
+                        </p>
 
                         <div className="flex items-center gap-6 pb-6">
                             <div className="flex flex-shrink-0 items-center gap-6 rounded bg-primary px-4 py-3 w-fit">
