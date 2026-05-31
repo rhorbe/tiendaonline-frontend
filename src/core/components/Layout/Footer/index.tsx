@@ -1,5 +1,6 @@
 import { ROUTES } from "@/core/enum/common";
 import { Link } from "react-router-dom";
+import LogoEssences from "../Logo";
 
 export default function Footer() {
   const navLinks = [
@@ -13,13 +14,7 @@ export default function Footer() {
       <div className="flex flex-col md:flex-row justify-between items-center mb-[49px] 2xl:container mx-auto gap-10">
         <div className="flex flex-col md:flex-row gap-8 items-center">
           <Link to={ROUTES.HOME} className="flex items-center">
-            <img
-              src="/images/logo_essences_blanco.svg"
-              alt="Essence Perfumes"
-              width={75}
-              height={21}
-              className="h-10 w-auto p-2"
-            />
+            <LogoEssences className="h-10 w-auto p-2" ariaLabel="Essences" />
           </Link>
           <div className="h-[1px] w-6 md:min-h-6 md:w-[1px] bg-app-gray" />
           <p className="max-w-[350px] flex-shrink-0 text-white font-inter text-sm/[22px]">

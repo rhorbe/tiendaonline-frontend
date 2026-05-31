@@ -5,6 +5,7 @@ import {ROUTES} from "@/core/enum/common";
 import {useAuth} from "@/store/useAuth";
 import Modal from "@/core/components/Modal";
 import {useProductContext} from "@/store/useProductContext";
+import LogoEssences from "../Logo";
 
 const Flayout = lazy(() =>
     import("../../Cart/Flayout").then((module) => ({default: module.Flayout}))
@@ -160,13 +161,7 @@ const Header: FC = () => {
             <div className="hidden md:flex justify-between items-center mx-auto px-4 md:px-7 lg:px-14 py-4">
                 <div className="flex items-center">
                     <Link to={ROUTES.HOME}>
-                        <img
-                            src="/images/logo_essences_blanco.svg"
-                            alt="Essences"
-                            width={75}
-                            height={21}
-                            className="h-12 w-auto p-2"
-                        />
+                        <LogoEssences className="h-12 w-auto p-2" ariaLabel="Essences" />
                     </Link>
                 </div>
                 <nav className="flex-grow text-left pl-14">
@@ -205,11 +200,7 @@ const Header: FC = () => {
                         <img src="/images/menu.svg" alt="Abrir menú" className="invert"/>
                     </button>
                     <Link to={ROUTES.HOME}>
-                        <img
-                            src="/images/logo_essences_blanco.svg"
-                            alt="Essences Perfumes"
-                            className="h-6 w-auto"
-                        />
+                        <LogoEssences className="h-6 w-auto" ariaLabel="Essences" />
                     </Link>
                 </div>
                 <div className="flex items-center gap-4 shrink-0 flex-nowrap">

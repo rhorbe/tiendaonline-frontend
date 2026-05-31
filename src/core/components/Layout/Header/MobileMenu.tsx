@@ -2,6 +2,7 @@ import {ROUTES} from "@/core/enum/common";
 import {useAuth} from "@/store/useAuth";
 import {useProductContext} from "@/store/useProductContext";
 import {Link} from "react-router-dom";
+import LogoEssences from "../Logo";
 
 interface MobileMenuProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,7 +33,7 @@ export default function MobileMenu({setOpen, onRequestLogout}: MobileMenuProps) 
             className="p-6 bg-app-black text-white absolute top-0 left-0 z-50 w-full h-screen flex flex-col justify-between md:hidden">
             <div>
                 <div className="flex justify-between items-center self-stretch">
-                   <img src="/images/logo_essences_blanco.svg" alt="Essence Perfumes" className="h-10 w-auto"/>
+                   <LogoEssences className="h-10 w-auto" ariaLabel="Essences" />
 
                     <button onClick={() => setOpen(false)}>
                         <img src="/images/close.svg" alt="Cerrar" className="h-6 w-auto invert"/>

@@ -16,7 +16,7 @@ const getShippingMethodLabel = (method: MetodoEnvio): string => {
         case MetodoEnvio.ENVIO_ESTANDAR:
             return "Envío estándar";
         case MetodoEnvio.ENVIO_EXPRESS:
-            return "Envío express";
+            return "Envío express (24hs)";
         default:
             return "Método de envío";
     }
