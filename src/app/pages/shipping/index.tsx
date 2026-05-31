@@ -209,6 +209,7 @@ export default function ShippingPage() {
             const response = await checkoutApi.procesarCompra({
                 carrito_id: carritoId,
                 metodo_envio: selectedShippingMethod,
+                direccion_id: selectedShippingMethod === MetodoEnvio.RETIRO_LOCAL ? "" : selectedShippingAddressId,
             });
 
             if (!response.success) {
