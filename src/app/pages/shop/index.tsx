@@ -236,7 +236,9 @@ export default function ShopPage() {
                     <div className="space-y-2">
                         <div className="flex items-center justify-between gap-4 rounded-lg py-3">
                             <div>
-                                <div className={`font-inter w-fit text-sm/[22px] font-semibold ${
+                                <div
+                                    id="destacados-label"
+                                    className={`font-inter w-fit text-sm/[22px] font-semibold ${
                                     selectedFeatured ? "text-app-black" : "text-app-gray"
                                 }`}>
                                     <span>Destacados</span>
@@ -245,8 +247,10 @@ export default function ShopPage() {
 
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
+                                    id="destacados-toggle"
                                     type="checkbox"
                                     className="sr-only peer"
+                                    aria-labelledby="destacados-label"
                                     checked={selectedFeatured}
                                     onChange={(e) => {
                                         const checked = e.target.checked;
