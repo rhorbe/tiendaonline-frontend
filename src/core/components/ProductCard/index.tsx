@@ -89,7 +89,7 @@ const ProductCard: React.FC<ProductCardProps> = (
                             </div>
                         )}
                         {oferta && (
-                            <div className="px-3 py-1 bg-app-green rounded">
+                            <div className="px-3 py-1 bg-app-red rounded">
                                 <p className="text-white font-inter text-base font-bold uppercase">
                                     {oferta}
                                 </p>

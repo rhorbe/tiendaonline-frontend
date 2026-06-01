@@ -16,6 +16,7 @@ module.exports = {
         'app-light-gray': '#E8ECEF',
         'app-slate-gray': '#343839',
         'app-green': '#38CB89',
+        'app-red': '#b4011f',
         'app-blue': '#377DFF',
         'grayish-brown': '#605F5F',
         'taup-gray': '#807E7E',
