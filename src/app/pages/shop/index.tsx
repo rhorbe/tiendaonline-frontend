@@ -162,7 +162,17 @@ export default function ShopPage() {
         <section className="px-8 lg:px-14">
             <div
                 className="shop-page-banner-bg min-h-[208px] md:h-[208px] flex justify-center items-center">
-                <div className="max-w-fit flex flex-col items-center gap-4 md:gap-6">
+                <img
+                    src="/images/shop-bg.webp"
+                    alt=""
+                    aria-hidden="true"
+                    className="shop-page-banner-image"
+                    fetchPriority="high"
+                    loading="eager"
+                    decoding="async"
+                />
+                <div className="shop-page-banner-overlay" aria-hidden="true" />
+                <div className="shop-page-banner-content max-w-fit flex flex-col items-center gap-4 md:gap-6">
                     <h1 className="text-app-black font-poppins text-[40px]/[44px] md:text-[54px]/[58px] tracking-[-0.4px] md:tracking-[-1px] font-medium">
                         Tienda
                     </h1>
