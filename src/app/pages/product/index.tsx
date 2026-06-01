@@ -416,9 +416,6 @@ export default function ProductPage() {
                                         })}
                                     </div>
 
-                                    <p className="mt-6 text-app-gray font-poppins text-[22px]/[28px] font-semibold tracking-[-0.6px]">
-                                        {formatCurrency(normalizePrice(basePrice))}
-                                    </p>
                                     <div className="flex items-center gap-4">
                                         <p className="text-app-gray font-inter text-sm/[22px] font-normal">
                                             Disponibles
