@@ -164,7 +164,7 @@ export default function ShopPage() {
     return (
         <section className="px-8 lg:px-14">
             <div
-                className="shop-page-banner-bg min-h-[208px] md:h-[208px] flex justify-center items-center">
+                className="shop-page-banner-bg hidden md:flex min-h-[208px] md:h-[208px] justify-center items-center">
                 <img
                     src="/images/shop-bg.webp"
                     alt=""
