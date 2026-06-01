@@ -105,9 +105,9 @@ const ProductCard: React.FC<ProductCardProps> = (
                         <img key={i} src="/images/star-icon.svg" alt="estrella"/>
                     ))}
                 </div>
-                <h3 className="mb-2 text-app-gray font-inter text-base/[24px] font-medium">
+                <p className="mb-2 text-app-gray font-inter text-base/[24px] font-medium">
                     {brand}
-                </h3>
+                </p>
                 <h3 className="mb-2 text-app-black font-inter text-base/[26px] font-medium">
                     {name}
                 </h3>
