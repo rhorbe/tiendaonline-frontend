@@ -199,6 +199,11 @@ export default function ShippingPage() {
             setProcesandoCompra(true);
             setProcesarCompraError(null);
 
+            if (selectedShippingMethod !== MetodoEnvio.RETIRO_LOCAL && !selectedShippingAddressId) {
+                setProcesarCompraError("Debes seleccionar una dirección de envío para entrega a domicilio.");
+                return;
+            }
+
             const {carritoId} = await getCartContextByUserId(user.id);
 
             if (!carritoId) {
@@ -206,11 +211,15 @@ export default function ShippingPage() {
                 throw new Error("No se pudo identificar el carrito actual.");
             }
 
-            const response = await checkoutApi.procesarCompra({
+            const payload = {
                 carrito_id: carritoId,
                 metodo_envio: selectedShippingMethod,
-                direccion_id: selectedShippingMethod === MetodoEnvio.RETIRO_LOCAL ? "" : selectedShippingAddressId,
-            });
+                ...(selectedShippingMethod === MetodoEnvio.RETIRO_LOCAL
+                    ? {}
+                    : {direccion_id: selectedShippingAddressId}),
+            };
+
+            const response = await checkoutApi.procesarCompra(payload);
 
             if (!response.success) {
                 // TODO capturar

@@ -4,7 +4,7 @@ import { MetodoEnvio } from "@/core/enum/MetodoEnvio";
 export interface ProcesarCompraRequest {
   carrito_id: string;
   metodo_envio: MetodoEnvio;
-  direccion_id: string;
+  direccion_id?: string;
 }
 
 export interface ProcesarCompraResponse {
