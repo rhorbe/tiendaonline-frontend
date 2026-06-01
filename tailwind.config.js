@@ -28,7 +28,6 @@ module.exports = {
         '2xl': '1440px',
       },
       boxShadow: {
-        'wishlist-icon': '0px 8px 16px -8px rgba(15, 15, 15, 0.12)',
         'order-complete': '0px 32px 48px -48px rgba(18, 18, 18, 0.10)'
       }
     },

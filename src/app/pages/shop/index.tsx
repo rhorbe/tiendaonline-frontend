@@ -1,12 +1,10 @@
 import {fetchBrands} from "@/core/api/marcasApi.ts";
 import {fetchCategorias} from "@/core/api/categoriasApi.ts";
 import {fetchProducts, ProductFilters} from "@/core/api/productosApi.ts";
-/*import {fetchTamanio} from "@/core/api/tamaniosApi.ts";*/
+
 import ProductCard from "@/core/components/ProductCard";
 import {Marca} from "@/core/models/Marca.ts";
 import {Categoria} from "@/core/models/Categoria.ts";
-/*import {Tamanio} from "@/core/models/Tamanio.ts";*/
-/*import {useCallback, useEffect, useMemo, useState} from "react";*/
 import {useCallback, useEffect, useState} from "react";
 import {ROUTES} from "@/core/enum/common";
 import {useProductContext} from "@/store/useProductContext";
@@ -157,7 +155,6 @@ export default function ShopPage() {
     useEffect(() => {
         loadCategorias();
         loadMarcas();
-        /* loadTamanios();*/
     }, [loadCategorias, loadMarcas, /*loadTamanios*/]);
 
 

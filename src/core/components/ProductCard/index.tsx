@@ -11,7 +11,6 @@ interface ProductCardProps {
     price?: number | string;
     variantes?: VarianteProducto[];
     onAddToCart?: (variante?: VarianteProducto) => void;
-    onToggleWishlist?: () => void;
     onClick?: () => void;
     disableAddToCart?: boolean;
 }
@@ -26,7 +25,6 @@ const ProductCard: React.FC<ProductCardProps> = (
         name,
         variantes = [],
         onAddToCart,
-        onToggleWishlist,
         onClick,
         disableAddToCart = false,
     }) => {
@@ -98,14 +96,6 @@ const ProductCard: React.FC<ProductCardProps> = (
                             </div>
                         )}
                     </div>
-                    {/* TODO sacar botón o agregar funcionalidad */}
-                    <button onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleWishlist?.();
-                    }}
-                            className="bg-white p-1.5 rounded-3xl h-8 w-8 shadow-wishlist-icon"
-                    >
-                    </button>
                 </div>
             </div>
 
