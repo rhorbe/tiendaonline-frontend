@@ -202,10 +202,14 @@ export default function ShopPage() {
                     </div>
                     <div className="flex">
                         <button
+                            type="button"
+                            aria-label="Expandir filtros"
                             className="py-2 px-3 bg-primary flex justify-center items-center border-r border-app-light-gray">
                             {/* SVG */}
                         </button>
                         <button
+                            type="button"
+                            aria-label="Contraer filtros"
                             className="py-3 px-3 bg-primary flex justify-center items-center border-t border-app-light-gray rotate-90">
                             {/* SVG */}
                         </button>
@@ -232,6 +236,7 @@ export default function ShopPage() {
                         >
                             Limpiar filtros
                         </button>
+                                type="button"
                     </div>
                     <div className="space-y-2">
                         <div className="flex items-center justify-between gap-4 rounded-lg py-3">
@@ -503,6 +508,8 @@ export default function ShopPage() {
                             {hasMoreProducts && (
                                 <div className="flex justify-center">
                                     <button
+                                        type="button"
+                                        aria-label="Cargar más productos de la tienda"
                                         className="py-1.5 px-10 rounded-[80px] border border-app-black text-center font-inter text-base/7 font-semibold tracking-[-0.4px]">
                                         Ver más
                                     </button>
