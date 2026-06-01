@@ -27,6 +27,7 @@ export default function ShopPage() {
     const {user} = useAuth();
     const [isCartErrorModalOpen, setIsCartErrorModalOpen] = useState(false);
     const [cartErrorMessage, setCartErrorMessage] = useState("");
+    const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
     const getVariantLabel = (label: unknown) => {
         if (typeof label === "string") {
@@ -157,6 +158,8 @@ export default function ShopPage() {
         loadMarcas();
     }, [loadCategorias, loadMarcas, /*loadTamanios*/]);
 
+    const mobileFiltersPanelId = "mobile-filters-panel";
+
 
     return (
         <section className="px-8 lg:px-14">
@@ -198,31 +201,176 @@ export default function ShopPage() {
                 </div>
             </div>
             <div className="pt-8 md:pt-[60px] pb-[100px] grid md:grid-cols-4 lg:grid-cols-[3fr_13fr] gap-6">
-                <div
-                    className="flex md:hidden border-y border-app-light-gray col-span-3 justify-between items-center py-2">
-                    <div className="flex items-center gap-2">
-                        <img
-                            src="/images/filter.svg"
-                            alt="icono filtro"
-                            className="h-6 w-6"
-                        />
-                        <p className="text-app-black font-inter text-base/[28px] md:text-xl/8 font-semibold">
-                            Filtro
-                        </p>
-                    </div>
-                    <div className="flex">
-                        <button
-                            type="button"
-                            aria-label="Expandir filtros"
-                            className="py-2 px-3 bg-primary flex justify-center items-center border-r border-app-light-gray">
-                            {/* SVG */}
-                        </button>
-                        <button
-                            type="button"
-                            aria-label="Contraer filtros"
-                            className="py-3 px-3 bg-primary flex justify-center items-center border-t border-app-light-gray rotate-90">
-                            {/* SVG */}
-                        </button>
+                <div className="md:hidden col-span-3 border-y border-app-light-gray">
+                    <button
+                        type="button"
+                        aria-expanded={isMobileFiltersOpen}
+                        aria-controls={mobileFiltersPanelId}
+                        onClick={() => setIsMobileFiltersOpen((current) => !current)}
+                        className="flex w-full items-center justify-between py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-black focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    >
+                        <span className="flex items-center gap-2">
+                            <img
+                                src="/images/filter.svg"
+                                alt=""
+                                aria-hidden="true"
+                                className="h-6 w-6"
+                            />
+                            <span className="text-app-black font-inter text-base/[28px] font-semibold">
+                                Filtro
+                            </span>
+                        </span>
+                        <span
+                            className={`flex h-10 w-10 items-center justify-center rounded-full bg-primary transition-transform ${
+                                isMobileFiltersOpen ? "rotate-180" : "rotate-0"
+                            }`}
+                            aria-hidden="true"
+                        >
+                            <img
+                                src="/images/dropdown-icon.svg"
+                                alt=""
+                                aria-hidden="true"
+                                className="h-4 w-4 object-contain"
+                            />
+                        </span>
+                    </button>
+
+                    <div
+                        id={mobileFiltersPanelId}
+                        hidden={!isMobileFiltersOpen}
+                        className="pb-4"
+                    >
+                        <div className="flex flex-col gap-6 pt-2">
+                            <button
+                                type="button"
+                                onClick={handleClearAllFilters}
+                                disabled={!hasActiveFilters}
+                                className="py-1.5 px-5 rounded-[80px] border border-app-black text-center font-inter text-sm/[22px] font-semibold text-app-black tracking-[-0.2px] transition-colors hover:bg-app-black hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Limpiar filtros
+                            </button>
+
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between gap-4 rounded-lg py-3">
+                                    <div>
+                                        <div
+                                            id="destacados-mobile-label"
+                                            className={`font-inter w-fit text-sm/[22px] font-semibold ${
+                                                selectedFeatured ? "text-app-black" : "text-app-gray"
+                                            }`}
+                                        >
+                                            <span>Destacados</span>
+                                        </div>
+                                    </div>
+
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            id="destacados-mobile-toggle"
+                                            type="checkbox"
+                                            className="sr-only peer"
+                                            aria-labelledby="destacados-mobile-label"
+                                            checked={selectedFeatured}
+                                            onChange={(e) => {
+                                                const checked = e.target.checked;
+                                                const nextFilters: ProductFilters = {
+                                                    categoriaId: selectedCategoryId ?? undefined,
+                                                    marcaId: selectedBrandId ?? undefined,
+                                                };
+
+                                                if (checked) {
+                                                    nextFilters.destacado = true;
+                                                }
+
+                                                setSelectedFeatured(checked);
+                                                loadProducts(nextFilters);
+                                            }}
+                                        />
+                                        <span className="w-12 h-5 bg-app-gray rounded-full peer peer-focus:ring-2 peer-focus:ring-app-black/30 peer-checked:bg-app-black transition-colors"></span>
+                                        <span className="absolute left-1 top-1 h-3 w-5 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <h2 className="text-app-black font-inter text-base/[26px] font-semibold">
+                                    CATEGORÍAS
+                                </h2>
+                                {loadingCategories ? (
+                                    <div className="flex justify-center items-center h-40">
+                                        <p className="font-inter w-fit text-sm/[22px] font-semibold text-taup-gray">
+                                            Cargando...
+                                        </p>
+                                    </div>
+                                ) : categoryError ? (
+                                    <div className="flex flex-col gap-3 items-start">
+                                        <p className="font-inter text-sm/[22px] font-semibold text-taup-gray">
+                                            {categoryError}
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
+                                        {categorias.length > 0 ? (
+                                            categorias.map((c) => (
+                                                <button
+                                                    key={c.id}
+                                                    type="button"
+                                                    onClick={() => handleCategoryClick(c.id)}
+                                                    className={`font-inter w-fit text-sm/[22px] font-semibold ${
+                                                        selectedCategoryId === c.id ? "text-app-black" : "text-app-gray"
+                                                    }`}
+                                                >
+                                                    {c.nombre}
+                                                </button>
+                                            ))
+                                        ) : (
+                                            <p className="font-inter w-fit text-sm/[22px] font-semibold text-taup-gray">
+                                                Sin categorías disponibles.
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-2">
+                                <h2 className="text-app-black font-inter text-base/[26px] font-semibold">
+                                    MARCAS
+                                </h2>
+                                {loadingBrands ? (
+                                    <div className="flex justify-center items-center h-40">
+                                        <p className="font-inter w-fit text-sm/[22px] font-semibold text-taup-gray">
+                                            Cargando...
+                                        </p>
+                                    </div>
+                                ) : brandError ? (
+                                    <div className="flex flex-col gap-3 items-start">
+                                        <p className="font-inter text-sm/[22px] font-semibold text-taup-gray">
+                                            {brandError}
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col gap-2 max-h-[208px] overflow-y-scroll custom-category-scrollbar">
+                                        {marcas.length > 0 ? (
+                                            marcas.map((b) => (
+                                                <button
+                                                    key={b.id}
+                                                    type="button"
+                                                    onClick={() => handleBrandClick(b.id)}
+                                                    className={`font-inter w-fit text-sm/[22px] font-semibold ${
+                                                        selectedBrandId === b.id ? "text-app-black" : "text-app-gray"
+                                                    }`}
+                                                >
+                                                    {b.name}
+                                                </button>
+                                            ))
+                                        ) : (
+                                            <p className="font-inter w-fit text-sm/[22px] font-semibold text-taup-gray">
+                                                Sin marcas disponibles.
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
